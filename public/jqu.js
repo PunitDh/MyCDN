@@ -55,11 +55,15 @@ class ElementCollection extends Array {
 
   value(value) {
     if (!value) {
-      return this.map((e) => e.value).join("");
+      return this.map((e) => e.value);
     } else {
       this.forEach((e) => (e.value = value));
       return this;
     }
+  }
+
+  val(val) {
+    return this.value(val);
   }
 
   caretPosition() {
@@ -90,7 +94,7 @@ class ElementCollection extends Array {
 
   text(content) {
     if (!content) {
-      return this.map((e) => e.innerText).join("");
+      return this.map((e) => e.innerText);
     } else {
       this.forEach((e) => (e.innerText = content));
       return this;
@@ -103,7 +107,7 @@ class ElementCollection extends Array {
   }
 
   getAttribute(attribute) {
-    return this.map((e) => e.getAttribute(attribute)).join("");
+    return this.map((e) => e.getAttribute(attribute));
   }
 
   color(col) {
@@ -193,6 +197,11 @@ class ElementCollection extends Array {
     return this;
   }
 
+  gap(gap) {
+    this.forEach((e) => (e.style.gap = gap));
+    return this;
+  }
+
   position(pos) {
     this.forEach((e) => (e.style.position = pos));
     return this;
@@ -219,13 +228,21 @@ class ElementCollection extends Array {
   }
 
   width(width) {
-    this.forEach((e) => (e.style.width = width));
-    return this;
+    if (!width) {
+      return this.map((e) => getComputedStyle(e).width);
+    } else {
+      this.forEach((e) => (e.style.width = width));
+      return this;
+    }
   }
 
   height(height) {
-    this.forEach((e) => (e.style.height = height));
-    return this;
+    if (!height) {
+      return this.map((e) => getComputedStyle(e).height);
+    } else {
+      this.forEach((e) => (e.style.height = height));
+      return this;
+    }
   }
 
   opacity(opacity) {
@@ -261,6 +278,14 @@ class ElementCollection extends Array {
   backgroundColor(backgroundColor) {
     this.forEach((e) => (e.style.backgroundColor = backgroundColor));
     return this;
+  }
+
+  bg(bg) {
+    return this.background(bg);
+  }
+
+  bgColor(bg) {
+    return this.backgroundColor(bg);
   }
 
   border(border) {
@@ -466,7 +491,31 @@ class ElementCollection extends Array {
   }
 
   color(color) {
-    this.forEach((e) => (e.style.color = color));
+    if (!color) {
+      return this.map((e) => e.style.color);
+    } else {
+      this.forEach((e) => (e.style.color = color));
+      return this;
+    }
+  }
+
+  getStyle() {
+    const map = new Map();
+    this.forEach((e) => map.set(e, e.style.cssText));
+    return map;
+  }
+
+  hover(hoverFunction) {
+    const originalStyleMap = this.getStyle();
+    this.forEach((e, i) => {
+      e.addEventListener("mouseover", () => {
+        hoverFunction(new ElementCollection(e));
+      });
+      e.addEventListener("mouseout", () => {
+        e.style = originalStyleMap.get(e);
+      });
+    });
+
     return this;
   }
 
@@ -571,11 +620,15 @@ class ElementCollection extends Array {
   }
 
   center() {
-    if (this.style.display === "flex") {
-      this.forEach((e) => (e.style.textAlign = "center"));
-    } else {
-      this.forEach((e) => (e.style.justifyContent = "center"));
-    }
+    this.forEach((e) => {
+      if (e.style.display === "flex") {
+        e.style.justifyContent = "center";
+        e.style.alignItems = "center";
+      } else {
+        e.style.textAlign = "center";
+      }
+    });
+
     return this;
   }
 
