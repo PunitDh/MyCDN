@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tester doc</title>
+  <script src="jqu.js"></script>
+</head>
+
+<body>
+  <div id="head1">
+    Text display
+  </div>
+  <div id="head2">
+    Hello css
+  </div>
+  <textarea type="text" id="textbox"></textarea>
+  <button id="btn">Show me Css</button>
+</body>
+<script>
+  $(document.body).centerScreen().flexColumn().gap('1rem')
+  $('#head1', '#head2')
+    .flex()
+    .red()
+    .fontFamily('sans-serif')
+    .border('1px solid black')
+    .width('15rem')
+    .height('4rem')
+    .center()
+    .bg('#f0f0f0')
+    .transition('all 0.3s ease-in')
+    .fontSize('2rem')
+    .hover(e => e.blue().bg('yellow'));
+
+  $('#textbox').flex().width('30rem').height('10rem').center()
+
+  $('#btn').click(function () {
+    console.log(window.getSelection())
+    $('#textbox').text(window.getSelection());
+  });
+
+  const g = $(document.body, '#textbox', 'div')
+
+</script>
+
+</html>
