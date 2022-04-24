@@ -78,11 +78,11 @@ class ElementCollection extends Array {
     return this;
   }
 
-  html(text) {
-    if (!text) {
-      return this.map((e) => e.innerHTML).join("\n");
+  html(html) {
+    if (!html) {
+      return this.map((e) => e.innerHTML);
     } else {
-      this.forEach((e) => (e.innerHTML = text));
+      this.forEach((e) => (e.innerHTML = html));
       return this;
     }
   }
@@ -112,7 +112,7 @@ class ElementCollection extends Array {
 
   color(col) {
     if (!col) {
-      return this.map((e) => e.style.color);
+      return this.map((e) => getComputedStyle(e).color);
     } else {
       this.forEach((e) => (e.style.color = col));
       return this;
@@ -121,7 +121,7 @@ class ElementCollection extends Array {
 
   display(display) {
     if (!display) {
-      return this.map((e) => e.style.display);
+      return this.map((e) => getComputedStyle(e).display);
     } else {
       this.forEach((e) => (e.style.display = display));
       return this;
@@ -138,13 +138,21 @@ class ElementCollection extends Array {
   }
 
   margin(margin) {
-    this.forEach((e) => (e.style.margin = margin));
-    return this;
+    if (!margin) {
+      return this.map((e) => getComputedStyle(e).margin);
+    } else {
+      this.forEach((e) => (e.style.margin = margin));
+      return this;
+    }
   }
 
   padding(padding) {
-    this.forEach((e) => (e.style.padding = padding));
-    return this;
+    if (!padding) {
+      return this.map((e) => getComputedStyle(e).padding);
+    } else {
+      this.forEach((e) => (e.style.padding = padding));
+      return this;
+    }
   }
 
   hide() {
@@ -193,38 +201,70 @@ class ElementCollection extends Array {
   }
 
   flexBasis(basis) {
-    this.forEach((e) => (e.style.flexBasis = basis));
-    return this;
+    if (!basis) {
+      return this.map((e) => getComputedStyle(e).flexBasis);
+    } else {
+      this.forEach((e) => (e.style.flexBasis = basis));
+      return this;
+    }
   }
 
   gap(gap) {
-    this.forEach((e) => (e.style.gap = gap));
-    return this;
+    if (!gap) {
+      return this.map((e) => getComputedStyle(e).gap);
+    } else {
+      this.forEach((e) => (e.style.gap = gap));
+      return this;
+    }
   }
 
   position(pos) {
-    this.forEach((e) => (e.style.position = pos));
-    return this;
+    if (!pos) {
+      return this.map((e) => getComputedStyle(e).position);
+    } else {
+      this.forEach((e) => (e.style.position = pos));
+      return this;
+    }
+  }
+
+  getPosition() {
+    return this.map((e) => [getComputedStyle(e).x, getComputedStyle(e).y]);
   }
 
   top(top) {
-    this.forEach((e) => (e.style.top = top));
-    return this;
+    if (!top) {
+      return this.map((e) => getComputedStyle(e).top);
+    } else {
+      this.forEach((e) => (e.style.top = top));
+      return this;
+    }
   }
 
   left(left) {
-    this.forEach((e) => (e.style.left = left));
-    return this;
+    if (!left) {
+      return this.map((e) => getComputedStyle(e).left);
+    } else {
+      this.forEach((e) => (e.style.left = left));
+      return this;
+    }
   }
 
   right(right) {
-    this.forEach((e) => (e.style.right = right));
-    return this;
+    if (!right) {
+      return this.map((e) => getComputedStyle(e).right);
+    } else {
+      this.forEach((e) => (e.style.right = right));
+      return this;
+    }
   }
 
   bottom(bottom) {
-    this.forEach((e) => (e.style.bottom = bottom));
-    return this;
+    if (!bottom) {
+      return this.map((e) => getComputedStyle(e).bottom);
+    } else {
+      this.forEach((e) => (e.style.bottom = bottom));
+      return this;
+    }
   }
 
   width(width) {
@@ -246,8 +286,12 @@ class ElementCollection extends Array {
   }
 
   opacity(opacity) {
-    this.forEach((e) => (e.style.opacity = opacity));
-    return this;
+    if (!opacity) {
+      return this.map((e) => getComputedStyle(e).opacity);
+    } else {
+      this.forEach((e) => (e.style.opacity = opacity));
+      return this;
+    }
   }
 
   background(background) {
@@ -381,8 +425,12 @@ class ElementCollection extends Array {
   }
 
   userSelect(userSelect) {
-    this.forEach((e) => (e.style.userSelect = userSelect));
-    return this;
+    if (!userSelect) {
+      return this.map((e) => getComputedStyle(e).userSelect);
+    } else {
+      this.forEach((e) => (e.style.userSelect = userSelect));
+      return this;
+    }
   }
 
   cursor(cursor) {
@@ -456,18 +504,30 @@ class ElementCollection extends Array {
   }
 
   lineHeight(lineHeight) {
-    this.forEach((e) => (e.style.lineHeight = lineHeight));
-    return this;
+    if (!lineHeight) {
+      return this.map((e) => getComputedStyle(e).lineHeight);
+    } else {
+      this.forEach((e) => (e.style.lineHeight = lineHeight));
+      return this;
+    }
   }
 
   fontFamily(fontFamily) {
-    this.forEach((e) => (e.style.fontFamily = fontFamily));
-    return this;
+    if (!fontFamily) {
+      return this.map((e) => getComputedStyle(e).fontFamily);
+    } else {
+      this.forEach((e) => (e.style.fontFamily = fontFamily));
+      return this;
+    }
   }
 
   fontSize(fontSize) {
-    this.forEach((e) => (e.style.fontSize = fontSize));
-    return this;
+    if (!fontSize) {
+      return this.map((e) => getComputedStyle(e).fontSize);
+    } else {
+      this.forEach((e) => (e.style.fontSize = fontSize));
+      return this;
+    }
   }
 
   fontStyle(fontStyle) {
@@ -492,7 +552,7 @@ class ElementCollection extends Array {
 
   color(color) {
     if (!color) {
-      return this.map((e) => e.style.color);
+      return this.map((e) => getComputedStyle(e).color);
     } else {
       this.forEach((e) => (e.style.color = color));
       return this;
@@ -507,7 +567,7 @@ class ElementCollection extends Array {
 
   hover(hoverFunction) {
     const originalStyleMap = this.getStyle();
-    this.forEach((e, i) => {
+    this.forEach((e) => {
       e.addEventListener("mouseover", () => {
         hoverFunction(new ElementCollection(e));
       });
@@ -515,8 +575,16 @@ class ElementCollection extends Array {
         e.style = originalStyleMap.get(e);
       });
     });
-
     return this;
+  }
+
+  tabIndex(tabIndex) {
+    if (!tabIndex) {
+      return this.map((e) => e.tabIndex);
+    } else {
+      this.forEach((e) => (e.tabIndex = tabIndex));
+      return this;
+    }
   }
 
   bgRed() {
@@ -723,12 +791,16 @@ class AjaxPromise {
   }
 }
 
-function $(param) {
-  if (typeof param === "string" || param instanceof String) {
-    return new ElementCollection(...document.querySelectorAll(param));
-  } else {
-    return new ElementCollection(param);
-  }
+function $() {
+  let queryArgs = Array.from(arguments)
+    .map((arg) =>
+      typeof arg === "string" || arg instanceof String
+        ? [...document.querySelectorAll(arg)]
+        : arg
+    )
+    .flat();
+
+  return new ElementCollection(...queryArgs);
 }
 
 $.get = function ({
@@ -855,3 +927,5 @@ String.prototype.capitalize = function (separator = " ") {
     .map((s) => s.charAt(0).toUpperCase() + s.slice(1))
     .join(separator);
 };
+
+window.$ = $;
