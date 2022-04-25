@@ -39,12 +39,21 @@ class ElementCollection extends Array {
     return this.map((e) => e.previousElementSibling).filter((e) => e);
   }
 
-  children() {
+  get children() {
     return this.map((e) => e.children).flat();
+  }
+
+  get childNodes() {
+    return this.map((e) => e.childNodes).flat();
   }
 
   addClass(className) {
     this.forEach((e) => e.classList.add(className));
+    return this;
+  }
+
+  toggleClass(className) {
+    this.forEach((e) => e.classList.toggle(className));
     return this;
   }
 
@@ -87,6 +96,15 @@ class ElementCollection extends Array {
     }
   }
 
+  outerHTML(html) {
+    if (!html) {
+      return this.map((e) => e.outerHTML);
+    } else {
+      this.forEach((e) => (e.outerHTML = html));
+      return this;
+    }
+  }
+
   indicesOf(element) {
     // TODO
     return this.map((e) => this.indexOf(e)).filter((e) => e);
@@ -101,6 +119,49 @@ class ElementCollection extends Array {
     }
   }
 
+  split(splitter) {
+    this.forEach((e) => (e.innerHTML = e.innerHTML.split(splitter)));
+    return this;
+  }
+
+  replace(element, string) {
+    const replacedHTML = this.map((e) => e.replace(element, string)).flat();
+    return replacedHTML;
+  }
+
+  trim() {
+    this.forEach((e) => (e.innerHTML = e.innerHTML.trim()));
+    return this;
+  }
+
+  match(selector) {
+    return this.map((e) => e.match(selector)).flat();
+  }
+
+  each(callback) {
+    this.forEach((e) => callback(e));
+    return this;
+  }
+
+  replaceHTML(literals, vars) {
+    this.forEach((e) => {
+      literals.forEach((literal) => {
+        replaceRecursively(e, literal, vars[literal.slice(2, -2)] || "");
+      });
+    });
+    return this;
+  }
+
+  replaceLiterals(literals, vars) {
+    this.map((e) => {
+      literals.forEach((literal) => {
+        e.replace(literal, vars[literal.slice(2, -2)] || "");
+      });
+    });
+
+    return this;
+  }
+
   setAttribute(attribute, value) {
     this.forEach((e) => e.setAttribute(attribute, value));
     return this;
@@ -108,6 +169,28 @@ class ElementCollection extends Array {
 
   getAttribute(attribute) {
     return this.map((e) => e.getAttribute(attribute));
+  }
+
+  get attributes() {
+    return this.map((e) => e.attributes);
+  }
+
+  getAttributes() {
+    return this.map((e) => e.attributes)
+      .map((a) => Array.from(a))
+      .flat();
+  }
+
+  toAttributesObject() {
+    const vars = {};
+    this.getAttributes().forEach((attribute) => {
+      vars[attribute.name] = attribute.value;
+    });
+    return vars;
+  }
+
+  toObject() {
+    return this.map((e) => e.toObject());
   }
 
   color(col) {
@@ -166,8 +249,12 @@ class ElementCollection extends Array {
   }
 
   justifyContent(justify) {
-    this.forEach((e) => (e.style.justifyContent = justify));
-    return this;
+    if (!justify) {
+      return this.map((e) => getComputedStyle(e).justifyContent);
+    } else {
+      this.forEach((e) => (e.style.justifyContent = justify));
+      return this;
+    }
   }
 
   flexWrap(wrap) {
@@ -176,8 +263,12 @@ class ElementCollection extends Array {
   }
 
   flexDirection(direction) {
-    this.forEach((e) => (e.style.flexDirection = direction));
-    return this;
+    if (!direction) {
+      return this.map((e) => getComputedStyle(e).flexDirection);
+    } else {
+      this.forEach((e) => (e.style.flexDirection = direction));
+      return this;
+    }
   }
 
   flexRow() {
@@ -540,6 +631,11 @@ class ElementCollection extends Array {
     return this;
   }
 
+  bold() {
+    this.forEach((e) => (e.style.fontWeight = "bolder"));
+    return this;
+  }
+
   fontVariant(fontVariant) {
     this.forEach((e) => (e.style.fontVariant = fontVariant));
     return this;
@@ -565,14 +661,88 @@ class ElementCollection extends Array {
     return map;
   }
 
-  hover(hoverFunction) {
+  device(device, orientation = "portrait", callback) {
+    // window.addEventListener("resize", () => {
+    //   if (window.matchMedia("(max-width: 700px)").matches) {
+    //     console.log("mobile");
+    //   }
+    // });
+    const getMediaQuery = (o) => {
+      const orientation = o.toLowerCase();
+      switch (device.toLowerCase()) {
+        case "iphone": {
+          if (orientation === "portrait") {
+            return window.matchMedia(
+              "(min-device-width: 320px) and (max-device-width: 480px) and (-webkit-min-device-pixel-ratio: 2) and (orientation: portrait)"
+            );
+          } else if (orientation === "landscape") {
+            return window.matchMedia(
+              "(min-device-width: 320px) and (max-device-width: 480px) and (-webkit-min-device-pixel-ratio: 2) and (orientation: landscape)"
+            );
+          } else {
+            return window.matchMedia(
+              "(min-device-width: 320px) and (max-device-width: 480px) and (-webkit-min-device-pixel-ratio: 2)"
+            );
+          }
+        }
+        case "ipad": {
+          break;
+        }
+        case "galaxy": {
+          break;
+        }
+        case "htc": {
+          break;
+        }
+        case "google": {
+          break;
+        }
+        case "samsung": {
+        }
+        case "nexus": {
+          break;
+        }
+        case "tablet": {
+          break;
+        }
+        case "desktop": {
+          break;
+        }
+        case "laptop": {
+          break;
+        }
+        case "mobile": {
+          break;
+        }
+      }
+    };
+  }
+
+  hover(hoverFunction, revertFunction) {
     const originalStyleMap = this.getStyle();
     this.forEach((e) => {
       e.addEventListener("mouseover", () => {
         hoverFunction(new ElementCollection(e));
       });
       e.addEventListener("mouseout", () => {
-        e.style = originalStyleMap.get(e);
+        if (revertFunction) {
+          revertFunction(new ElementCollection(e));
+        } else {
+          e.style = originalStyleMap.get(e);
+        }
+      });
+    });
+    return this;
+  }
+
+  mouseOver(mouseOverFn, revertFunction) {
+    return this.hover(mouseOverFn, revertFunction);
+  }
+
+  mouseOut(mouseOutFn, revertFunction) {
+    this.forEach((e) => {
+      e.addEventListener("mouseout", () => {
+        mouseOutFn(new ElementCollection(e));
       });
     });
     return this;
@@ -791,6 +961,15 @@ class AjaxPromise {
   }
 }
 
+function replaceRecursively(element, from, to) {
+  if (element.childNodes.length) {
+    element.childNodes.forEach((child) => replaceRecursively(child, from, to));
+  } else {
+    const cont = element.textContent;
+    if (cont) element.textContent = cont.replace(from, to);
+  }
+}
+
 function $() {
   let queryArgs = Array.from(arguments)
     .map((arg) =>
@@ -803,13 +982,13 @@ function $() {
   return new ElementCollection(...queryArgs);
 }
 
-$.get = function ({
+$.get = function (
   url,
-  data = {},
+  query = {},
   success = () => {},
-  dataType = "application/json",
-}) {
-  const queryString = Object.entries(data)
+  dataType = "application/json"
+) {
+  const queryString = Object.entries(query)
     .map(([key, value]) => `${key}=${value}`)
     .join("&");
   return new AjaxPromise(
@@ -820,10 +999,12 @@ $.get = function ({
       },
     })
       .then((res) => {
-        if (res.ok) res.json();
+        if (res.ok) return res.json();
         else throw new Error(res.status);
       })
-      .then((data) => success(data))
+      .then((data) => {
+        success(data);
+      })
   );
 };
 

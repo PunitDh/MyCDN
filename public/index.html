@@ -7,6 +7,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tester doc</title>
   <script src="jqu.js"></script>
+  <script defer src="templater.js"></script>
+  <data email-label="Email" email="punit04@gmail.com" alert="alert('show me magic')">
+  </data>
+  <data gul="gul"></data>
 </head>
 
 <body>
@@ -16,8 +20,22 @@
   <div id="head2">
     Hello css
   </div>
-  <textarea type="text" id="textbox"></textarea>
+  <textarea type="text" id="textbox">{{email-label}} is {{email}} gul is {{gul}}</textarea>
   <button id="btn">Show me Css</button>
+  <fetch src="https://jsonplaceholder.typicode.com/todos/1">
+    <table>
+      <tr>
+        <td>id</td>
+        <td>Title</td>
+        <td>Completed</td>
+      </tr>
+      <tr map>
+        <td>{{id}}</td>
+        <td>{{title}}</td>
+        <td>{{completed}}</td>
+      </tr>
+    </table>
+  </fetch>
 </body>
 <script>
   $(document.body).centerScreen().flexColumn().gap('1rem')
@@ -34,12 +52,16 @@
     .fontSize('2rem')
     .hover(e => e.blue().bg('yellow'));
 
+  $('td').bold()
+
   $('#textbox').flex().width('30rem').height('10rem').center()
 
   $('#btn').click(function () {
-    console.log(window.getSelection())
-    $('#textbox').text(window.getSelection());
+
+    $('#textbox').html(window.getSelection());
   });
+
+
 
   const g = $(document.body, '#textbox', 'div')
 
