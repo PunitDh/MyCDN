@@ -1,1 +1,58 @@
-$(document).ready((()=>{const t=$("flex"),e=$("fetch"),c=$("data").toAttributesObject(),a=/{{([^}]+)}}/g,o=$(document.body).html().match(a);if(t.flex().flexDirection(t.getAttribute("direction")).justifyContent(t.getAttribute("justify-content")).alignItems(t.getAttribute("align-items")),e.length){const t=e.getAttribute("src").first(),r=e.html().match(a);$.get(t,{},(function(t){if(t instanceof Array){const e=r.map((t=>t.replace(/{{|}}/g,""))),c=$("fetch [map]");let a="";t.forEach((t=>{const o={};e.forEach((e=>{o[e]=t[e]}));const r=c.outerHTML().map((t=>(o.keys().map((e=>{t=t.replace(`{{${e}}}`,o[e])})),t)));a+=r.join("")})),c.outerHTML(a)}else{const c={};r.forEach((e=>{const a=e.replace(/{{|}}/g,"");c[a]=t[a]})),r.forEach((t=>{e.html(e.html().replace(t,c[t.replace(/{{|}}/g,"")]))}))}})).always((()=>{$("body").replaceHTML(o,c)}))}else $("body").replaceHTML(o,c)}));
+$(document).ready(() => {
+  const flex = $("flex");
+  const fetcher = $("fetch");
+  const vars = $("data").toAttributesObject();
+  const bodyHTML = $(document.body).html();
+  const regExp = /{{([^}]+)}}/g;
+  const literals = bodyHTML.match(regExp);
+
+  flex
+    .flex()
+    .flexDirection(flex.getAttribute("direction"))
+    .justifyContent(flex.getAttribute("justify-content"))
+    .alignItems(flex.getAttribute("align-items"));
+
+  if (fetcher.length) {
+    const fetchSrc = fetcher.getAttribute("src").first();
+    const fetchLiterals = fetcher.html().match(regExp);
+    $.get(fetchSrc, {}, function (data) {
+      if (data instanceof Array) {
+        const columns = fetchLiterals.map((column) =>
+          column.replace(/{{|}}/g, "")
+        );
+        const mapper = $("fetch [map]");
+        let finalRow = "";
+        data.forEach((row) => {
+          const v = {};
+          columns.forEach((column) => {
+            v[column] = row[column];
+          });
+          const rowData = mapper.outerHTML().map((ht) => {
+            const keys = v.keys();
+            keys.map((key) => {
+              ht = ht.replace(`{{${key}}}`, v[key]);
+            });
+            return ht;
+          });
+          finalRow += rowData.join("");
+        });
+        mapper.outerHTML(finalRow);
+      } else {
+        const vars = {};
+        fetchLiterals.forEach((literal) => {
+          const key = literal.replace(/{{|}}/g, "");
+          vars[key] = data[key];
+        });
+        fetchLiterals.forEach((literal) => {
+          fetcher.html(
+            fetcher.html().replace(literal, vars[literal.replace(/{{|}}/g, "")])
+          );
+        });
+      }
+    }).always(() => {
+      $("body").replaceHTML(literals, vars);
+    });
+  } else {
+    $("body").replaceHTML(literals, vars);
+  }
+});
