@@ -757,38 +757,38 @@ class ElementCollection extends Array {
     }
   }
 
-  bgRed() {
-    this.forEach((e) => (e.style.backgroundColor = "red"));
+  bgAliceBlue() {
+    this.forEach((e) => (e.style.backgroundColor = "aliceblue"));
     return this;
   }
 
-  bgGreen() {
-    this.forEach((e) => (e.style.backgroundColor = "green"));
+  bgAntiqueWhite() {
+    this.forEach((e) => (e.style.backgroundColor = "antiquewhite"));
     return this;
   }
 
-  bgBlue() {
-    this.forEach((e) => (e.style.backgroundColor = "blue"));
+  bgAqua() {
+    this.forEach((e) => (e.style.backgroundColor = "aqua"));
     return this;
   }
 
-  bgYellow() {
-    this.forEach((e) => (e.style.backgroundColor = "yellow"));
+  bgAquamarine() {
+    this.forEach((e) => (e.style.backgroundColor = "aquamarine"));
     return this;
   }
 
-  bgCyan() {
-    this.forEach((e) => (e.style.backgroundColor = "cyan"));
+  bgAzure() {
+    this.forEach((e) => (e.style.backgroundColor = "azure"));
     return this;
   }
 
-  bgMagenta() {
-    this.forEach((e) => (e.style.backgroundColor = "magenta"));
+  bgBeige() {
+    this.forEach((e) => (e.style.backgroundColor = "beige"));
     return this;
   }
 
-  bgWhite() {
-    this.forEach((e) => (e.style.backgroundColor = "white"));
+  bgBisque() {
+    this.forEach((e) => (e.style.backgroundColor = "bisque"));
     return this;
   }
 
@@ -797,48 +797,698 @@ class ElementCollection extends Array {
     return this;
   }
 
-  bgGray() {
-    this.forEach((e) => (e.style.backgroundColor = "gray"));
+  bgBlanchedAlmond() {
+    this.forEach((e) => (e.style.backgroundColor = "blanchedalmond"));
     return this;
   }
 
-  red() {
-    this.forEach((e) => (e.style.color = "red"));
+  bgBlue() {
+    this.forEach((e) => (e.style.backgroundColor = "blue"));
     return this;
   }
 
-  blue() {
-    this.forEach((e) => (e.style.color = "blue"));
+  bgBlueViolet() {
+    this.forEach((e) => (e.style.backgroundColor = "blueviolet"));
     return this;
   }
 
-  green() {
-    this.forEach((e) => (e.style.color = "green"));
+  bgBrown() {
+    this.forEach((e) => (e.style.backgroundColor = "brown"));
     return this;
   }
 
-  yellow() {
-    this.forEach((e) => (e.style.color = "yellow"));
+  bgBurlyWood() {
+    this.forEach((e) => (e.style.backgroundColor = "burlywood"));
     return this;
   }
 
-  orange() {
-    this.forEach((e) => (e.style.color = "orange"));
+  bgCadetBlue() {
+    this.forEach((e) => (e.style.backgroundColor = "cadetblue"));
     return this;
   }
 
-  purple() {
-    this.forEach((e) => (e.style.color = "purple"));
+  bgChartreuse() {
+    this.forEach((e) => (e.style.backgroundColor = "chartreuse"));
     return this;
   }
 
-  pink() {
-    this.forEach((e) => (e.style.color = "pink"));
+  bgChocolate() {
+    this.forEach((e) => (e.style.backgroundColor = "chocolate"));
     return this;
   }
 
-  brown() {
-    this.forEach((e) => (e.style.color = "brown"));
+  bgCoral() {
+    this.forEach((e) => (e.style.backgroundColor = "coral"));
+    return this;
+  }
+
+  bgCornflowerBlue() {
+    this.forEach((e) => (e.style.backgroundColor = "cornflowerblue"));
+    return this;
+  }
+
+  bgCornsilk() {
+    this.forEach((e) => (e.style.backgroundColor = "cornsilk"));
+    return this;
+  }
+
+  bgCrimson() {
+    this.forEach((e) => (e.style.backgroundColor = "crimson"));
+    return this;
+  }
+
+  bgCyan() {
+    this.forEach((e) => (e.style.backgroundColor = "cyan"));
+    return this;
+  }
+
+  bgDarkBlue() {
+    this.forEach((e) => (e.style.backgroundColor = "darkblue"));
+    return this;
+  }
+
+  bgDarkCyan() {
+    this.forEach((e) => (e.style.backgroundColor = "darkcyan"));
+    return this;
+  }
+
+  bgDarkGoldenRod() {
+    this.forEach((e) => (e.style.backgroundColor = "darkgoldenrod"));
+    return this;
+  }
+
+  bgDarkGrey() {
+    this.forEach((e) => (e.style.backgroundColor = "darkgrey"));
+    return this;
+  }
+
+  bgDarkGreen() {
+    this.forEach((e) => (e.style.backgroundColor = "darkgreen"));
+    return this;
+  }
+
+  bgDarkKhaki() {
+    this.forEach((e) => (e.style.backgroundColor = "darkkhaki"));
+    return this;
+  }
+
+  bgDarkMagenta() {
+    this.forEach((e) => (e.style.backgroundColor = "darkmagenta"));
+    return this;
+  }
+
+  bgDarkOliveGreen() {
+    this.forEach((e) => (e.style.backgroundColor = "darkolivegreen"));
+    return this;
+  }
+
+  bgDarkorange() {
+    this.forEach((e) => (e.style.backgroundColor = "darkorange"));
+    return this;
+  }
+
+  bgDarkOrchid() {
+    this.forEach((e) => (e.style.backgroundColor = "darkorchid"));
+    return this;
+  }
+
+  bgDarkRed() {
+    this.forEach((e) => (e.style.backgroundColor = "darkred"));
+    return this;
+  }
+
+  bgDarkSalmon() {
+    this.forEach((e) => (e.style.backgroundColor = "darksalmon"));
+    return this;
+  }
+
+  bgDarkSeaGreen() {
+    this.forEach((e) => (e.style.backgroundColor = "darkseagreen"));
+    return this;
+  }
+
+  bgDarkSlateBlue() {
+    this.forEach((e) => (e.style.backgroundColor = "darkslateblue"));
+    return this;
+  }
+
+  bgDarkSlateGrey() {
+    this.forEach((e) => (e.style.backgroundColor = "darkslategrey"));
+    return this;
+  }
+
+  bgDarkTurquoise() {
+    this.forEach((e) => (e.style.backgroundColor = "darkturquoise"));
+    return this;
+  }
+
+  bgDarkViolet() {
+    this.forEach((e) => (e.style.backgroundColor = "darkviolet"));
+    return this;
+  }
+
+  bgDeepPink() {
+    this.forEach((e) => (e.style.backgroundColor = "deeppink"));
+    return this;
+  }
+
+  bgDeepSkyBlue() {
+    this.forEach((e) => (e.style.backgroundColor = "deepskyblue"));
+    return this;
+  }
+
+  bgDimGray() {
+    this.forEach((e) => (e.style.backgroundColor = "dimgray"));
+    return this;
+  }
+
+  bgDodgerBlue() {
+    this.forEach((e) => (e.style.backgroundColor = "dodgerblue"));
+    return this;
+  }
+
+  bgFireBrick() {
+    this.forEach((e) => (e.style.backgroundColor = "firebrick"));
+    return this;
+  }
+
+  bgFloralWhite() {
+    this.forEach((e) => (e.style.backgroundColor = "floralwhite"));
+    return this;
+  }
+
+  bgForestGreen() {
+    this.forEach((e) => (e.style.backgroundColor = "forestgreen"));
+    return this;
+  }
+
+  bgFuchsia() {
+    this.forEach((e) => (e.style.backgroundColor = "fuchsia"));
+    return this;
+  }
+
+  bgGainsboro() {
+    this.forEach((e) => (e.style.backgroundColor = "gainsboro"));
+    return this;
+  }
+
+  bgGhostWhite() {
+    this.forEach((e) => (e.style.backgroundColor = "ghostwhite"));
+    return this;
+  }
+
+  bgGold() {
+    this.forEach((e) => (e.style.backgroundColor = "gold"));
+    return this;
+  }
+
+  bgGoldenRod() {
+    this.forEach((e) => (e.style.backgroundColor = "goldenrod"));
+    return this;
+  }
+
+  bgGrey() {
+    this.forEach((e) => (e.style.backgroundColor = "grey"));
+    return this;
+  }
+
+  bgGreen() {
+    this.forEach((e) => (e.style.backgroundColor = "green"));
+    return this;
+  }
+
+  bgGreenYellow() {
+    this.forEach((e) => (e.style.backgroundColor = "greenyellow"));
+    return this;
+  }
+
+  bgHoneyDew() {
+    this.forEach((e) => (e.style.backgroundColor = "honeydew"));
+    return this;
+  }
+
+  bgHotPink() {
+    this.forEach((e) => (e.style.backgroundColor = "hotpink"));
+    return this;
+  }
+
+  bgIndianRed() {
+    this.forEach((e) => (e.style.backgroundColor = "indianred"));
+    return this;
+  }
+
+  bgIndigo() {
+    this.forEach((e) => (e.style.backgroundColor = "indigo"));
+    return this;
+  }
+
+  bgIvory() {
+    this.forEach((e) => (e.style.backgroundColor = "ivory"));
+    return this;
+  }
+
+  bgKhaki() {
+    this.forEach((e) => (e.style.backgroundColor = "khaki"));
+    return this;
+  }
+
+  bgLavender() {
+    this.forEach((e) => (e.style.backgroundColor = "lavender"));
+    return this;
+  }
+
+  bgLavenderBlush() {
+    this.forEach((e) => (e.style.backgroundColor = "lavenderblush"));
+    return this;
+  }
+
+  bgLawnGreen() {
+    this.forEach((e) => (e.style.backgroundColor = "lawngreen"));
+    return this;
+  }
+
+  bgLemonChiffon() {
+    this.forEach((e) => (e.style.backgroundColor = "lemonchiffon"));
+    return this;
+  }
+
+  bgLightBlue() {
+    this.forEach((e) => (e.style.backgroundColor = "lightblue"));
+    return this;
+  }
+
+  bgLightCoral() {
+    this.forEach((e) => (e.style.backgroundColor = "lightcoral"));
+    return this;
+  }
+
+  bgLightCyan() {
+    this.forEach((e) => (e.style.backgroundColor = "lightcyan"));
+    return this;
+  }
+
+  bgLightGoldenRodYellow() {
+    this.forEach((e) => (e.style.backgroundColor = "lightgoldenrodyellow"));
+    return this;
+  }
+
+  bgLightGrey() {
+    this.forEach((e) => (e.style.backgroundColor = "lightgrey"));
+    return this;
+  }
+
+  bgLightGreen() {
+    this.forEach((e) => (e.style.backgroundColor = "lightgreen"));
+    return this;
+  }
+
+  bgLightPink() {
+    this.forEach((e) => (e.style.backgroundColor = "lightpink"));
+    return this;
+  }
+
+  bgLightSalmon() {
+    this.forEach((e) => (e.style.backgroundColor = "lightsalmon"));
+    return this;
+  }
+
+  bgLightSeaGreen() {
+    this.forEach((e) => (e.style.backgroundColor = "lightseagreen"));
+    return this;
+  }
+
+  bgLightSkyBlue() {
+    this.forEach((e) => (e.style.backgroundColor = "lightskyblue"));
+    return this;
+  }
+
+  bgLightSlateGrey() {
+    this.forEach((e) => (e.style.backgroundColor = "lightslategrey"));
+    return this;
+  }
+
+  bgLightSteelBlue() {
+    this.forEach((e) => (e.style.backgroundColor = "lightsteelblue"));
+    return this;
+  }
+
+  bgLightYellow() {
+    this.forEach((e) => (e.style.backgroundColor = "lightyellow"));
+    return this;
+  }
+
+  bgLime() {
+    this.forEach((e) => (e.style.backgroundColor = "lime"));
+    return this;
+  }
+
+  bgLimeGreen() {
+    this.forEach((e) => (e.style.backgroundColor = "limegreen"));
+    return this;
+  }
+
+  bgLinen() {
+    this.forEach((e) => (e.style.backgroundColor = "linen"));
+    return this;
+  }
+
+  bgMagenta() {
+    this.forEach((e) => (e.style.backgroundColor = "magenta"));
+    return this;
+  }
+
+  bgMaroon() {
+    this.forEach((e) => (e.style.backgroundColor = "maroon"));
+    return this;
+  }
+
+  bgMediumAquaMarine() {
+    this.forEach((e) => (e.style.backgroundColor = "mediumaquamarine"));
+    return this;
+  }
+
+  bgMediumBlue() {
+    this.forEach((e) => (e.style.backgroundColor = "mediumblue"));
+    return this;
+  }
+
+  bgMediumOrchid() {
+    this.forEach((e) => (e.style.backgroundColor = "mediumorchid"));
+    return this;
+  }
+
+  bgMediumPurple() {
+    this.forEach((e) => (e.style.backgroundColor = "mediumpurple"));
+    return this;
+  }
+
+  bgMediumSeaGreen() {
+    this.forEach((e) => (e.style.backgroundColor = "mediumseagreen"));
+    return this;
+  }
+
+  bgMediumSlateBlue() {
+    this.forEach((e) => (e.style.backgroundColor = "mediumslateblue"));
+    return this;
+  }
+
+  bgMediumSpringGreen() {
+    this.forEach((e) => (e.style.backgroundColor = "mediumspringgreen"));
+    return this;
+  }
+
+  bgMediumTurquoise() {
+    this.forEach((e) => (e.style.backgroundColor = "mediumturquoise"));
+    return this;
+  }
+
+  bgMediumVioletRed() {
+    this.forEach((e) => (e.style.backgroundColor = "mediumvioletred"));
+    return this;
+  }
+
+  bgMidnightBlue() {
+    this.forEach((e) => (e.style.backgroundColor = "midnightblue"));
+    return this;
+  }
+
+  bgMintCream() {
+    this.forEach((e) => (e.style.backgroundColor = "mintcream"));
+    return this;
+  }
+
+  bgMistyRose() {
+    this.forEach((e) => (e.style.backgroundColor = "mistyrose"));
+    return this;
+  }
+
+  bgMoccasin() {
+    this.forEach((e) => (e.style.backgroundColor = "moccasin"));
+    return this;
+  }
+
+  bgNavajoWhite() {
+    this.forEach((e) => (e.style.backgroundColor = "navajowhite"));
+    return this;
+  }
+
+  bgNavy() {
+    this.forEach((e) => (e.style.backgroundColor = "navy"));
+    return this;
+  }
+
+  bgOldLace() {
+    this.forEach((e) => (e.style.backgroundColor = "oldlace"));
+    return this;
+  }
+
+  bgOlive() {
+    this.forEach((e) => (e.style.backgroundColor = "olive"));
+    return this;
+  }
+
+  bgOliveDrab() {
+    this.forEach((e) => (e.style.backgroundColor = "olivedrab"));
+    return this;
+  }
+
+  bgOrange() {
+    this.forEach((e) => (e.style.backgroundColor = "orange"));
+    return this;
+  }
+
+  bgOrangeRed() {
+    this.forEach((e) => (e.style.backgroundColor = "orangered"));
+    return this;
+  }
+
+  bgOrchid() {
+    this.forEach((e) => (e.style.backgroundColor = "orchid"));
+    return this;
+  }
+
+  bgPaleGoldenRod() {
+    this.forEach((e) => (e.style.backgroundColor = "palegoldenrod"));
+    return this;
+  }
+
+  bgPaleGreen() {
+    this.forEach((e) => (e.style.backgroundColor = "palegreen"));
+    return this;
+  }
+
+  bgPaleTurquoise() {
+    this.forEach((e) => (e.style.backgroundColor = "paleturquoise"));
+    return this;
+  }
+
+  bgPaleVioletRed() {
+    this.forEach((e) => (e.style.backgroundColor = "palevioletred"));
+    return this;
+  }
+
+  bgPapayaWhip() {
+    this.forEach((e) => (e.style.backgroundColor = "papayawhip"));
+    return this;
+  }
+
+  bgPeachPuff() {
+    this.forEach((e) => (e.style.backgroundColor = "peachpuff"));
+    return this;
+  }
+
+  bgPeru() {
+    this.forEach((e) => (e.style.backgroundColor = "peru"));
+    return this;
+  }
+
+  bgPink() {
+    this.forEach((e) => (e.style.backgroundColor = "pink"));
+    return this;
+  }
+
+  bgPlum() {
+    this.forEach((e) => (e.style.backgroundColor = "plum"));
+    return this;
+  }
+
+  bgPowderBlue() {
+    this.forEach((e) => (e.style.backgroundColor = "powderblue"));
+    return this;
+  }
+
+  bgPurple() {
+    this.forEach((e) => (e.style.backgroundColor = "purple"));
+    return this;
+  }
+
+  bgRed() {
+    this.forEach((e) => (e.style.backgroundColor = "red"));
+    return this;
+  }
+
+  bgRosyBrown() {
+    this.forEach((e) => (e.style.backgroundColor = "rosybrown"));
+    return this;
+  }
+
+  bgRoyalBlue() {
+    this.forEach((e) => (e.style.backgroundColor = "royalblue"));
+    return this;
+  }
+
+  bgSaddleBrown() {
+    this.forEach((e) => (e.style.backgroundColor = "saddlebrown"));
+    return this;
+  }
+
+  bgSalmon() {
+    this.forEach((e) => (e.style.backgroundColor = "salmon"));
+    return this;
+  }
+
+  bgSandyBrown() {
+    this.forEach((e) => (e.style.backgroundColor = "sandybrown"));
+    return this;
+  }
+
+  bgSeaGreen() {
+    this.forEach((e) => (e.style.backgroundColor = "seagreen"));
+    return this;
+  }
+
+  bgSeaShell() {
+    this.forEach((e) => (e.style.backgroundColor = "seashell"));
+    return this;
+  }
+
+  bgSienna() {
+    this.forEach((e) => (e.style.backgroundColor = "sienna"));
+    return this;
+  }
+
+  bgSilver() {
+    this.forEach((e) => (e.style.backgroundColor = "silver"));
+    return this;
+  }
+
+  bgSkyBlue() {
+    this.forEach((e) => (e.style.backgroundColor = "skyblue"));
+    return this;
+  }
+
+  bgSlateBlue() {
+    this.forEach((e) => (e.style.backgroundColor = "slateblue"));
+    return this;
+  }
+
+  bgSlateGrey() {
+    this.forEach((e) => (e.style.backgroundColor = "slategrey"));
+    return this;
+  }
+
+  bgSnow() {
+    this.forEach((e) => (e.style.backgroundColor = "snow"));
+    return this;
+  }
+
+  bgSpringGreen() {
+    this.forEach((e) => (e.style.backgroundColor = "springgreen"));
+    return this;
+  }
+
+  bgSteelBlue() {
+    this.forEach((e) => (e.style.backgroundColor = "steelblue"));
+    return this;
+  }
+
+  bgTan() {
+    this.forEach((e) => (e.style.backgroundColor = "tan"));
+    return this;
+  }
+
+  bgTeal() {
+    this.forEach((e) => (e.style.backgroundColor = "teal"));
+    return this;
+  }
+
+  bgThistle() {
+    this.forEach((e) => (e.style.backgroundColor = "thistle"));
+    return this;
+  }
+
+  bgTomato() {
+    this.forEach((e) => (e.style.backgroundColor = "tomato"));
+    return this;
+  }
+
+  bgTurquoise() {
+    this.forEach((e) => (e.style.backgroundColor = "turquoise"));
+    return this;
+  }
+
+  bgViolet() {
+    this.forEach((e) => (e.style.backgroundColor = "violet"));
+    return this;
+  }
+
+  bgWheat() {
+    this.forEach((e) => (e.style.backgroundColor = "wheat"));
+    return this;
+  }
+
+  bgWhite() {
+    this.forEach((e) => (e.style.backgroundColor = "white"));
+    return this;
+  }
+
+  bgWhiteSmoke() {
+    this.forEach((e) => (e.style.backgroundColor = "whitesmoke"));
+    return this;
+  }
+
+  bgYellow() {
+    this.forEach((e) => (e.style.backgroundColor = "yellow"));
+    return this;
+  }
+
+  bgYellowGreen() {
+    this.forEach((e) => (e.style.backgroundColor = "yellowgreen"));
+    return this;
+  }
+
+  aliceblue() {
+    this.forEach((e) => (e.style.color = "aliceblue"));
+    return this;
+  }
+
+  antiquewhite() {
+    this.forEach((e) => (e.style.color = "antiquewhite"));
+    return this;
+  }
+
+  aqua() {
+    this.forEach((e) => (e.style.color = "aqua"));
+    return this;
+  }
+
+  aquamarine() {
+    this.forEach((e) => (e.style.color = "aquamarine"));
+    return this;
+  }
+
+  azure() {
+    this.forEach((e) => (e.style.color = "azure"));
+    return this;
+  }
+
+  beige() {
+    this.forEach((e) => (e.style.color = "beige"));
+    return this;
+  }
+
+  bisque() {
+    this.forEach((e) => (e.style.color = "bisque"));
     return this;
   }
 
@@ -847,8 +1497,668 @@ class ElementCollection extends Array {
     return this;
   }
 
-  gray() {
-    this.forEach((e) => (e.style.color = "gray"));
+  blanchedalmond() {
+    this.forEach((e) => (e.style.color = "blanchedalmond"));
+    return this;
+  }
+
+  blue() {
+    this.forEach((e) => (e.style.color = "blue"));
+    return this;
+  }
+
+  blueviolet() {
+    this.forEach((e) => (e.style.color = "blueviolet"));
+    return this;
+  }
+
+  brown() {
+    this.forEach((e) => (e.style.color = "brown"));
+    return this;
+  }
+
+  burlywood() {
+    this.forEach((e) => (e.style.color = "burlywood"));
+    return this;
+  }
+
+  cadetblue() {
+    this.forEach((e) => (e.style.color = "cadetblue"));
+    return this;
+  }
+
+  chartreuse() {
+    this.forEach((e) => (e.style.color = "chartreuse"));
+    return this;
+  }
+
+  chocolate() {
+    this.forEach((e) => (e.style.color = "chocolate"));
+    return this;
+  }
+
+  coral() {
+    this.forEach((e) => (e.style.color = "coral"));
+    return this;
+  }
+
+  cornflowerblue() {
+    this.forEach((e) => (e.style.color = "cornflowerblue"));
+    return this;
+  }
+
+  cornsilk() {
+    this.forEach((e) => (e.style.color = "cornsilk"));
+    return this;
+  }
+
+  crimson() {
+    this.forEach((e) => (e.style.color = "crimson"));
+    return this;
+  }
+
+  cyan() {
+    this.forEach((e) => (e.style.color = "cyan"));
+    return this;
+  }
+
+  darkblue() {
+    this.forEach((e) => (e.style.color = "darkblue"));
+    return this;
+  }
+
+  darkcyan() {
+    this.forEach((e) => (e.style.color = "darkcyan"));
+    return this;
+  }
+
+  darkgoldenrod() {
+    this.forEach((e) => (e.style.color = "darkgoldenrod"));
+    return this;
+  }
+
+  darkgrey() {
+    this.forEach((e) => (e.style.color = "darkgrey"));
+    return this;
+  }
+
+  darkgreen() {
+    this.forEach((e) => (e.style.color = "darkgreen"));
+    return this;
+  }
+
+  darkkhaki() {
+    this.forEach((e) => (e.style.color = "darkkhaki"));
+    return this;
+  }
+
+  darkmagenta() {
+    this.forEach((e) => (e.style.color = "darkmagenta"));
+    return this;
+  }
+
+  darkolivegreen() {
+    this.forEach((e) => (e.style.color = "darkolivegreen"));
+    return this;
+  }
+
+  darkorange() {
+    this.forEach((e) => (e.style.color = "darkorange"));
+    return this;
+  }
+
+  darkorchid() {
+    this.forEach((e) => (e.style.color = "darkorchid"));
+    return this;
+  }
+
+  darkred() {
+    this.forEach((e) => (e.style.color = "darkred"));
+    return this;
+  }
+
+  darksalmon() {
+    this.forEach((e) => (e.style.color = "darksalmon"));
+    return this;
+  }
+
+  darkseagreen() {
+    this.forEach((e) => (e.style.color = "darkseagreen"));
+    return this;
+  }
+
+  darkslateblue() {
+    this.forEach((e) => (e.style.color = "darkslateblue"));
+    return this;
+  }
+
+  darkslategrey() {
+    this.forEach((e) => (e.style.color = "darkslategrey"));
+    return this;
+  }
+
+  darkturquoise() {
+    this.forEach((e) => (e.style.color = "darkturquoise"));
+    return this;
+  }
+
+  darkviolet() {
+    this.forEach((e) => (e.style.color = "darkviolet"));
+    return this;
+  }
+
+  deeppink() {
+    this.forEach((e) => (e.style.color = "deeppink"));
+    return this;
+  }
+
+  deepskyblue() {
+    this.forEach((e) => (e.style.color = "deepskyblue"));
+    return this;
+  }
+
+  dimgray() {
+    this.forEach((e) => (e.style.color = "dimgray"));
+    return this;
+  }
+
+  dodgerblue() {
+    this.forEach((e) => (e.style.color = "dodgerblue"));
+    return this;
+  }
+
+  firebrick() {
+    this.forEach((e) => (e.style.color = "firebrick"));
+    return this;
+  }
+
+  floralwhite() {
+    this.forEach((e) => (e.style.color = "floralwhite"));
+    return this;
+  }
+
+  forestgreen() {
+    this.forEach((e) => (e.style.color = "forestgreen"));
+    return this;
+  }
+
+  fuchsia() {
+    this.forEach((e) => (e.style.color = "fuchsia"));
+    return this;
+  }
+
+  gainsboro() {
+    this.forEach((e) => (e.style.color = "gainsboro"));
+    return this;
+  }
+
+  ghostwhite() {
+    this.forEach((e) => (e.style.color = "ghostwhite"));
+    return this;
+  }
+
+  gold() {
+    this.forEach((e) => (e.style.color = "gold"));
+    return this;
+  }
+
+  goldenrod() {
+    this.forEach((e) => (e.style.color = "goldenrod"));
+    return this;
+  }
+
+  grey() {
+    this.forEach((e) => (e.style.color = "grey"));
+    return this;
+  }
+
+  green() {
+    this.forEach((e) => (e.style.color = "green"));
+    return this;
+  }
+
+  greenyellow() {
+    this.forEach((e) => (e.style.color = "greenyellow"));
+    return this;
+  }
+
+  honeydew() {
+    this.forEach((e) => (e.style.color = "honeydew"));
+    return this;
+  }
+
+  hotpink() {
+    this.forEach((e) => (e.style.color = "hotpink"));
+    return this;
+  }
+
+  indianred() {
+    this.forEach((e) => (e.style.color = "indianred"));
+    return this;
+  }
+
+  indigo() {
+    this.forEach((e) => (e.style.color = "indigo"));
+    return this;
+  }
+
+  ivory() {
+    this.forEach((e) => (e.style.color = "ivory"));
+    return this;
+  }
+
+  khaki() {
+    this.forEach((e) => (e.style.color = "khaki"));
+    return this;
+  }
+
+  lavender() {
+    this.forEach((e) => (e.style.color = "lavender"));
+    return this;
+  }
+
+  lavenderblush() {
+    this.forEach((e) => (e.style.color = "lavenderblush"));
+    return this;
+  }
+
+  lawngreen() {
+    this.forEach((e) => (e.style.color = "lawngreen"));
+    return this;
+  }
+
+  lemonchiffon() {
+    this.forEach((e) => (e.style.color = "lemonchiffon"));
+    return this;
+  }
+
+  lightblue() {
+    this.forEach((e) => (e.style.color = "lightblue"));
+    return this;
+  }
+
+  lightcoral() {
+    this.forEach((e) => (e.style.color = "lightcoral"));
+    return this;
+  }
+
+  lightcyan() {
+    this.forEach((e) => (e.style.color = "lightcyan"));
+    return this;
+  }
+
+  lightgoldenrodyellow() {
+    this.forEach((e) => (e.style.color = "lightgoldenrodyellow"));
+    return this;
+  }
+
+  lightgrey() {
+    this.forEach((e) => (e.style.color = "lightgrey"));
+    return this;
+  }
+
+  lightgreen() {
+    this.forEach((e) => (e.style.color = "lightgreen"));
+    return this;
+  }
+
+  lightpink() {
+    this.forEach((e) => (e.style.color = "lightpink"));
+    return this;
+  }
+
+  lightsalmon() {
+    this.forEach((e) => (e.style.color = "lightsalmon"));
+    return this;
+  }
+
+  lightseagreen() {
+    this.forEach((e) => (e.style.color = "lightseagreen"));
+    return this;
+  }
+
+  lightskyblue() {
+    this.forEach((e) => (e.style.color = "lightskyblue"));
+    return this;
+  }
+
+  lightslategrey() {
+    this.forEach((e) => (e.style.color = "lightslategrey"));
+    return this;
+  }
+
+  lightsteelblue() {
+    this.forEach((e) => (e.style.color = "lightsteelblue"));
+    return this;
+  }
+
+  lightyellow() {
+    this.forEach((e) => (e.style.color = "lightyellow"));
+    return this;
+  }
+
+  lime() {
+    this.forEach((e) => (e.style.color = "lime"));
+    return this;
+  }
+
+  limegreen() {
+    this.forEach((e) => (e.style.color = "limegreen"));
+    return this;
+  }
+
+  linen() {
+    this.forEach((e) => (e.style.color = "linen"));
+    return this;
+  }
+
+  magenta() {
+    this.forEach((e) => (e.style.color = "magenta"));
+    return this;
+  }
+
+  maroon() {
+    this.forEach((e) => (e.style.color = "maroon"));
+    return this;
+  }
+
+  mediumaquamarine() {
+    this.forEach((e) => (e.style.color = "mediumaquamarine"));
+    return this;
+  }
+
+  mediumblue() {
+    this.forEach((e) => (e.style.color = "mediumblue"));
+    return this;
+  }
+
+  mediumorchid() {
+    this.forEach((e) => (e.style.color = "mediumorchid"));
+    return this;
+  }
+
+  mediumpurple() {
+    this.forEach((e) => (e.style.color = "mediumpurple"));
+    return this;
+  }
+
+  mediumseagreen() {
+    this.forEach((e) => (e.style.color = "mediumseagreen"));
+    return this;
+  }
+
+  mediumslateblue() {
+    this.forEach((e) => (e.style.color = "mediumslateblue"));
+    return this;
+  }
+
+  mediumspringgreen() {
+    this.forEach((e) => (e.style.color = "mediumspringgreen"));
+    return this;
+  }
+
+  mediumturquoise() {
+    this.forEach((e) => (e.style.color = "mediumturquoise"));
+    return this;
+  }
+
+  mediumvioletred() {
+    this.forEach((e) => (e.style.color = "mediumvioletred"));
+    return this;
+  }
+
+  midnightblue() {
+    this.forEach((e) => (e.style.color = "midnightblue"));
+    return this;
+  }
+
+  mintcream() {
+    this.forEach((e) => (e.style.color = "mintcream"));
+    return this;
+  }
+
+  mistyrose() {
+    this.forEach((e) => (e.style.color = "mistyrose"));
+    return this;
+  }
+
+  moccasin() {
+    this.forEach((e) => (e.style.color = "moccasin"));
+    return this;
+  }
+
+  navajowhite() {
+    this.forEach((e) => (e.style.color = "navajowhite"));
+    return this;
+  }
+
+  navy() {
+    this.forEach((e) => (e.style.color = "navy"));
+    return this;
+  }
+
+  oldlace() {
+    this.forEach((e) => (e.style.color = "oldlace"));
+    return this;
+  }
+
+  olive() {
+    this.forEach((e) => (e.style.color = "olive"));
+    return this;
+  }
+
+  olivedrab() {
+    this.forEach((e) => (e.style.color = "olivedrab"));
+    return this;
+  }
+
+  orange() {
+    this.forEach((e) => (e.style.color = "orange"));
+    return this;
+  }
+
+  orangered() {
+    this.forEach((e) => (e.style.color = "orangered"));
+    return this;
+  }
+
+  orchid() {
+    this.forEach((e) => (e.style.color = "orchid"));
+    return this;
+  }
+
+  palegoldenrod() {
+    this.forEach((e) => (e.style.color = "palegoldenrod"));
+    return this;
+  }
+
+  palegreen() {
+    this.forEach((e) => (e.style.color = "palegreen"));
+    return this;
+  }
+
+  paleturquoise() {
+    this.forEach((e) => (e.style.color = "paleturquoise"));
+    return this;
+  }
+
+  palevioletred() {
+    this.forEach((e) => (e.style.color = "palevioletred"));
+    return this;
+  }
+
+  papayawhip() {
+    this.forEach((e) => (e.style.color = "papayawhip"));
+    return this;
+  }
+
+  peachpuff() {
+    this.forEach((e) => (e.style.color = "peachpuff"));
+    return this;
+  }
+
+  peru() {
+    this.forEach((e) => (e.style.color = "peru"));
+    return this;
+  }
+
+  pink() {
+    this.forEach((e) => (e.style.color = "pink"));
+    return this;
+  }
+
+  plum() {
+    this.forEach((e) => (e.style.color = "plum"));
+    return this;
+  }
+
+  powderblue() {
+    this.forEach((e) => (e.style.color = "powderblue"));
+    return this;
+  }
+
+  purple() {
+    this.forEach((e) => (e.style.color = "purple"));
+    return this;
+  }
+
+  red() {
+    this.forEach((e) => (e.style.color = "red"));
+    return this;
+  }
+
+  rosybrown() {
+    this.forEach((e) => (e.style.color = "rosybrown"));
+    return this;
+  }
+
+  royalblue() {
+    this.forEach((e) => (e.style.color = "royalblue"));
+    return this;
+  }
+
+  saddlebrown() {
+    this.forEach((e) => (e.style.color = "saddlebrown"));
+    return this;
+  }
+
+  salmon() {
+    this.forEach((e) => (e.style.color = "salmon"));
+    return this;
+  }
+
+  sandybrown() {
+    this.forEach((e) => (e.style.color = "sandybrown"));
+    return this;
+  }
+
+  seagreen() {
+    this.forEach((e) => (e.style.color = "seagreen"));
+    return this;
+  }
+
+  seashell() {
+    this.forEach((e) => (e.style.color = "seashell"));
+    return this;
+  }
+
+  sienna() {
+    this.forEach((e) => (e.style.color = "sienna"));
+    return this;
+  }
+
+  silver() {
+    this.forEach((e) => (e.style.color = "silver"));
+    return this;
+  }
+
+  skyblue() {
+    this.forEach((e) => (e.style.color = "skyblue"));
+    return this;
+  }
+
+  slateblue() {
+    this.forEach((e) => (e.style.color = "slateblue"));
+    return this;
+  }
+
+  slategrey() {
+    this.forEach((e) => (e.style.color = "slategrey"));
+    return this;
+  }
+
+  snow() {
+    this.forEach((e) => (e.style.color = "snow"));
+    return this;
+  }
+
+  springgreen() {
+    this.forEach((e) => (e.style.color = "springgreen"));
+    return this;
+  }
+
+  steelblue() {
+    this.forEach((e) => (e.style.color = "steelblue"));
+    return this;
+  }
+
+  tan() {
+    this.forEach((e) => (e.style.color = "tan"));
+    return this;
+  }
+
+  teal() {
+    this.forEach((e) => (e.style.color = "teal"));
+    return this;
+  }
+
+  thistle() {
+    this.forEach((e) => (e.style.color = "thistle"));
+    return this;
+  }
+
+  tomato() {
+    this.forEach((e) => (e.style.color = "tomato"));
+    return this;
+  }
+
+  turquoise() {
+    this.forEach((e) => (e.style.color = "turquoise"));
+    return this;
+  }
+
+  violet() {
+    this.forEach((e) => (e.style.color = "violet"));
+    return this;
+  }
+
+  wheat() {
+    this.forEach((e) => (e.style.color = "wheat"));
+    return this;
+  }
+
+  white() {
+    this.forEach((e) => (e.style.color = "white"));
+    return this;
+  }
+
+  whitesmoke() {
+    this.forEach((e) => (e.style.color = "whitesmoke"));
+    return this;
+  }
+
+  yellow() {
+    this.forEach((e) => (e.style.color = "yellow"));
+    return this;
+  }
+
+  yellowgreen() {
+    this.forEach((e) => (e.style.color = "yellowgreen"));
+    return this;
+  }
+
+  white() {
+    this.forEach((e) => (e.style.color = "white"));
     return this;
   }
 

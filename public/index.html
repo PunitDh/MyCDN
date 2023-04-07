@@ -1,28 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tester doc</title>
+    <script src="jqu.js"></script>
+    <script defer src="templater.js"></script>
+    <data
+      email-label="Email"
+      email="punit04@gmail.com"
+      alert="alert('show me magic')"
+    >
+    </data>
+    <data gul="gul"></data>
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tester doc</title>
-  <script src="jqu.js"></script>
-  <script defer src="templater.js"></script>
-  <data email-label="Email" email="punit04@gmail.com" alert="alert('show me magic')">
-  </data>
-  <data gul="gul"></data>
-</head>
-
-<body>
-  <div id="head1">
-    Text display
-  </div>
-  <div id="head2">
-    Hello css
-  </div>
-  <textarea type="text" id="textbox">{{email-label}} is {{email}} gul is {{gul}}</textarea>
-  <button id="btn">Show me Css</button>
-  <!-- <fetch src="https://jsonplaceholder.typicode.com/todos/1">
+  <body>
+    <div id="head1">Text display</div>
+    <div id="head2">Hello css</div>
+    <textarea type="text" id="textbox">
+{{email-label}} is {{email}} gul is {{gul}}</textarea
+    >
+    <button id="btn">Show me Css</button>
+    <!-- <fetch src="https://jsonplaceholder.typicode.com/todos/1">
     <table>
       <tr>
         <td>id</td>
@@ -36,32 +37,30 @@
       </tr>
     </table>
   </fetch> -->
-</body>
-<script>
-  $(document.body).centerScreen().flexColumn().gap('1rem')
-  $('#head1', '#head2')
-    .flex()
-    .red()
-    .fontFamily('sans-serif')
-    .border('1px solid black')
-    .width('15rem')
-    .height('4rem')
-    .center()
-    .bg('#f0f0f0')
-    .transition('all 0.3s ease-in')
-    .fontSize('2rem')
-    .hover(e => e.blue().bg('yellow'));
+  </body>
+  <script>
+    $(document.body).centerScreen().flexColumn().gap("1rem");
+    $("#head1", "#head2")
+      .flex()
+      .red()
+      .fontFamily("sans-serif")
+      .border("1px solid black")
+      .width("15rem")
+      .height("4rem")
+      .center()
+      .bg("#f0f0f0")
+      .transition("all 0.3s ease-in")
+      .fontSize("2rem")
+      .hover((e) => e.blue().bg("yellow"));
 
-  $('td').bold()
+    $("td").bold();
 
-  $('#textbox').flex().width('30rem').height('10rem').center()
+    $("#textbox").flex().width("30rem").height("10rem").center();
 
-  $('#btn').click(function () {
-    $('#textbox').html(window.getSelection());
-  });
+    $("#btn").click(function () {
+      $("#textbox").html(window.getSelection());
+    });
 
-  const g = $(document.body, '#textbox', 'div')
-
-</script>
-
+    const g = $(document.body, "#textbox", "div");
+  </script>
 </html>
