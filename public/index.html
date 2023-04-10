@@ -19,24 +19,24 @@
   <body>
     <div id="head1">Text display</div>
     <div id="head2">Hello css</div>
-    <textarea type="text" id="textbox">
-{{email-label}} is {{email}} gul is {{gul}}</textarea
-    >
+    <div type="text" id="textbox" contenteditable="">
+      {{email-label}} is {{email}} gul is {{gul}}
+    </div>
     <button id="btn">Show me Css</button>
     <!-- <fetch src="https://jsonplaceholder.typicode.com/todos/1">
-    <table>
-      <tr>
-        <td>id</td>
-        <td>Title</td>
-        <td>Completed</td>
-      </tr>
-      <tr map>
-        <td>{{id}}</td>
-        <td>{{title}}</td>
-        <td>{{completed}}</td>
-      </tr>
-    </table>
-  </fetch> -->
+      <table>
+        <tr>
+          <td>id</td>
+          <td>Title</td>
+          <td>Completed</td>
+        </tr>
+        <tr map>
+          <td>{{id}}</td>
+          <td>{{title}}</td>
+          <td>{{completed}}</td>
+        </tr>
+      </table>
+    </fetch> -->
   </body>
   <script>
     $(document.body).centerScreen().flexColumn().gap("1rem");
@@ -55,10 +55,19 @@
 
     $("td").bold();
 
-    $("#textbox").flex().width("30rem").height("10rem").center();
+    $("#textbox")
+      .flex()
+      .width("30rem")
+      .height("10rem")
+      .border("1px solid blue")
+      .paddingLeft("1rem")
+      .paddingTop("1rem")
+      .borderRadius("5px")
+      .fontFamily("sans-serif");
 
     $("#btn").click(function () {
-      $("#textbox").html(window.getSelection());
+      console.log(window.getSelection());
+     //$("#textbox").html(window.getSelection());
     });
 
     const g = $(document.body, "#textbox", "div");

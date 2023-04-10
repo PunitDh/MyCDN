@@ -11,10 +11,6 @@ class NoSuchElementException extends Error {
 }
 
 class List extends Array {
-  constructor(...args) {
-    super(...args);
-  }
-
   /**
    * Size of the list
    */
@@ -37,12 +33,21 @@ class List extends Array {
   }
 
   /**
-   * Checks if the list contains a given element
-   * @param {*} element
+   * Returns the element at a particular index of a list
+   * @param {Number} index
+   * @returns {*}
+   */
+  get(index) {
+    return this[index];
+  }
+
+  /**
+   * Checks if the list contains any of the given elements
+   * @param {*} elements
    * @returns {Boolean}
    */
-  contains(element) {
-    return this.includes(element);
+  contains(...elements) {
+    return this.some((item) => elements.includes(item));
   }
 
   /**
@@ -74,293 +79,148 @@ class List extends Array {
   }
 
   /**
-   * Returns the first element in the array or the first element that matches the predicate
+   * Returns the first element in the list or the first element that matches the predicate
    * @param {Function | undefined} predicate
    * @returns {*}
    * @throws {NoSuchElementException}
    */
   first(predicate) {
-    if (predicate) {
-      const element = this.firstOrNull(predicate);
-      if (element === null) {
-        throw new NoSuchElementException(`No such element`);
-      }
-      return element;
-    } else {
-      return this[0];
-    }
+    return this.match(predicate, 1);
   }
 
   /**
-   * Returns the first element in the array or the first element that matches the predicate or null
+   * Returns the first element in the list or the first element that matches the predicate or null
    * @param {Function} predicate
    * @returns {* | null}
    */
   firstOrNull(predicate) {
-    if (predicate) {
-      for (const item of this) {
-        if (predicate(item)) {
-          return item;
-        }
-      }
-      return null;
-    } else {
-      return this[0];
-    }
+    return this.matchOrNull(predicate, 1);
   }
 
   /**
-   * Returns the second element in the array or the first element that matches the predicate
+   * Returns the second element in the list or the first element that matches the predicate
    * @param {Function | undefined} predicate
    * @returns {*}
    * @throws {NoSuchElementException}
    */
   second(predicate) {
-    if (predicate) {
-      const element = this.secondOrNull(predicate);
-      if (element === null) {
-        throw new NoSuchElementException(`No such element`);
-      }
-      return element;
-    } else {
-      return this[1];
-    }
+    return this.match(predicate, 2);
   }
 
   /**
-   * Returns the second element in the array or the second element that matches the predicate or null
+   * Returns the second element in the list or the second element that matches the predicate or null
    * @param {Function} predicate
    * @returns {*}
    */
   secondOrNull(predicate) {
-    if (predicate) {
-      let count = 0;
-      for (const item of this) {
-        if (predicate(item)) {
-          if (count === 1) {
-            return item;
-          } else {
-            count++;
-          }
-        }
-      }
-      throw new NoSuchElementException(`No such element`);
-    } else {
-      return this[1];
-    }
+    return this.matchOrNull(predicate, 2);
   }
 
   /**
-   * Returns the third element in the array or the third element that matches the predicate
+   * Returns the third element in the list or the third element that matches the predicate
    * @param {Function | undefined} predicate
    * @returns {*}
    * @throws {NoSuchElementException}
    */
   third(predicate) {
-    if (predicate) {
-      const element = this.thirdOrNull(predicate);
-      if (element === null) {
-        throw new NoSuchElementException(`No such element`);
-      }
-      return element;
-    } else {
-      return this[2];
-    }
+    return this.match(predicate, 3);
   }
 
   /**
-   * Returns the third element in the array or the third element that matches the predicate
+   * Returns the third element in the list or the third element that matches the predicate
    * @param {Function} predicate
    * @returns {*}
    */
   thirdOrNull(predicate) {
-    if (predicate) {
-      let count = 0;
-      for (const item of this) {
-        if (predicate(item)) {
-          if (count === 2) {
-            return item;
-          } else {
-            count++;
-          }
-        }
-      }
-      throw new NoSuchElementException(`No such element`);
-    } else {
-      return this[2];
-    }
+    return this.matchOrNull(predicate, 3);
   }
 
   /**
-   * Returns the fourth element in the array or the fourth element that matches the predicate
+   * Returns the fourth element in the list or the fourth element that matches the predicate
    * @param {Function | undefined} predicate
    * @returns {*}
    * @throws {NoSuchElementException}
    */
   fourth(predicate) {
-    if (predicate) {
-      const element = this.fourthOrNull(predicate);
-      if (element === null) {
-        throw new NoSuchElementException(`No such element`);
-      }
-      return element;
-    } else {
-      return this[3];
-    }
+    return this.match(predicate, 4);
   }
 
   /**
-   * Returns the fourth element in the array or the fourth element that matches the predicate
+   * Returns the fourth element in the list or the fourth element that matches the predicate
    * @param {Function} predicate
    * @returns {*}
    */
   fourthOrNull(predicate) {
-    if (predicate) {
-      let count = 0;
-      for (const item of this) {
-        if (predicate(item)) {
-          if (count === 3) {
-            return item;
-          } else {
-            count++;
-          }
-        }
-      }
-      throw new NoSuchElementException(`No such element`);
-    } else {
-      return this[3];
-    }
+    return this.matchOrNull(predicate, 4);
   }
 
   /**
-   * Returns the fifth element in the array or the fifth element that matches the predicate
+   * Returns the fifth element in the list or the fifth element that matches the predicate
    * @param {Function | undefined} predicate
    * @returns {*}
    * @throws {NoSuchElementException}
    */
   fifth(predicate) {
-    if (predicate) {
-      const element = this.fifthOrNull(predicate);
-      if (element === null) {
-        throw new NoSuchElementException(`No such element`);
-      }
-      return element;
-    } else {
-      return this[4];
-    }
+    return this.match(predicate, 5);
   }
 
   /**
-   * Returns the fifth element in the array or the fifth element that matches the predicate
+   * Returns the fifth element in the list or the fifth element that matches the predicate
    * @param {Function} predicate
    * @returns {*}
    */
   fifthOrNull(predicate) {
-    if (predicate) {
-      let count = 0;
-      for (const item of this) {
-        if (predicate(item)) {
-          if (count === 4) {
-            return item;
-          } else {
-            count++;
-          }
-        }
-      }
-      throw new NoSuchElementException(`No such element`);
-    } else {
-      return this[4];
-    }
+    return this.matchOrNull(predicate, 5);
   }
 
   /**
-   * Returns the sixth element in the array or the sixth element that matches the predicate
+   * Returns the sixth element in the list or the sixth element that matches the predicate
    * @param {Function | undefined} predicate
    * @returns {*}
    * @throws {NoSuchElementException}
    */
   sixth(predicate) {
-    if (predicate) {
-      const element = this.sixthOrNull(predicate);
-      if (element === null) {
-        throw new NoSuchElementException(`No such element`);
-      }
-      return element;
-    } else {
-      return this[5];
-    }
+    return this.match(predicate, 6);
   }
 
   /**
-   * Returns the sixth element in the array or the sixth element that matches the predicate
+   * Returns the sixth element in the list or the sixth element that matches the predicate
    * @param {Function} predicate
    * @returns {*}
    */
   sixthOrNull(predicate) {
-    if (predicate) {
-      let count = 0;
-      for (const item of this) {
-        if (predicate(item)) {
-          if (count === 5) {
-            return item;
-          } else {
-            count++;
-          }
-        }
-      }
-      throw new NoSuchElementException(`No such element`);
-    } else {
-      return this[5];
-    }
+    return this.matchOrNull(predicate, 6);
   }
 
   /**
-   * Returns the last element in the array or the last element that matches the predicate
+   * Returns the last element in the list or the last element that matches the predicate
    * @param {Function | undefined} predicate
    * @returns {*}
    * @throws {NoSuchElementException}
    */
   last(predicate) {
-    if (predicate) {
-      const element = this.lastOrNull(predicate);
-      if (element === null) {
-        throw new NoSuchElementException(`No such element`);
-      }
-      return element;
-    } else {
-      return this[this.length - 1];
-    }
+    return this.reverse().first(predicate);
   }
 
   /**
-   * Returns the last element in the array or the last element that matches the predicate
+   * Returns the last element in the list or the last element that matches the predicate
    * @returns {*}
    */
   lastOrNull(predicate) {
-    if (predicate) {
-      const values = this.reverse();
-      for (const value of values) {
-        if (predicate(value)) {
-          return value;
-        }
-      }
-      throw new NoSuchElementException(`No such element`);
-    } else {
-      return this[this.length - 1];
-    }
+    return this.reverse().firstOrNull(predicate);
   }
 
   /**
-   * Returns the nth element in the array or the nth element that matches the predicate
+   * Returns the nth element in the list or the nth element that matches the predicate
    * @param {Function} predicate
    * @param {Number} nth
    * @returns {*}
    */
-  match(predicate, nth) {
+  match(predicate, nth = 1) {
     if (predicate) {
       let count = 0;
       for (const item of this) {
-        if (predicate(item)) {
+        if (isMatch(predicate, item)) {
           if (count === nth - 1) {
             return item;
           } else {
@@ -375,16 +235,16 @@ class List extends Array {
   }
 
   /**
-   * Returns the nth element in the array or the nth element that matches the predicate
+   * Returns the nth element in the list or the nth element that matches the predicate
    * @param {Function} predicate
    * @param {Number} nth
    * @returns {*}
    */
-  matchOrNull(predicate, nth) {
+  matchOrNull(predicate, nth = 1) {
     if (predicate) {
       let count = 0;
       for (const item of this) {
-        if (predicate(item)) {
+        if (isMatch(predicate, item)) {
           if (count === nth - 1) {
             return item;
           } else {
@@ -396,6 +256,65 @@ class List extends Array {
     } else {
       return this[nth - 1];
     }
+  }
+
+  /**
+   * Given a list of lists, returns the first element of each list as a list
+   * @returns {List}
+   * @example listOf(['a','b','c'], ['d','e','f'], ['x','y','z']).firstOfEach() ==> ['a','d','x']
+   */
+  firstOfEach() {
+    return this.map((list) => list[0]);
+  }
+
+  /**
+   * Given a list of lists, returns the last element of each list as a list
+   * @returns {List}
+   * @example listOf(['a','b','c'], ['d','e','f'], ['x','y','z']).firstOfEach() ==> ['c','f','z']
+   */
+  lastOfEach() {
+    return this.map((list) => list[list.length - 1]);
+  }
+
+  /**
+   * Given a list of lists, returns the nth element of each list as a list
+   * @param {Number} n
+   * @returns {List}
+   * @example listOf(['a','b','c'], ['d','e','f'], ['x','y','z']).nthOfEach(1) ==> ['b','e','y']
+   */
+  nthOfEach(n) {
+    return this.map((list) => list[n]);
+  }
+
+  /**
+   * Given a list of list of strings, joins each string with the given separator, prefix and postfix
+   * @param {String} separator
+   * @param {String} prefix
+   * @param {String} postfix
+   * @returns {List}
+   * @example listOf(['a','b','c'], ['d','e','f'], ['x','y','z']).joinEach("-", "<", ">") ==> ['<a-b-c>','<d-e-f>','<x-y-z>']
+   */
+  joinEach(separator, prefix = "", postfix = "") {
+    return this.map((list) => list.toList().joinTo(separator, prefix, postfix));
+  }
+
+  /**
+   * Given a list of strings, splits each element with the given separator
+   * @param {String} separator
+   * @returns {List}
+   * @example listOf("Foo:Bar", "Baz:Test").splitEach(":") ==> [['Foo','Bar'],['Baz','Test']]
+   */
+  splitEach(separator) {
+    return this.map((list) => list.split(separator));
+  }
+
+  /**
+   * Trims whitespace from each element in the list
+   * @returns {List}
+   * @example listOf("   foo", "  bar   ").trimEach() ==> ['foo','bar']
+   */
+  trimEach() {
+    return this.map((element) => element.trim());
   }
 
   /**
@@ -430,35 +349,59 @@ class List extends Array {
   }
 
   /**
-   * Halves the list into two and returns the two parts
+   * Halves the list into two and returns the two parts.
+   * If the list contains an odd number of elements, the middle element is added to the second list.
+   * To control this behaviour, set param keepMiddle to false
+   * @param {Boolean} keepMiddle
    * @returns {List}
+   * @example listOf("foo", "bar", "baz").halve() ==> [['foo'], ['bar','baz']]
+   * @example listOf("foo", "bar", "baz").halve(false) ==> [['foo','bar'], ['baz']]
    */
-  halve() {
-    const firstHalf = listOf(...this.slice(0, this.length / 2));
-    const secondHalf = listOf(...this.slice(this.length / 2, this.length));
+  halve(keepMiddle = true) {
+    const middleIndex = keepMiddle
+      ? Math.floor(this.length / 2)
+      : Math.ceil(this.length / 2);
+    const firstHalf = this.slice(0, middleIndex).toList();
+    const secondHalf = this.slice(middleIndex, this.length).toList();
     return listOf(firstHalf, secondHalf);
   }
 
   /**
    * Returns the first half of the list
+   * @param {Boolean} keepMiddle - controls whether the middle element of the list should be included in this list
    * @returns {List}
+   * @example listOf("foo", "bar", "baz").firstHalf() ==> ['foo']
+   * @example listOf("foo", "bar", "baz").firstHalf(false) ==> ['foo','bar']
    */
-  firstHalf() {
-    return this.halve().first();
+  firstHalf(keepMiddle = true) {
+    return this.halve(!keepMiddle).first();
   }
 
   /**
    * Returns the second half of the list
+   * @param {Boolean} keepMiddle - controls whether the middle element of the list should be included in this list
+   * @returns {List}
+   * @example listOf("foo", "bar", "baz").secondHalf() ==> ['baz']
+   * @example listOf("foo", "bar", "baz").secondHalf(false) ==> ['bar','baz']
+   */
+  secondHalf(keepMiddle = false) {
+    return this.halve(keepMiddle).last();
+  }
+
+  /**
+   * Returns the second half of the list
+   * @param {Boolean} keepMiddle - controls whether the middle element of the list should be included in this list
    * @returns {List}
    */
-  secondHalf() {
-    return this.halve().last();
+  lastHalf(keepMiddle = false) {
+    return this.secondHalf(keepMiddle);
   }
 
   /**
    * Returns a list containing all elements except first n elements
    * @param {Number} n
    * @returns {List}
+   * @example listOf(3,4,5,6,7).drop(3) ==> [6,7]
    */
   drop(n) {
     return this.slice(n);
@@ -468,6 +411,7 @@ class List extends Array {
    * Returns a list containing all elements except last n elements
    * @param {Number} n
    * @returns {List}
+   * @example listOf(3,4,5,6,7).drop(3) ==> [3,4,5]
    */
   dropLast(n) {
     return this.slice(0, n);
@@ -477,6 +421,7 @@ class List extends Array {
    * Returns a list containing first n elements.
    * @param {Number} n
    * @returns {List}
+   * @example listOf(3,4,5,6,7).take(3) ==> [3,4,5]
    */
   take(n) {
     return this.head(n);
@@ -486,6 +431,7 @@ class List extends Array {
    * Returns a list containing last n elements.
    * @param {Number} n
    * @returns {List}
+   * @example listOf(3,4,5,6,7).takeLast(3) ==> [5,6,7]
    */
   takeLast(n) {
     return this.tail(n);
@@ -595,7 +541,11 @@ class List extends Array {
    * @returns {*}
    */
   elementAtOrElse(index, defaultValue) {
-    return index < index.length ? this[index] : defaultValue();
+    return index < index.length
+      ? this[index]
+      : isFn(defaultValue)
+      ? defaultValue()
+      : defaultValue;
   }
 
   /**
@@ -608,12 +558,32 @@ class List extends Array {
   }
 
   /**
+   * If the list is empty, return the defaultValue. Or else return the list.
+   * @param {*} value
+   */
+  ifEmpty(value) {
+    return this.isEmpty() ? value : this;
+  }
+
+  /**
+   * If the list is not empty, return the defaultValue. Or else return the list.
+   * @param {*} value
+   */
+  ifNotEmpty(value) {
+    return this.isNotEmpty() ? value : this;
+  }
+
+  /**
    * Returns a list containing all elements that are instances of specified type parameter .
    * @param {Class} clazz
    * @returns {List}
    */
   filterIsInstance(clazz) {
-    return this.filter((item) => item instanceof clazz);
+    if (!clazz.name) return this;
+    return this.filter(
+      (item) =>
+        item instanceof clazz || typeof item === clazz.name.toLowerCase()
+    );
   }
 
   /**
@@ -631,14 +601,16 @@ class List extends Array {
    * Returns a list containing all elements not matching the given predicate.
    * @param {Function} predicate
    * @returns {List}
+   * @example listOf(3,4,5,6,7).filterNot(x => x > 5) ==> [3,4,5]
    */
   filterNot(predicate) {
-    return this.filter((it) => !predicate(it));
+    return this.filter((it) => !isMatch(predicate, it));
   }
 
   /**
-   * Filters out all the elements in the array that are not null
+   * Filters out all the elements in the list that are not null. Keeps undefined values.
    * @returns {List}
+   * @example listOf(3,4,5,null,7,undefined).filterNotNull() ==> [3,4,5,7,undefined]
    */
   filterNotNull() {
     return this.filter((value) => value !== null);
@@ -662,19 +634,29 @@ class List extends Array {
   }
 
   /**
-   * Filters out all values that are truthy
+   * Filters out all values that are truthy. Value of '0' is truthy be default
+   * @param {Boolean} zeroTruthy - controls whether the value '0' should be treated as truthy or not
    * @returns {List}
+   * @example listOf(3,4,null,7,undefined,0,8).filterTruthy() ==> [3,4,7,0,8]
+   * @example listOf(3,4,null,7,undefined,0,8).filterTruthy(false) ==> [3,4,7,8]
    */
-  filterTruthy() {
-    return this.filter(Boolean);
+  filterTruthy(zeroTruthy = true) {
+    return this.filter((it) =>
+      zeroTruthy ? it === 0 || Boolean(it) : Boolean(it)
+    );
   }
 
   /**
    * Only returns values that are falsy
+   * @param {Boolean} zeroTruthy - controls whether the value '0' should be treated as truthy or not
    * @returns {List}
+   * @example listOf(3,4,null,7,undefined,0,8).filterFalsy() ==> [null, undefined]
+   * @example listOf(3,4,null,7,undefined,0,8).filterFalsy(false) ==> [null, undefined,0]
    */
-  filterFalsy() {
-    return this.filter((it) => !Boolean(it));
+  filterFalsy(zeroTruthy = true) {
+    return this.filter((it) =>
+      zeroTruthy ? it !== 0 && !Boolean(it) : !Boolean(it)
+    );
   }
 
   /**
@@ -688,8 +670,9 @@ class List extends Array {
   }
 
   /**
-   * Filters out all the elements in the array that are not undefined
+   * Filters out all the elements in the list that are not undefined. Keeps null values.
    * @returns {List}
+   * @example listOf(3,4,5,null,7,undefined).filterNotUndefined() ==> [3,4,5,null,7]
    */
   filterNotUndefined() {
     return this.filter((value) => value !== undefined);
@@ -699,7 +682,7 @@ class List extends Array {
    * Appends all elements matching the given predicate to the given destination.
    * @param {List} destination
    * @param {Function} predicate
-   * @returns
+   * @returns {List}
    */
   filterTo(destination, predicate) {
     const filtered = this.filter(predicate);
@@ -710,7 +693,7 @@ class List extends Array {
    * Appends all elements not matching the given predicate to the given destination.
    * @param {List} destination
    * @param {Function} predicate
-   * @returns
+   * @returns {List}
    */
   filterNotTo(destination, predicate) {
     const filtered = this.filterNot(predicate);
@@ -727,12 +710,24 @@ class List extends Array {
   }
 
   /**
+   * Removes the list from all falsy values, including 0, undefined, null and empty strings
+   * @returns {List}
+   * @example listOf(1,4,null,undefined,0,8, "", "test", "foo", false, true).compact() ==> [1,4,8,'test','foo',true]
+   */
+  compact() {
+    return this.filter(Boolean).filter((it) => it !== "");
+  }
+
+  /**
    * Same as reduce
    * @param {Function} callback
    * @param {*} initialValue
    * @returns {*}
    */
   fold(callback, initialValue) {
+    if (!initialValue && initialValue !== 0) {
+      throw new Error(`Initial value must be specified`);
+    }
     return this.reduce(callback, initialValue);
   }
 
@@ -742,13 +737,14 @@ class List extends Array {
    * @param {String} prefix
    * @param {String} postfix
    * @returns {String}
+   * @example listOf('a','b','c').joinTo("-", "<", ">") ==> '<a-b-c>'
    */
   joinTo(separator, prefix = "", postfix = "") {
     return `${prefix}${this.join(separator)}${postfix}`;
   }
 
   /**
-   * Performs an async await operation on an array and returns the resultant array.
+   * Performs an async await operation on a list and returns the resultant list.
    * Note: The result must be awaited, i.e. The 'await' keyword must be used before it
    * @param {Function} callback
    * @returns {List}
@@ -763,7 +759,7 @@ class List extends Array {
   }
 
   /**
-   * Performs an async await operation on an array
+   * Performs an async await operation on a list
    * @param {Function} callback
    */
   async forEachAsync(callback) {
@@ -773,19 +769,21 @@ class List extends Array {
   }
 
   /**
-   * Takes in a number of arguments and excludes them from the array
+   * Takes in a number of arguments and excludes them from the list. Does not modify original list.
    * @returns {List}
+   * @example listOf('z','a','d','b','e','c','f').exclude('a','b','c') ==> ['z','d','e','f']
    */
-  exclude(...exclusions) {
-    return this.filter((item) => !exclusions.includes(item));
+  exclude(...elements) {
+    return this.filter((item) => !elements.includes(item));
   }
 
   /**
-   * Returns the distinct elements in an array
+   * Returns the distinct elements in a list
    * @returns {List}
+   * @example listOf('a','a','b','b','e','e','f').distinct() ==> ['a','b','e','f']
    */
   distinct() {
-    return new List(...new Set(this));
+    return listOf(...this.unique());
   }
 
   /**
@@ -807,31 +805,34 @@ class List extends Array {
   }
 
   /**
-   * Returns the unique elements in an array
-   * @returns {List}
+   * Returns the unique elements in a list as a Set object
+   * @returns {Set}
+   * @example listOf('a','a','b','b','e','e','f').distinct() ==> Set {'a','b','e','f'}
    */
   unique() {
-    return this.distinct();
+    return new Set(this);
   }
 
   /**
-   * Converts all elements in the array to upper case
+   * Converts all elements in the list to upper case
    * @returns {Array<String>}
+   * @example listOf('apple','banana','carrot').toUpperCase() ==> ['APPLE','BANANA','CARROT']
    */
   toUpperCase() {
     return listOf(...this).map((arg) => arg.toUpperCase());
   }
 
   /**
-   * Converts all elements in the array to lower case
+   * Converts all elements in the list to lower case
    * @returns {Array<String>}
+   * @example listOf('Apple','Banana','CARROT').toLowerCase() ==> ['apple','banana','carrot']
    */
   toLowerCase() {
     return listOf(...this).map((arg) => arg.toLowerCase());
   }
 
   /**
-   * Returns the sum of all elements in an array
+   * Returns the sum of all elements in a list
    * @returns {Number}
    */
   sum() {
@@ -839,7 +840,7 @@ class List extends Array {
   }
 
   /**
-   * Returns the sum of all elements in an array
+   * Returns the sum of all elements in a list
    * @returns {Number}
    */
   sumOf(selector) {
@@ -848,7 +849,7 @@ class List extends Array {
   }
 
   /**
-   * Returns the multiplication product of all elements in an array
+   * Returns the multiplication product of all elements in a list
    * @returns {Number}
    */
   product() {
@@ -856,7 +857,7 @@ class List extends Array {
   }
 
   /**
-   * Checks whether an array is empty
+   * Checks whether a list is empty
    * @returns {Boolean}
    */
   isEmpty() {
@@ -864,7 +865,7 @@ class List extends Array {
   }
 
   /**
-   * Checks whether an array is empty
+   * Checks whether a list is empty
    * @returns {Boolean}
    */
   isNotEmpty() {
@@ -872,7 +873,7 @@ class List extends Array {
   }
 
   /**
-   * Chunks an array into specified size
+   * Chunks a list into specified size
    * @param {Number} size
    * @returns {Array<Array<any>>}
    */
@@ -885,11 +886,12 @@ class List extends Array {
   }
 
   /**
-   * Checks whether the array includes all the arguments
+   * Returns true if the list includes all the specified elements, else returns false
+   * @param  {...any} elements
    * @returns {Boolean}
    */
-  includesAll() {
-    const values = [...arguments].flat();
+  includesAll(...elements) {
+    const values = elements.flat();
     for (const value of values) {
       if (!this.includes(value)) {
         return false;
@@ -899,38 +901,39 @@ class List extends Array {
   }
 
   /**
-   * Finds intersection between two arrays
-   * @param {List} array
+   * Finds all the elements that exist in both lists
+   * @param {List} list
    * @returns {List}
    */
-  intersect(array) {
-    return this.intersection(array);
+  intersect(list) {
+    return this.intersection(list);
   }
 
   /**
-   * Finds intersection between two arrays
-   * @param {List} array
+   * Finds all the elements that exist in both lists
+   * @param {List} list
    * @returns {List}
    */
-  intersection(array) {
-    if (!array) return null;
-    return array.filter((item) => this.includes(item));
+  intersection(list) {
+    if (!list || !(list instanceof Array)) return null;
+    return list.filter((item) => this.includes(item));
   }
 
   /**
-   * Finds the difference between the two arrays
-   * @param {List} array
+   * Finds all the elements that do not exist in both lists
+   * @param {List} list
    * @returns {List}
    */
-  difference(array) {
+  difference(list) {
+    if (!list || !(list instanceof Array)) return null;
     const diff = listOf();
-    array.forEach((item) => {
+    list.forEach((item) => {
       if (!this.includes(item)) {
         diff.push(item);
       }
     });
     this.forEach((item) => {
-      if (!array.includes(item)) {
+      if (!list.includes(item)) {
         diff.push(item);
       }
     });
@@ -947,18 +950,28 @@ class List extends Array {
   }
 
   /**
-   * Returns the number of elements matching a given predicate function
-   * @param {Function} predicate
+   * Returns the number of elements matching a given predicate.
+   * If the predicate is a function, runs the function.
+   * If the predicate is a value, counts the number of values.
+   * If no predicate is provided, returns the length of the array.
+   * @param {Function | *} predicate
    * @returns {Number}
    */
   count(predicate) {
-    let count = 0;
-    this.forEach((item, index) => {
-      if (predicate(item, index)) {
-        count++;
-      }
-    });
-    return count;
+    if (predicate) {
+      let count = 0;
+      this.forEach((item, index) => {
+        const match = isFn(predicate)
+          ? predicate(item, index)
+          : item === predicate;
+        if (match) {
+          count++;
+        }
+      });
+      return count;
+    } else {
+      return this.length;
+    }
   }
 
   /**
@@ -1010,7 +1023,7 @@ class List extends Array {
   }
 
   /**
-   * Adds all the elements to the array
+   * Adds all the elements to the list
    * @param  {...any} elements
    * @returns {List}
    */
@@ -1019,7 +1032,7 @@ class List extends Array {
   }
 
   /**
-   * Removes all the elements from the array
+   * Removes all the elements from the list
    * @param  {...any} elements
    * @returns {List}
    */
@@ -1109,7 +1122,7 @@ class List extends Array {
   none(predicate) {
     if (predicate) {
       for (const item of this) {
-        if (predicate(item)) {
+        if (isMatch(predicate, item)) {
           return false;
         }
       }
@@ -1120,36 +1133,38 @@ class List extends Array {
   }
 
   /**
-   * Checks if an object exists inside an array using a deep comparison
-   * @param {Object} object
-   * @returns {Boolean}
+   * Returns every index of the occurence of the element
+   * @param {*} element
+   * @returns {List}
    */
-  includesObject(object) {
-    for (const item of this) {
-      if (typeof item === "object") {
-        if (object.equals(item)) {
-          return true;
-        }
-      } else {
-        if (item === object) {
-          return true;
-        }
+  indicesOf(element) {
+    const indices = listOf();
+    for (let i = 0; i < this.length; i++) {
+      if (this[i] === element) {
+        indices.push(i);
       }
     }
-    return false;
+    return indices;
   }
 
   /**
-   * Deletes any given number of elements from an array
+   * Deletes any given number of elements from a list. Mutates the original list.
    * @param {*} elements
    * @returns {List}
    */
   delete(...elements) {
-    return this.filter((item) => !elements.includes(item));
+    for (const element of elements) {
+      for (let i = this.length; i >= 0; i--) {
+        if (this[i] === element) {
+          this.splice(i, 1);
+        }
+      }
+    }
+    return this;
   }
 
   /**
-   * Returns a randomly chosen element within the array
+   * Returns a randomly chosen element within the list
    * @returns {*}
    */
   random() {
@@ -1158,7 +1173,7 @@ class List extends Array {
   }
 
   /**
-   * Returns a randomly chosen sample of elements within the array
+   * Returns a randomly chosen sample of elements within the list
    * @param {Number} sampleSize
    * @param {Boolean} repeat
    * @returns {List}
@@ -1172,15 +1187,15 @@ class List extends Array {
         sample.push(this[index]);
       }
     } else {
-      let duplicateArray = listOf(...this);
+      const duplicateArray = this.slice();
       if (sampleSize > this.length) {
-        const errorMessage = `Sample size of '${sampleSize}' is greater than the array length of '${this.length}'`;
-        throw new Error(errorMessage);
+        const error = `Sample size '${sampleSize}' is greater than list length '${this.length}'`;
+        throw new Error(error);
       }
       while (sample.length < sampleSize) {
         const index = Math.floor(Math.random() * duplicateArray.length);
         const elem = duplicateArray[index];
-        duplicateArray = duplicateArray.filter((n) => n !== elem);
+        duplicateArray.splice(index, 1);
         sample.push(elem);
       }
     }
@@ -1188,15 +1203,15 @@ class List extends Array {
   }
 
   /**
-   * Returns a new array with its original elements randomly shuffled
+   * Returns a new list with its original elements randomly shuffled
    * @returns {List}
    */
   shuffled() {
-    return this.map((item) => item).sort(() => Math.random() - 0.5);
+    return this.map((item) => item.sort(() => Math.random() - 0.5));
   }
 
   /**
-   * Casts each item in the array to its boolean value
+   * Casts each item in the list to its boolean value
    * @returns {Array<Boolean>}
    */
   toBoolean() {
@@ -1204,7 +1219,7 @@ class List extends Array {
   }
 
   /**
-   * Checks whether all the elements in the array matches a given element
+   * Checks whether all the elements in the list matches a given element
    * @param {Function} predicate
    * @param {*} thisArg
    * @returns {Boolean}
@@ -1214,7 +1229,7 @@ class List extends Array {
   }
 
   /**
-   * Checks whether any of the elements in the array matches a given element
+   * Checks whether any of the elements in the list matches a given element
    * @param {Function} predicate
    * @param {*} thisArg
    * @returns {Boolean}
@@ -1280,7 +1295,7 @@ class List extends Array {
   }
 
   /**
-   * Performs a map on all elements in the array that are not null or undefined
+   * Performs a map on all elements in the list that are not null or undefined
    * @param {Function} transform
    * @returns {List}
    */
@@ -1296,7 +1311,7 @@ class List extends Array {
   }
 
   /**
-   * Performs a map on all elements in the array that are not null or undefined and appends it to the destination
+   * Performs a map on all elements in the list that are not null or undefined and appends it to the destination
    * @param {List} destination
    * @param {Function} transform
    * @returns {List}
@@ -1329,20 +1344,52 @@ class List extends Array {
     return map;
   }
 
-  unzip() {}
+  /**
+   * Converts a list of lists to an object
+   * @returns {Object}
+   */
+  toObject() {
+    return Object.fromEntries(this);
+  }
 
   /**
-   * Given two lists, returns pairs of one element in one list with
-   * another element in the other list
-   * @param {List} other
+   * Converts a list of lists to a map
+   * @returns {Map}
+   * @example [['a',1], ['b',2], ['c',3]].toMap()
+   */
+  toMap() {
+    const map = new Map();
+    for (let i = 0; i < this.length; i++) {
+      map.set(this[i][0], this[i][1]);
+    }
+    return map;
+  }
+
+  /**
+   *
    * @returns {List}
    */
-  zip(other) {
-    const zipped = listOf();
-    for (let i = 0; i < Math.min(this.length, other.length); i++) {
-      zipped.push(listOf(this[i], other[i]));
-    }
-    return zipped;
+  unzip() {
+    const maxLength = Math.max(...this.map((arr) => arr.length));
+    const result = listOf(...List.from({ length: maxLength }, () => []));
+    this.forEach((arr) => {
+      for (let i = 0; i < maxLength; i++) {
+        result[i].push(arr[i]);
+      }
+    });
+    return result;
+  }
+
+  /**
+   * Given two or more lists, returns pairs of one element in one list with
+   * another element in the other list
+   * @param {...List} lists
+   * @returns {List}
+   */
+  zip(...lists) {
+    return this.map((item, index) =>
+      [item, ...lists.map((list) => list[index]).toList()].toList()
+    ).toList();
   }
 
   /**
@@ -1369,7 +1416,7 @@ class List extends Array {
     const listTrue = listOf();
     const listFalse = listOf();
     for (const item of this) {
-      if (predicate(item)) {
+      if (isMatch(predicate, item)) {
         listTrue.push(item);
       } else {
         listFalse.push(item);
@@ -1382,6 +1429,7 @@ class List extends Array {
    * Repeats the list n times and returns the result
    * @param {Number} n
    * @returns {List}
+   * @example listOf(3,4,8,7).repeat(3) ==> [3,4,8,7,3,4,8,7,3,4,8,7]
    */
   repeat(n) {
     const repeatedList = listOf();
@@ -1434,6 +1482,7 @@ class List extends Array {
   /**
    * Sorts numbers in ascending order
    * @returns {List}
+   * @example listOf(3,4,8,7).sortNumbers() ==> [3,4,7,8]
    */
   sortNumbers() {
     return this.sort((a, b) => a - b);
@@ -1442,15 +1491,17 @@ class List extends Array {
   /**
    * Sorts numbers in descending order
    * @returns {List}
+   * @example listOf(3,4,8,7).sortNumbersDescending() ==> [8,7,4,3]
    */
   sortNumbersDescending() {
     return this.sort((a, b) => b - a);
   }
 
   /**
-   * Adds the element to the array and returns the array
+   * Adds the element to the list and returns the list
    * @param {any} element
    * @returns {List}
+   * @example listOf(3,4,8,7).add(6) ==> [3,4,8,7,6]
    */
   add(element) {
     this.push(element);
@@ -1458,16 +1509,18 @@ class List extends Array {
   }
 
   /**
-   * Returns the average of the supplied array
+   * Returns the average of the supplied list
    * @returns {Number}
+   * @example listOf(1,3,5,7,9).mean() ==> 5
    */
   mean() {
     return this.reduce((acc, cur) => +acc + cur, 0) / this.length;
   }
 
   /**
-   * Returns the median of the supplied array
+   * Returns the median of the supplied list
    * @returns {Number}
+   * @example listOf(3,4,8,7,6).median() ==> 6
    */
   median() {
     const sorted = this.sort((a, b) => a - b);
@@ -1476,8 +1529,9 @@ class List extends Array {
   }
 
   /**
-   * Returns the mode (most frequently occurring element) of the array
+   * Returns the mode (most frequently occurring element) of the list
    * @returns {*}
+   * @example listOf(3,4,8,8,7,6).mode() ==> 8
    */
   mode() {
     const counts = {};
@@ -1497,9 +1551,9 @@ class List extends Array {
   }
 
   /**
-   * Calculate the standard deviation of the array of numbers
+   * Calculate the standard deviation of the list of numbers
    * @returns {Number}
-   * @example [3,4,8,7,6].stdev() ==> 1.8547236990991407
+   * @example listOf(3,4,8,7,6).stdev() ==> 1.8547236990991407
    */
   stdev() {
     const mean = this.reduce((acc, cur) => +acc + cur) / this.length;
@@ -1508,14 +1562,29 @@ class List extends Array {
     );
   }
 
+  /**
+   * Returns all the prime numbers in the list
+   * @returns {List}
+   * @example listOf(1,2,4,7,9).filterOddNumbers() ==> [1,7,9]
+   */
   filterOddNumbers() {
     return this.filter((it) => it % 2 === 1);
   }
 
+  /**
+   * Returns all the prime numbers in the list
+   * @returns {List}
+   * @example listOf(1,2,4,7,9).filterEvenNumbers() ==> [2,4]
+   */
   filterEvenNumbers() {
     return this.filter((it) => it % 2 === 0);
   }
 
+  /**
+   * Returns all the prime numbers in the list
+   * @returns {List}
+   * @example listOf(1,3,5,7,9).filterPrimeNumbers() ==> [3,5,7]
+   */
   filterPrimeNumbers() {
     return this.filter((num) => {
       for (let i = 2, s = Math.sqrt(num); i <= s; i++) {
@@ -1526,9 +1595,9 @@ class List extends Array {
   }
 
   /**
-   * Counts all unique occurences in the array and returns them as an object along with the count
+   * Counts all unique occurences in the list and returns them as an object along with the count
    * @returns {Object}
-   * @example ['apple', 'apple', 'orange', 'banana', 'banana', 'banana'].counts() ==> { apple: 2, orange: 1, banana: 3 }
+   * @example listOf('apple', 'apple', 'orange', 'banana', 'banana', 'banana').counts() ==> { apple: 2, orange: 1, banana: 3 }
    */
   counts() {
     const cts = {};
@@ -1543,15 +1612,15 @@ class List extends Array {
   }
 
   /**
-   * Returns an object containing key-value pairs provided by transform function applied to each elements of the array
+   * Returns an object containing key-value pairs provided by transform function applied to each elements of the list
    * @param {Function} transform
    * @returns {Object}
-   * @example ['apple','banana','orange'].associate(fruit => fruit.toUpperCase()) ==> { apple: 'APPLE', banana: 'BANANA', orange: 'ORANGE' }
+   * @example listOf('apple','banana','orange').associate(fruit => fruit.toUpperCase()) ==> { apple: 'APPLE', banana: 'BANANA', orange: 'ORANGE' }
    */
   associate(transform) {
     const obj = {};
-    for (const item of this) {
-      obj[item] = transform(item);
+    for (const [idx, item] of this.entries()) {
+      obj[item] = transform(item, idx);
     }
     return obj;
   }
@@ -1571,40 +1640,40 @@ class List extends Array {
   }
 
   /**
-   * Multiplies each element in the array with a given number
+   * Multiplies each element in the list with a given number
    * @param {Number} number
    * @returns {List}
-   * @example [3,2,1].multiply(2) ==> [6,4,2]
+   * @example listOf(3,2,1).multiply(2) ==> [6,4,2]
    */
   multiply(number) {
     return this.map((n) => n * number);
   }
 
   /**
-   * Divides each element in the array with a given number
+   * Divides each element in the list with a given number
    * @param {Number} number
    * @returns {List}
-   * @example [4,8,10].divide(2) ==> [2,4,5]
+   * @example listOf(4,8,10).divide(2) ==> [2,4,5]
    */
   divide(number) {
     return this.map((n) => n / number);
   }
 
   /**
-   * Raises each element in the array to the power of a given number
+   * Raises each element in the list to the power of a given number
    * @param {Number} number
    * @returns {List}
-   * @example [1,2,3].power(2) ==> [1,4,9]
+   * @example listOf(1,2,3).power(2) ==> [1,4,9]
    */
   power(number) {
     return this.map((n) => n ** number);
   }
 
   /**
-   * Sets the decimal places of each number in the array
+   * Sets the decimal places of each number in the list
    * @param {Number} number
    * @returns {List}
-   * @example [1,2,3].toFixed(2) ==> ['1.00', '2.00', '3.00']
+   * @example listOf(1,2,3).toFixed(2) ==> ['1.00', '2.00', '3.00']
    */
   toFixed(number) {
     return this.map((n) => n.toFixed(number));
@@ -1729,20 +1798,20 @@ class List extends Array {
   }
 
   /**
-   * Replaces every occurence of an element in an array with a new value
+   * Replaces every occurence of an element in a list with a new value
    * @param {any} element
    * @param {any} replaced
    * @returns {List}
-   * @example  [1,2,3,4].replace(2,7) ==> [1,7,3,4]
+   * @example  listOf(1,2,3,4).replace(2,7) ==> [1,7,3,4]
    */
   replace(element, replaced) {
     return this.map((item) => (item === element ? replaced : item));
   }
 
   /**
-   * Returns an array of numbers counting from start to end
+   * Returns a list of numbers counting from start to end
    * @returns {List}
-   * @example [1, 4].range()  ==> [1,2,3,4]
+   * @example listOf(1,4).range()  ==> [1,2,3,4]
    */
   range() {
     const start = this[0];
@@ -1759,13 +1828,13 @@ class List extends Array {
   }
 
   /**
-   * Checks if an item exists in the array that matches the given predicate
+   * Checks if an item exists in the list that matches the given predicate
    * @param {Function} predicate
    * @returns {Boolean}
    */
   exists(predicate) {
     for (const item of this) {
-      if (predicate(item)) {
+      if (isMatch(predicate, item)) {
         return true;
       }
     }
@@ -1773,27 +1842,27 @@ class List extends Array {
   }
 
   /**
-   * Returns the first 'n' elements in an array
+   * Returns the first 'n' elements in a list
    * @param {Number} n
    * @returns {List}
    */
-  head(n) {
-    return n ? (n > this.length ? this : this.slice(0, n)) : [this[0]];
+  head(n = 1) {
+    return n > this.length ? this : this.slice(0, n);
   }
 
   /**
-   * Returns the last 'n' elements in an array
+   * Returns the last 'n' elements in a list
    * @param {Number} n
    * @returns {List}
    */
-  tail(n) {
-    return n
-      ? n > this.length
-        ? this
-        : this.slice(this.length - n, this.length)
-      : [this[this.length - 1]];
+  tail(n = 1) {
+    return n > this.length ? this : this.slice(this.length - n, this.length);
   }
 
+  /**
+   * Clears all elements from the list
+   * @returns {List}
+   */
   clear() {
     while (this.length) {
       this.pop();
@@ -1801,21 +1870,44 @@ class List extends Array {
     return this;
   }
 
-  static isList(list) {
-    return list instanceof List;
+  /**
+   * Checks if the given object is a List
+   * @param {*} object
+   * @returns {Boolean}
+   */
+  static isList(object) {
+    return object instanceof List;
   }
 
+  /**
+   * Checks if two lists are equal using a deep comparison
+   * @param {List} list
+   * @returns {Boolean}
+   */
   equals(list) {
-    if (this.length !== list.length) return false;
+    // Check if the length of the lists are the same
+    if (this.length !== list.length) {
+      return false;
+    }
+
+    // Check each element of the lists for equality
     for (let i = 0; i < this.length; i++) {
-      if (List.isList(this[i]) && List.isList(list[i])) {
-        if (!this[i].equals(list[i])) {
+      const element1 = this[i];
+      const element2 = list[i];
+
+      // If both elements are lists, perform a deep comparison
+      if (Array.isArray(element1) && Array.isArray(element2)) {
+        if (!element1.equals(element2)) {
           return false;
         }
-      } else if (this[i] !== list[i]) {
+      }
+      // Otherwise, use strict equality check
+      else if (element1 !== element2) {
         return false;
       }
     }
+
+    // All elements are equal, return true
     return true;
   }
 }
@@ -1858,6 +1950,26 @@ class Pair extends Array {
   toList() {
     return listOf(this[0], this[1]);
   }
+}
+
+/**
+ * If the predicate argument is a function, invokes the function with the given element.
+ * If it's not a function, checks whether the predicate is equal to element.
+ * @param {Function} predicate
+ * @param {*} element
+ * @returns {Boolean}
+ */
+function isMatch(predicate, element) {
+  return isFn(predicate) ? predicate(element) : predicate === element;
+}
+
+/**
+ * Checks if the argument is a function
+ * @param {*} argument
+ * @returns {Boolean}
+ */
+function isFn(argument) {
+  return typeof argument === "function";
 }
 
 class Node {
@@ -2112,11 +2224,47 @@ class DoublyLinkedList {
   }
 }
 
+class StringExtended extends String {
+  constructor(...args) {
+    super(...args);
+  }
+
+  /**
+   * Capitalizes the first letter of each word as defined by a separator and a joiner
+   * @param {Array} separators
+   * @param {String} joiner
+   * @returns {String}
+   */
+  capitalize(separators = [" "], joiner = " ") {
+    const pattern = separators.join("|");
+    const regex = new RegExp(pattern, "gi");
+    return this.split(regex)
+      .map((part) => (part[0] ? part[0].toUpperCase() : "") + part.slice(1))
+      .join(joiner);
+  }
+}
+
 function listOf(...args) {
   if (args.length === 1) {
     return new List(1).fill(...args);
   }
   return new List(...args);
+}
+
+function listOfType(clazz) {
+  return (...items) => {
+    items.forEach((item, idx) => {
+      const isInstance =
+        item instanceof clazz || typeof item === clazz.name.toLowerCase();
+      if (!isInstance) {
+        const error = `Item at index '${idx}' of type '${typeof item}' is not assignable to type: '${
+          clazz.name
+        }'`;
+        throw new Error(error);
+      }
+    });
+    return listOf(...items);
+  };
 }
 
 function pairOf(arg1, arg2) {
@@ -2143,8 +2291,67 @@ Set.prototype.toList = function () {
   return listOf(...this);
 };
 
+Object.prototype.toList = function () {
+  return Object.entries(this)
+    .map((arr) => arr.toList())
+    .toList();
+};
+
+Object.prototype.keys = function () {
+  return Object.keys(this).toList();
+};
+
+Object.prototype.values = function () {
+  return Object.values(this).toList();
+};
+
+Object.prototype.entries = function () {
+  return this.toList();
+};
+
+Object.prototype.equals = function (obj) {
+  const keys1 = Object.keys(this);
+  const keys2 = Object.keys(obj);
+  if (keys1.length !== keys2.length) {
+    return false;
+  }
+  for (const key of keys1) {
+    const val1 = this[key];
+    const val2 = obj[key];
+    const areObjects = isObject(val1) && isObject(val2);
+    if ((areObjects && !val1.equals(val2)) || (!areObjects && val1 !== val2)) {
+      return false;
+    }
+  }
+  return true;
+};
+
+function strOf(str) {
+  return new StringExtended(str);
+}
+
+String.prototype.toExtended = function () {
+  return new StringExtended(this);
+};
+
+class Utils {
+  static uuid() {
+    const chars = "0123456789abcdef".split("").toList();
+    const lengths = [8, 4, 4, 4, 12];
+    return lengths
+      .map((len) =>
+        Array(len)
+          .fill(null)
+          .map(() => chars.random())
+          .join("")
+      )
+      .join("-");
+  }
+}
+
 module.exports = {
   listOf,
+  listOfType,
   pairOf,
   tripleOf,
   Pair,
@@ -2152,4 +2359,7 @@ module.exports = {
   List,
   LinkedList,
   DoublyLinkedList,
+  Utils,
+  StringExtended,
+  strOf,
 };

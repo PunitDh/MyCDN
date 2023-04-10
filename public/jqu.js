@@ -190,7 +190,7 @@ class ElementCollection extends Array {
   }
 
   toObject() {
-    return this.map((e) => e.toObject());
+    return this.map((e) => Object.fromEntries(e));
   }
 
   color(col) {
@@ -234,6 +234,42 @@ class ElementCollection extends Array {
       return this.map((e) => getComputedStyle(e).padding);
     } else {
       this.forEach((e) => (e.style.padding = padding));
+      return this;
+    }
+  }
+
+  paddingLeft(padding) {
+    if (!padding) {
+      return this.map((e) => getComputedStyle(e).paddingLeft);
+    } else {
+      this.forEach((e) => (e.style.paddingLeft = padding));
+      return this;
+    }
+  }
+
+  paddingRight(padding) {
+    if (!padding) {
+      return this.map((e) => getComputedStyle(e).paddingRight);
+    } else {
+      this.forEach((e) => (e.style.paddingRight = padding));
+      return this;
+    }
+  }
+
+  paddingTop(padding) {
+    if (!padding) {
+      return this.map((e) => getComputedStyle(e).paddingTop);
+    } else {
+      this.forEach((e) => (e.style.paddingTop = padding));
+      return this;
+    }
+  }
+
+  paddingBottom(padding) {
+    if (!padding) {
+      return this.map((e) => getComputedStyle(e).paddingBottom);
+    } else {
+      this.forEach((e) => (e.style.paddingBottom = padding));
       return this;
     }
   }
