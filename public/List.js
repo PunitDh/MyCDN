@@ -22,7 +22,9 @@ class List extends Array {
    * Returns the valid indices of the list
    */
   get indices() {
-    return Object.keys(this).map((n) => parseInt(n));
+    return Object.keys(this)
+      .map((n) => parseInt(n))
+      .toList();
   }
 
   /**
@@ -193,6 +195,101 @@ class List extends Array {
   }
 
   /**
+   * Returns the seventh element in the list or the seventh element that matches the predicate
+   * @param {Function | undefined} predicate
+   * @returns {*}
+   * @throws {NoSuchElementException}
+   */
+  seventh(predicate) {
+    return this.match(predicate, 7);
+  }
+
+  /**
+   * Returns the seventh element in the list or the seventh element that matches the predicate
+   * @param {Function} predicate
+   * @returns {*}
+   */
+  seventhOrNull(predicate) {
+    return this.matchOrNull(predicate, 7);
+  }
+
+  /**
+   * Returns the eighth element in the list or the eighth element that matches the predicate
+   * @param {Function | undefined} predicate
+   * @returns {*}
+   * @throws {NoSuchElementException}
+   */
+  eighth(predicate) {
+    return this.match(predicate, 8);
+  }
+
+  /**
+   * Returns the eighth element in the list or the eighth element that matches the predicate
+   * @param {Function} predicate
+   * @returns {*}
+   */
+  eighthOrNull(predicate) {
+    return this.matchOrNull(predicate, 8);
+  }
+
+  /**
+   * Returns the ninth element in the list or the ninth element that matches the predicate
+   * @param {Function | undefined} predicate
+   * @returns {*}
+   * @throws {NoSuchElementException}
+   */
+  ninth(predicate) {
+    return this.match(predicate, 9);
+  }
+
+  /**
+   * Returns the ninth element in the list or the ninth element that matches the predicate
+   * @param {Function} predicate
+   * @returns {*}
+   */
+  ninthOrNull(predicate) {
+    return this.matchOrNull(predicate, 9);
+  }
+
+  /**
+   * Returns the tenth element in the list or the tenth element that matches the predicate
+   * @param {Function | undefined} predicate
+   * @returns {*}
+   * @throws {NoSuchElementException}
+   */
+  tenth(predicate) {
+    return this.match(predicate, 10);
+  }
+
+  /**
+   * Returns the tenth element in the list or the tenth element that matches the predicate
+   * @param {Function} predicate
+   * @returns {*}
+   */
+  tenthOrNull(predicate) {
+    return this.matchOrNull(predicate, 10);
+  }
+
+  /**
+   * Returns the hundredth element in the list or the hundredth element that matches the predicate
+   * @param {Function | undefined} predicate
+   * @returns {*}
+   * @throws {NoSuchElementException}
+   */
+  hundredth(predicate) {
+    return this.match(predicate, 100);
+  }
+
+  /**
+   * Returns the hundredth element in the list or the hundredth element that matches the predicate
+   * @param {Function} predicate
+   * @returns {*}
+   */
+  hundredthOrNull(predicate) {
+    return this.matchOrNull(predicate, 100);
+  }
+
+  /**
    * Returns the last element in the list or the last element that matches the predicate
    * @param {Function | undefined} predicate
    * @returns {*}
@@ -287,6 +384,17 @@ class List extends Array {
   }
 
   /**
+   * Given a list of strings, joins each string with the given separator, prefix and postfix
+   * @param {*} separator
+   * @param {*} prefix
+   * @param {*} postfix
+   * @returns {String}
+   */
+  joinWith(separator, prefix = "", postfix = "") {
+    return `${prefix}${this.join(separator)}${postfix}`;
+  }
+
+  /**
    * Given a list of list of strings, joins each string with the given separator, prefix and postfix
    * @param {String} separator
    * @param {String} prefix
@@ -304,8 +412,10 @@ class List extends Array {
    * @returns {List}
    * @example listOf("Foo:Bar", "Baz:Test").splitEach(":") ==> [['Foo','Bar'],['Baz','Test']]
    */
-  splitEach(separator) {
-    return this.map((list) => list.split(separator));
+  splitEach(...separators) {
+    const pattern = separators.join("|");
+    const regex = new RegExp(pattern, "gi");
+    return this.map((list) => list.split(regex).toList());
   }
 
   /**
@@ -414,7 +524,7 @@ class List extends Array {
    * @example listOf(3,4,5,6,7).drop(3) ==> [3,4,5]
    */
   dropLast(n) {
-    return this.slice(0, n);
+    return this.slice(0, this.length - n);
   }
 
   /**
@@ -494,10 +604,10 @@ class List extends Array {
     const droppedList = listOf();
     for (const it of this) {
       if (predicate(it) && !dropped) {
-        dropped = true;
-      } else {
-        droppedList.push(it);
+        continue;
       }
+      dropped = true;
+      droppedList.push(it);
     }
     return droppedList;
   }
@@ -541,7 +651,7 @@ class List extends Array {
    * @returns {*}
    */
   elementAtOrElse(index, defaultValue) {
-    return index < index.length
+    return index < this.length
       ? this[index]
       : isFn(defaultValue)
       ? defaultValue()
@@ -653,7 +763,7 @@ class List extends Array {
    * @example listOf(3,4,null,7,undefined,0,8).filterFalsy() ==> [null, undefined]
    * @example listOf(3,4,null,7,undefined,0,8).filterFalsy(false) ==> [null, undefined,0]
    */
-  filterFalsy(zeroTruthy = true) {
+  filterFalsy(zeroTruthy = false) {
     return this.filter((it) =>
       zeroTruthy ? it !== 0 && !Boolean(it) : !Boolean(it)
     );
@@ -666,7 +776,7 @@ class List extends Array {
    */
   filterNotNullTo(destination) {
     const filtered = this.filterNotNull();
-    return new List(...destination.concat(filtered));
+    return destination.concat(filtered);
   }
 
   /**
@@ -719,7 +829,7 @@ class List extends Array {
   }
 
   /**
-   * Same as reduce
+   * Same as reduce, but throws an error if an initial value is not specified
    * @param {Function} callback
    * @param {*} initialValue
    * @returns {*}
@@ -815,7 +925,7 @@ class List extends Array {
 
   /**
    * Converts all elements in the list to upper case
-   * @returns {Array<String>}
+   * @returns {List<String>}
    * @example listOf('apple','banana','carrot').toUpperCase() ==> ['APPLE','BANANA','CARROT']
    */
   toUpperCase() {
@@ -823,8 +933,16 @@ class List extends Array {
   }
 
   /**
+   * Capitalizes the first letter of each word in the list
+   * @returns {List<String>}
+   */
+  capitalize() {
+    return listOf(...this).map(arg => arg.extend().capitalize());
+  }
+
+  /**
    * Converts all elements in the list to lower case
-   * @returns {Array<String>}
+   * @returns {List<String>}
    * @example listOf('Apple','Banana','CARROT').toLowerCase() ==> ['apple','banana','carrot']
    */
   toLowerCase() {
@@ -834,18 +952,19 @@ class List extends Array {
   /**
    * Returns the sum of all elements in a list
    * @returns {Number}
+   * @example listOf(1,2,3,4).sum() ==> 10
    */
   sum() {
     return this.reduce((acc, cur) => +acc + cur, 0);
   }
 
   /**
-   * Returns the sum of all elements in a list
+   * Returns the sum of all elements in a list given a selector function
    * @returns {Number}
+   * @example listOf({ item: 'apple', price: 2 }, { item: 'banana', price: 5 }).sumOf(it => it.price) ==> 7
    */
   sumOf(selector) {
-    const values = this.map(selector);
-    return values.sum();
+    return this.map(selector).sum();
   }
 
   /**
@@ -854,6 +973,14 @@ class List extends Array {
    */
   product() {
     return this.reduce((acc, cur) => acc * cur, 1);
+  }
+
+  /**
+   * Returns the multiplication product of all elements in a list given a selector function
+   * @returns {Number}
+   */
+  productOf(selector) {
+    return this.map(selector).product();
   }
 
   /**
@@ -873,16 +1000,28 @@ class List extends Array {
   }
 
   /**
-   * Chunks a list into specified size
+   * Splits a list down into smaller chunks specified by the size
    * @param {Number} size
-   * @returns {Array<Array<any>>}
+   * @returns {List<List>}
    */
   chunked(size) {
-    const chunkedArray = listOf();
+    if (size < 1) return this;
+    const chunkedList = listOf();
     for (let i = 0; i < this.length; i += Math.abs(size)) {
-      chunkedArray.push(this.slice(i, i + Math.abs(size)));
+      chunkedList.push(this.slice(i, i + Math.abs(size)));
     }
-    return chunkedArray;
+    return chunkedList;
+  }
+
+  /**
+   * Splits a list down into a number of smaller lists all of equal size, as specified by parts
+   * @param {Number} parts
+   * @returns {List<List>}
+   */
+  segment(parts) {
+    if (parts < 1 || parts > this.length) return this;
+    const size = Math.ceil(this.length / parts);
+    return this.chunked(size);
   }
 
   /**
@@ -953,7 +1092,7 @@ class List extends Array {
    * Returns the number of elements matching a given predicate.
    * If the predicate is a function, runs the function.
    * If the predicate is a value, counts the number of values.
-   * If no predicate is provided, returns the length of the array.
+   * If no predicate is provided, returns the length of the list.
    * @param {Function | *} predicate
    * @returns {Number}
    */
@@ -981,8 +1120,8 @@ class List extends Array {
    * @returns {Number}
    */
   maxOf(selector) {
-    const nums = this.map(selector);
-    return nums.max();
+    const max = this.map(selector).max();
+    return this.find((it) => selector(it) === max);
   }
 
   /**
@@ -992,13 +1131,13 @@ class List extends Array {
    * @returns {Number}
    */
   minOf(selector) {
-    const nums = this.map(selector);
-    return nums.min();
+    const min = this.map(selector).min();
+    return this.find((it) => selector(it) === min);
   }
 
   /**
    * Finds the max number in the arguments provided
-   * @this {Array<Number>}
+   * @this {List<Number>}
    * @returns {Number}
    */
   max() {
@@ -1007,13 +1146,17 @@ class List extends Array {
 
   /**
    * Finds the min number in the arguments provided
-   * @this {Array<Number>}
+   * @this {List<Number>}
    * @returns {Number}
    */
   min() {
     return Math.min(...this);
   }
 
+  /**
+   * Returns a list containing the min and the max value of the numbers in the list
+   * @returns {List}
+   */
   minmax() {
     return new List(this.min(), this.max());
   }
@@ -1089,8 +1232,8 @@ class List extends Array {
 
   /**
    * Rounds all the numbers in the arguments provided
-   * @this {Array<Number>}
-   * @returns {Array<Number>}
+   * @this {List<Number>}
+   * @returns {List<Number>}
    */
   round() {
     return this.map((item) => Math.round(item));
@@ -1098,8 +1241,8 @@ class List extends Array {
 
   /**
    * Rounds all the numbers up in the arguments provided
-   * @this {Array<Number>}
-   * @returns {Array<Number>}
+   * @this {List<Number>}
+   * @returns {List<Number>}
    */
   ceil() {
     return this.map((item) => Math.ceil(item));
@@ -1107,8 +1250,8 @@ class List extends Array {
 
   /**
    * Rounds all the numbers down in the arguments provided
-   * @this {Array<Number>}
-   * @returns {Array<Number>}
+   * @this {List<Number>}
+   * @returns {List<Number>}
    */
   floor() {
     return this.map((item) => Math.floor(item));
@@ -1175,27 +1318,27 @@ class List extends Array {
   /**
    * Returns a randomly chosen sample of elements within the list
    * @param {Number} sampleSize
-   * @param {Boolean} repeat
+   * @param {Boolean} allowRepeats
    * @returns {List}
    */
-  sample(sampleSize, repeat = true) {
+  sample(sampleSize, allowRepeats = true) {
     const sample = listOf();
 
-    if (repeat) {
+    if (allowRepeats) {
       while (sample.length < sampleSize) {
         const index = Math.floor(Math.random() * this.length);
         sample.push(this[index]);
       }
     } else {
-      const duplicateArray = this.slice();
+      const duplicateList = this.slice();
       if (sampleSize > this.length) {
         const error = `Sample size '${sampleSize}' is greater than list length '${this.length}'`;
         throw new Error(error);
       }
       while (sample.length < sampleSize) {
-        const index = Math.floor(Math.random() * duplicateArray.length);
-        const elem = duplicateArray[index];
-        duplicateArray.splice(index, 1);
+        const index = Math.floor(Math.random() * duplicateList.length);
+        const elem = duplicateList[index];
+        duplicateList.splice(index, 1);
         sample.push(elem);
       }
     }
@@ -1207,12 +1350,12 @@ class List extends Array {
    * @returns {List}
    */
   shuffled() {
-    return this.map((item) => item.sort(() => Math.random() - 0.5));
+    return this.sort(() => Math.random() - 0.5);
   }
 
   /**
    * Casts each item in the list to its boolean value
-   * @returns {Array<Boolean>}
+   * @returns {List<Boolean>}
    */
   toBoolean() {
     return this.map((item) => Boolean(item));
@@ -1246,7 +1389,7 @@ class List extends Array {
    */
   groupBy(keySelector) {
     const grouped = {};
-    const distinctProperties = Array.from(new Set(this.map(keySelector)));
+    const distinctProperties = List.from(new Set(this.map(keySelector)));
     distinctProperties.forEach((property) => {
       grouped[property] = this.filter((item) => keySelector(item) === property);
     });
@@ -1265,6 +1408,14 @@ class List extends Array {
     return { ...destination, ...grouped };
   }
 
+  /**
+   * Performs a binary search on a sorted list of elements
+   *
+   * @param {*} element
+   * @param {Number} fromIndex
+   * @param {Number} toIndex
+   * @returns {*}
+   */
   binarySearch(element, fromIndex = 0, toIndex = this.length) {
     const halfIndex = Math.floor((toIndex - fromIndex) / 2 + fromIndex);
     if (element === this[halfIndex]) return halfIndex;
@@ -1274,10 +1425,19 @@ class List extends Array {
       : this.binarySearch(element, halfIndex, toIndex);
   }
 
+  /**
+   * Performs a binary search on a sorted list of elements based on the keySelector
+   *
+   * @param {*} element
+   * @param {Function} keySelector
+   * @param {Number} fromIndex
+   * @param {Number} toIndex
+   * @returns {*}
+   */
   binarySearchBy(element, keySelector, fromIndex = 0, toIndex = this.length) {
     const halfIndex = Math.floor((toIndex - fromIndex) / 2 + fromIndex);
     const keySelect = keySelector(this[halfIndex]);
-    if (element === keySelect) return this[halfIndex];
+    if (element === keySelect) return halfIndex;
     if (Math.abs(fromIndex - toIndex) === 1) return null;
     return element < keySelect
       ? this.binarySearchBy(element, keySelector, fromIndex, halfIndex)
@@ -1410,7 +1570,7 @@ class List extends Array {
    * contains elements for which predicate yielded true, while second list
    * contains elements for which predicate yielded false.
    * @param {Function} predicate
-   * @returns {Array<Array<any>>}
+   * @returns {List<List<any>>}
    */
   partition(predicate) {
     const listTrue = listOf();
@@ -1431,7 +1591,7 @@ class List extends Array {
    * @returns {List}
    * @example listOf(3,4,8,7).repeat(3) ==> [3,4,8,7,3,4,8,7,3,4,8,7]
    */
-  repeat(n) {
+  repeat(n = 1) {
     const repeatedList = listOf();
     for (const _ of listOf(0, n - 1).range()) {
       repeatedList.push(...this);
@@ -1440,13 +1600,33 @@ class List extends Array {
   }
 
   /**
+   * Returns the reverse of the list without modifying the original
+   * @returns {List}
+   */
+  reversed() {
+    return listOf(...this).reverse();
+  }
+
+  /**
+   * Searches for a string in an array and returns the search results as a list
+   * @param {String} query
+   * @returns {List}
+   */
+  search(query, caseSensitive = false) {
+    if (caseSensitive) return this.filter((element) => element.includes(query));
+    return this.filter((element) =>
+      element.toLowerCase().includes(query.toLowerCase())
+    );
+  }
+
+  /**
    * Returns a list of all elements sorted according to natural sort order of the value returned by specified selector function.
    * @param {Function} selector
    * @returns {List}
    */
   sortBy(selector) {
-    const newArray = this.map((n) => n);
-    return newArray.sort((a, b) => (selector(a) > selector(b) ? 1 : -1));
+    const newList = this.map((n) => n);
+    return newList.sort((a, b) => (selector(a) > selector(b) ? 1 : -1));
   }
 
   /**
@@ -1465,8 +1645,8 @@ class List extends Array {
    * @returns {List}
    */
   sortByDescending(selector) {
-    const newArray = this.map((n) => n);
-    return newArray.sort((a, b) => (selector(a) > selector(b) ? -1 : 1));
+    const newList = this.map((n) => n);
+    return newList.sort((a, b) => (selector(a) > selector(b) ? -1 : 1));
   }
 
   /**
@@ -1563,7 +1743,7 @@ class List extends Array {
   }
 
   /**
-   * Returns all the prime numbers in the list
+   * Returns all the odd numbers in the list
    * @returns {List}
    * @example listOf(1,2,4,7,9).filterOddNumbers() ==> [1,7,9]
    */
@@ -1572,7 +1752,7 @@ class List extends Array {
   }
 
   /**
-   * Returns all the prime numbers in the list
+   * Returns all the even numbers in the list
    * @returns {List}
    * @example listOf(1,2,4,7,9).filterEvenNumbers() ==> [2,4]
    */
@@ -1731,11 +1911,11 @@ class List extends Array {
       );
       const sign = Math.sign(num);
       const number = Math.abs(num);
-      const [integer, decimal] = number.toString().split(".");
-      const chunks = integer.split("").reverse().toList().chunked(3);
       if (number === 0) {
         return "Zero";
       }
+      const [integer, decimal] = number.toString().split(".");
+      const chunks = integer.split("").reverse().toList().chunked(3);
 
       const lastDigits = (num, n) =>
         num.toString().slice(num.toString().length - n);
@@ -1765,13 +1945,13 @@ class List extends Array {
         return twoPlacesEnglish;
       }
 
-      const hundredthChunks = chunks.map((chunk) =>
+      const thousandthChunks = chunks.map((chunk) =>
         parseThreeDigits(chunk.reverse().join(""))
       );
 
       const integerEnglish =
         (sign < 0 ? "Minus " : "") +
-        hundredthChunks
+        thousandthChunks
           .map((digit, index) => {
             if (index === 0) return digit;
             if (digit) return `${digit} ${bigNums[index - 1]}`;
@@ -1799,13 +1979,24 @@ class List extends Array {
 
   /**
    * Replaces every occurence of an element in a list with a new value
-   * @param {any} element
-   * @param {any} replaced
+   * @param {any} element - the element to replace
+   * @param {any} replaced - the replacer
+   * @param {any} count - indicates how many elements to replace, default is -1 which indicates replace all
    * @returns {List}
-   * @example  listOf(1,2,3,4).replace(2,7) ==> [1,7,3,4]
+   * @example  listOf(1,2,3,4,2).replace(2,7) ==> [1,7,3,4,7]
+   * @example  listOf(1,2,3,4,2).replace(2,7,1) ==> [1,7,3,4,2]
    */
-  replace(element, replaced) {
-    return this.map((item) => (item === element ? replaced : item));
+  replace(element, replaced, count = -1) {
+    let replaceCount = 0;
+    return this.map((item) => {
+      if (item === element) {
+        if (replaceCount < count || count < 0) {
+          replaceCount++;
+          return replaced;
+        }
+      }
+      return item;
+    });
   }
 
   /**
@@ -2235,11 +2426,11 @@ class StringExtended extends String {
    * @param {String} joiner
    * @returns {String}
    */
-  capitalize(separators = [" "], joiner = " ") {
+  capitalize(separators = [" ", "-", ":", "_"], joiner = " ") {
     const pattern = separators.join("|");
     const regex = new RegExp(pattern, "gi");
     return this.split(regex)
-      .map((part) => (part[0] ? part[0].toUpperCase() : "") + part.slice(1))
+      .map((part) => (part[0] ? part[0].toUpperCase() : "") + part.slice(1).toLowerCase())
       .join(joiner);
   }
 }
@@ -2281,6 +2472,16 @@ function tripleOf(first, second, third) {
     throw new Error(error);
   }
   return new Triple(first, second, third);
+}
+
+function mapOf(...pairs) {
+  const map = new Map();
+  const isPairs = pairs.every((pair) => pair instanceof Pair);
+  if (!isPairs) throw new Error("Arguments must be of type 'Pair'");
+  pairs.forEach((pair) => {
+    map.set(pair.first, pair.second);
+  });
+  return map;
 }
 
 Array.prototype.toList = function () {
@@ -2334,6 +2535,10 @@ String.prototype.toExtended = function () {
   return new StringExtended(this);
 };
 
+String.prototype.extend = function () {
+  return new StringExtended(this);
+};
+
 class Utils {
   static uuid() {
     const chars = "0123456789abcdef".split("").toList();
@@ -2349,14 +2554,78 @@ class Utils {
   }
 }
 
+class Table {
+  #columns = listOf();
+  #rows = listOf();
+  constructor(name) {
+    this.name = Symbol(name);
+  }
+
+  /**
+   *
+   * @param  {...any} columns
+   */
+  addColumns(...columns) {
+    columns.forEach((column) => {
+      if (column instanceof Column) this.#columns.push(column);
+      else this.#columns.push(new Column(column));
+    });
+  }
+
+  addHeadings(...columns) {
+    return this.addColumns(...columns);
+  }
+
+  insertRow(...data) {
+    if (data.length !== this.#columns.length) {
+      const message = `Unable to insert entry of length (${
+        data.length
+      }) into column length of (${this.#columns.length})`;
+      throw new Error(message);
+    }
+    const pairs = data.map(
+      (item, index) => new Pair(this.#columns[index].name, item)
+    );
+    this.#rows.push(mapOf(...pairs));
+    return this.#rows[this.#rows.length - 1];
+  }
+
+  get rows() {
+    return this.#rows;
+  }
+
+  toString() {
+    const headings = this.#columns.map((column) => column.name).join(",");
+    const data = this.#rows
+      .map((row) => {
+        const iterator = row.values();
+        const values = listOf();
+        for (let i = 0; i < row.size; i++) {
+          values.push(iterator.next().value);
+        }
+        return values.join(",");
+      })
+      .join("\n");
+    return `${headings}\n${data}`;
+  }
+}
+
+class Column {
+  constructor(name) {
+    this.name = name;
+  }
+}
+
 module.exports = {
   listOf,
   listOfType,
   pairOf,
   tripleOf,
+  mapOf,
   Pair,
   Triple,
   List,
+  Table,
   LinkedList,
   DoublyLinkedList,
   Utils,
