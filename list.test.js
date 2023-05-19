@@ -187,15 +187,10 @@ function timeInMilliseconds(str) {
 
 // console.log("g-man".extend().capitalize());
 
-const input = listOf(2, 6, 9, -1, 3, 2, 2, 5);
-let output = input.count();
-console.log(output);
-// 8
+const list1 = listOf("id", "name");
+const list2 = listOf(12, "Jake");
 
-output = input.count((it) => it > 5);
-console.log(output);
-// 2
+let output = list1.mapWith(list2);
 
-output = input.count(2);
 console.log(output);
-// 3
+// Map { 'id' => 12, 'name' => 'Jake' }

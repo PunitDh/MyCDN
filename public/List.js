@@ -367,7 +367,7 @@ class List extends Array {
   /**
    * Given a list of lists, returns the last element of each list as a list
    * @returns {List}
-   * @example listOf(['a','b','c'], ['d','e','f'], ['x','y','z']).firstOfEach() ==> ['c','f','z']
+   * @example listOf(['a','b','c'], ['d','e','f'], ['x','y','z']).lastOfEach() ==> ['c','f','z']
    */
   lastOfEach() {
     return this.map((list) => list[list.length - 1]);
@@ -403,7 +403,9 @@ class List extends Array {
    * @example listOf(['a','b','c'], ['d','e','f'], ['x','y','z']).joinEach("-", "<", ">") ==> ['<a-b-c>','<d-e-f>','<x-y-z>']
    */
   joinEach(separator, prefix = "", postfix = "") {
-    return this.map((list) => list.toList().joinTo(separator, prefix, postfix));
+    return this.map((list) =>
+      list.toList().joinWith(separator, prefix, postfix)
+    );
   }
 
   /**
@@ -697,7 +699,7 @@ class List extends Array {
   }
 
   /**
-   * Appends all elements that are instances of specified type parameter R to the given destination.
+   * Appends all elements that are instances of specified type parameter to the given destination.
    * @param {List} destination
    * @param {Class} clazz
    * @returns {List}
@@ -849,8 +851,12 @@ class List extends Array {
    * @returns {String}
    * @example listOf('a','b','c').joinTo("-", "<", ">") ==> '<a-b-c>'
    */
-  joinTo(separator, prefix = "", postfix = "") {
-    return `${prefix}${this.join(separator)}${postfix}`;
+  joinTo(list, separator, prefix = "", postfix = "") {
+    if (!Array.isArray(list)) {
+      const message = `Argument 'list' must be a type of Array or List. Found: ${typeof list}`;
+      throw new Error(message);
+    }
+    return list.toList().add(`${prefix}${this.join(separator)}${postfix}`);
   }
 
   /**
@@ -937,7 +943,7 @@ class List extends Array {
    * @returns {List<String>}
    */
   capitalize() {
-    return listOf(...this).map(arg => arg.extend().capitalize());
+    return listOf(...this).map((arg) => arg.extend().capitalize());
   }
 
   /**
@@ -1049,13 +1055,16 @@ class List extends Array {
   }
 
   /**
-   * Finds all the elements that exist in both lists
-   * @param {List} list
+   * Finds all the elements that exist in all lists
+   * @param {...List} lists
    * @returns {List}
    */
-  intersection(list) {
-    if (!list || !(list instanceof Array)) return null;
-    return list.filter((item) => this.includes(item));
+  intersection(...lists) {
+    if (!lists.every((list) => list instanceof Array)) return null;
+
+    return lists.reduce((result, list) => {
+      return result.filter((item) => list.includes(item));
+    });
   }
 
   /**
@@ -1193,12 +1202,12 @@ class List extends Array {
    */
   scan(operation, initialValue = 0) {
     const accumulated = listOf();
-    this.reduce((acc, cur) => {
+    const finalValue = this.reduce((acc, cur) => {
       const operated = operation(acc, cur);
       accumulated.push(acc);
       return operated;
     }, initialValue);
-    return accumulated;
+    return accumulated.add(finalValue);
   }
 
   /**
@@ -1231,7 +1240,7 @@ class List extends Array {
   }
 
   /**
-   * Rounds all the numbers in the arguments provided
+   * Rounds all the numbers in the list to the nearest integer
    * @this {List<Number>}
    * @returns {List<Number>}
    */
@@ -1445,7 +1454,7 @@ class List extends Array {
   }
 
   /**
-   *
+   * Performs a map on the list and appends the result to a destination list
    * @param {List} destination
    * @param {Function} transform
    */
@@ -1463,8 +1472,8 @@ class List extends Array {
     let results = listOf();
     for (let it = 0; it < this.length; it++) {
       if (this[it] !== null && this[it] !== undefined) {
-        const promise = transform(this[it], it);
-        results.push(promise);
+        const result = transform(this[it], it);
+        results.push(result);
       }
     }
     return results;
@@ -1679,12 +1688,14 @@ class List extends Array {
 
   /**
    * Adds the element to the list and returns the list
-   * @param {any} element
+   * @param {any} elements
    * @returns {List}
-   * @example listOf(3,4,8,7).add(6) ==> [3,4,8,7,6]
+   * @example listOf(3,4,8,7).add(6,7) ==> [3,4,8,7,6,7]
    */
-  add(element) {
-    this.push(element);
+  add(...elements) {
+    for (const element of elements) {
+      this.push(element);
+    }
     return this;
   }
 
@@ -1820,6 +1831,24 @@ class List extends Array {
   }
 
   /**
+   * Prefixes each element in the list with a specified string
+   * @param {String} string
+   * @returns {List<String>}
+   */
+  prefix(string) {
+    return this.map((item) => `${string}${item}`);
+  }
+
+  /**
+   * Postfixes each element in the list with a specified string
+   * @param {String} string
+   * @returns {List<String>}
+   */
+  postfix(string) {
+    return this.map((item) => `${item}${string}`);
+  }
+
+  /**
    * Multiplies each element in the list with a given number
    * @param {Number} number
    * @returns {List}
@@ -1851,12 +1880,12 @@ class List extends Array {
 
   /**
    * Sets the decimal places of each number in the list
-   * @param {Number} number
+   * @param {Number} digits
    * @returns {List}
    * @example listOf(1,2,3).toFixed(2) ==> ['1.00', '2.00', '3.00']
    */
-  toFixed(number) {
-    return this.map((n) => n.toFixed(number));
+  toFixed(digits) {
+    return this.map((n) => n.toFixed(digits));
   }
 
   /**
@@ -2005,6 +2034,10 @@ class List extends Array {
    * @example listOf(1,4).range()  ==> [1,2,3,4]
    */
   range() {
+    if (isNaN(this[0]) || isNaN(this[1])) {
+      const message = `Invalid list parameters`;
+      throw new Error(message);
+    }
     const start = this[0];
     const end = this[1];
     const arr = listOf();
@@ -2430,7 +2463,10 @@ class StringExtended extends String {
     const pattern = separators.join("|");
     const regex = new RegExp(pattern, "gi");
     return this.split(regex)
-      .map((part) => (part[0] ? part[0].toUpperCase() : "") + part.slice(1).toLowerCase())
+      .map(
+        (part) =>
+          (part[0] ? part[0].toUpperCase() : "") + part.slice(1).toLowerCase()
+      )
       .join(joiner);
   }
 }
