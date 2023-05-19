@@ -52,6 +52,7 @@ The `List` object extends the `Array` object, so all functionality that is avail
 ## `add(...elements)`
 
 **Description**
+
 Adds elements to the list and returns the list.
 
 **Usage**
@@ -68,6 +69,7 @@ console.log(output);
 ## `all(predicate, thisArg = undefined)`
 
 **Description**
+
 Checks whether _all_ the elements in the list matches a given `predicate`
 
 **Usage**
@@ -88,6 +90,7 @@ console.log(output);
 ## `any(predicate, thisArg = undefined)`
 
 **Description**
+
 Checks whether _any_ of the elements in the list matches a given element
 
 **Usage**
@@ -106,6 +109,7 @@ console.log(output);
 ## `associate(transform)`
 
 **Description**
+
 Returns an object containing key-value pairs provided by transform function applied to each elements of the list
 
 **Usage**
@@ -121,6 +125,7 @@ console.log(output);
 ## `associateWith(valueSelector)`
 
 **Description**
+
 Returns a `Map` where keys are elements from the given collection and values are produced by the valueSelector function applied to each element.
 
 **Usage**
@@ -146,6 +151,7 @@ console.log(associated);
 ## `binarySearch(element, fromIndex = 0, toIndex = this.length)`
 
 **Description**
+
 Performs a binary search on a sorted list of elements and returns the index of the search result
 
 **Usage**
@@ -160,6 +166,7 @@ console.log(result);
 ## `binarySearchBy(element, keySelector, fromIndex = 0, toIndex = this.length)`
 
 **Description**
+
 Performs a binary search on a sorted list of elements based on the keySelector
 
 **Usage**
@@ -181,6 +188,7 @@ console.log(result);
 ## `capitalize()`
 
 **Description**
+
 Capitalizes the first letter of each word in the list
 
 **Usage**
@@ -197,6 +205,7 @@ console.log(output);
 ## `ceil()`
 
 **Description**
+
 Rounds up all the numbers in the list
 
 **Usage**
@@ -213,6 +222,7 @@ console.log(ceil);
 ## `chunked(size)`
 
 **Description**
+
 Splits a list down into smaller chunks specified by the size
 
 **Usage**
@@ -233,6 +243,7 @@ console.log(output);
 ## `clear()`
 
 **Description**
+
 Clears all elements from the list.
 
 **Note**
@@ -252,6 +263,7 @@ console.log(list);
 ## `compact()`
 
 **Description**
+
 Removes from the list all falsy values, including `0`, `false`, `undefined`, `null` and empty strings
 
 **Usage**
@@ -280,6 +292,7 @@ console.log(output);
 ## `contains(...elements)`
 
 **Description**
+
 Checks if the list contains any of the given elements
 
 **Usage**
@@ -299,6 +312,7 @@ console.log(output);
 ## `containsAll(...elements)`
 
 **Description**
+
 Checks if a list contains all of the given elements
 
 **Usage**
@@ -317,6 +331,7 @@ console.log(contains);
 ## `count(predicate)`
 
 **Description**
+
 Returns the number of elements matching a given `predicate`.
 
 - If the `predicate` is a function, returns the number of instances for which the function returns `true`.
@@ -345,6 +360,7 @@ console.log(output);
 ## `counts()`
 
 **Description**
+
 Counts unique occurences in the list and returns them as an object
 
 **Usage**
@@ -362,6 +378,7 @@ console.log(output);
 ## `delete(...elements)`
 
 **Description**
+
 Deletes any given number of elements from a list.
 
 **Note**
@@ -381,6 +398,7 @@ console.log(fruits);
 ## `difference()`
 
 **Description**
+
 Finds all the elements that are _not_ common to both lists
 
 **Note**
@@ -401,6 +419,7 @@ console.log(difference);
 ## `distinct()`
 
 **Description**
+
 Returns all the unique elements in the list
 
 **Note**
@@ -420,6 +439,7 @@ console.log(output);
 ## `distinctBy(keySelector)`
 
 **Description**
+
 Returns a list containing only elements from the given collection having distinct keys returned by the given selector function.
 
 **Usage**
@@ -448,6 +468,7 @@ console.log(output);
 ## `divide(number)`
 
 **Description**
+
 Divides each element in the list with a given `number`
 
 **Usage**
@@ -464,6 +485,7 @@ console.log(output);
 ## `drop(n)`
 
 **Description**
+
 Returns a list containing all elements except first `n` elements
 
 **Usage**
@@ -480,6 +502,7 @@ console.log(output);
 ## `dropLast(n)`
 
 **Description**
+
 Returns a list containing all elements except last `n` elements
 
 **Usage**
@@ -496,6 +519,7 @@ console.log(dropped);
 ## `dropLastWhile(predicate)`
 
 **Description**
+
 Returns a list containing all elements except last elements that satisfy the given `predicate`.
 
 **Usage**
@@ -512,6 +536,7 @@ console.log(dropped);
 ## `dropWhile(predicate)`
 
 **Description**
+
 Returns a list containing all elements except first elements that satisfy the given `predicate`.
 
 **Usage**
@@ -528,6 +553,7 @@ console.log(dropped);
 ## `eighth(predicate)`
 
 **Description**
+
 Returns the eighth element in the list, or the eighth element that matches the `predicate`.
 
 **Note**
@@ -554,6 +580,7 @@ console.log(output);
 ## `eighthOrNull(predicate)`
 
 **Description**
+
 Returns the eighth element in the list or the eighth element that matches the `predicate`, or `null` if the element is not found.
 
 **Usage**
@@ -593,6 +620,7 @@ console.log(eighth);
 ## `elementAt(index)`
 
 **Description**
+
 Returns an element at the given `index` or throws an `IndexOutOfBoundsException` if the `index` is larger than the length of the list.
 
 **Usage**
@@ -612,6 +640,7 @@ console.log(element);
 ## `elementAtOrElse(index, defaultValue)`
 
 **Description**
+
 Returns an element at the given `index` or the result of calling the `defaultValue` function if the `index` is out of bounds of this list.
 
 **Note**
@@ -638,6 +667,7 @@ console.log(element);
 ## `elementAtOrNull(index)`
 
 **Description**
+
 Returns an element at the given `index` or `null` if the `index` is out of bounds.
 
 **Usage**
@@ -657,6 +687,7 @@ console.log(output);
 ## `equals(list)`
 
 **Description**
+
 Checks if two lists are equal using a deep comparison
 
 **Usage**
@@ -678,6 +709,7 @@ console.log(output);
 ## `exclude(...elements)`
 
 **Description**
+
 Takes in a variable number of arguments and excludes them from the list.
 
 **Note**
@@ -704,6 +736,7 @@ console.log(output);
 ## `exists(predicate)`
 
 **Description**
+
 Checks if an item exists in the list that matches the given `predicate`
 
 **Note**
@@ -730,6 +763,7 @@ console.log(output);
 ## `fifth(predicate)`
 
 **Description**
+
 Returns the fifth element in the list or the fifth element that matches the `predicate`
 
 **Note:**
@@ -756,6 +790,7 @@ console.log(output);
 ## `fifthOrNull(predicate)`
 
 **Description**
+
 Returns the fifth element in the list or the fifth element that matches the predicate, or `null` if the element is not found
 
 **Usage**
@@ -779,6 +814,7 @@ console.log(output);
 ## `filterEvenNumbers()`
 
 **Description**
+
 Returns all the even numbers in the list
 
 **Usage**
@@ -795,6 +831,7 @@ console.log(output);
 ## `filterFalsy(zeroTruthy=false)`
 
 **Description**
+
 Only returns values that are falsy.
 
 **Params**
@@ -818,6 +855,7 @@ console.log(filtered);
 ## `filterFirstNotNull()`
 
 **Description**
+
 Filters out the first `null` element, but keeps the rest
 
 **Usage**
@@ -834,6 +872,7 @@ console.log(output);
 ## `filterIsInstance(className)`
 
 **Description**
+
 Returns a list containing all elements that are instances of the specified class
 
 **Usage**
@@ -887,6 +926,7 @@ console.log(output);
 ## `filterIsInstanceTo(destinationList, className)`
 
 **Description**
+
 Appends all elements that are instances of specified `className` to the given `destination`.
 
 **Usage**
@@ -926,6 +966,7 @@ console.log(output);
 ## `filterNot(predicate)`
 
 **Description**
+
 Returns a list containing all elements _not_ matching the given `predicate`.
 
 **Usage**
@@ -941,6 +982,7 @@ console.log(output);
 ## `filterNotNull()`
 
 **Description**
+
 Filters out all the elements in the list that are not `null`. Keeps `undefined` values.
 
 **Usage**
@@ -964,6 +1006,7 @@ console.log(filtered);
 ## filterNotUndefined
 
 **Description**
+
 Filters out all the elements in the list that are not `undefined`. Keeps `null` values.
 
 **Usage**
@@ -980,6 +1023,7 @@ console.log(output);
 ## `filterOddNumbers()`
 
 **Description**
+
 Returns all the odd numbers in the list
 
 **Usage**
@@ -996,6 +1040,7 @@ console.log(output);
 ## `filterPrimeNumbers()`
 
 **Description**
+
 Returns all the prime numbers in the list
 
 **Usage**
@@ -1016,6 +1061,7 @@ console.log(output);
 ## `filterTruthy(zeroTruthy = true)`
 
 **Description**
+
 Filters out all values that are truthy. Value of '0' is treated as truthy by default
 
 **Usage**
@@ -1035,6 +1081,7 @@ console.log(output);
 ## `first(predicate)`
 
 **Description**
+
 Returns the first element in the list or the first element that matches the `predicate`
 
 **Note**
@@ -1062,6 +1109,7 @@ console.log(output);
 ## `firstHalf(keepMiddle = true)`
 
 **Description**
+
 Returns the first half of the list
 
 @param `keepMiddle` (Boolean) - controls whether the middle element of the list should be included in this list if the size of the list is an odd number
@@ -1090,6 +1138,7 @@ console.log(firstHalf);
 ## `firstOfEach()`
 
 **Description**
+
 Returns the first element of each element in the list
 
 ```js
@@ -1104,6 +1153,7 @@ console.log(output);
 ## `firstOrNull(predicate)`
 
 **Description**
+
 Returns the first element in the list or the first element that matches the `predicate`
 
 **Note**
@@ -1130,6 +1180,7 @@ console.log(output);
 ## flatten(depth=1)
 
 **Description**
+
 Flattens the list specified by the depth.
 
 **Note**
@@ -1155,6 +1206,7 @@ console.log(output);
 ## `floor()`
 
 **Description**
+
 Rounds down all the numbers in the list
 
 **Usage**
@@ -1203,6 +1255,7 @@ console.log(output);
 ## `halve(keepMiddle = true)`
 
 **Description**
+
 Halves the list into two and returns the two parts.
 
 - If the list contains an odd number of elements, the middle element is added to the second list.
@@ -1230,6 +1283,7 @@ console.log(output);
 ## `head(n=1)`
 
 **Description**
+
 Returns the first `n` elements in a list
 
 Default value of `n` is `1`.
@@ -1258,6 +1312,7 @@ console.log(head);
 ## `ifEmpty(defaultValue)`
 
 **Description**
+
 If the list is empty, return the `defaultValue`. Or else returns the list.
 
 **Usage**
@@ -1277,6 +1332,7 @@ console.log(output);
 ## `ifNotEmpty(defaultValue)`
 
 **Description**
+
 If the list is not empty, return the defaultValue. Or else return the list.
 
 **Usage**
@@ -1296,6 +1352,7 @@ console.log(output);
 ## `includesAll(...args)`
 
 **Description**
+
 Returns true if the list includes all the specified elements, else returns false
 
 **Usage**
@@ -1315,6 +1372,7 @@ console.log(output);
 ## `indices`
 
 **Description**
+
 Returns the valid indices of the list
 
 **Usage**
@@ -1329,6 +1387,7 @@ console.log(output);
 ## `indicesOf(element)`
 
 **Description**
+
 Returns every index of the occurence of the element in the list
 
 **Usage**
@@ -1343,6 +1402,7 @@ console.log(output);
 ## `intersect(...lists)`
 
 **Description**
+
 Finds all the elements that exist in all given lists
 
 **Note**
@@ -1382,6 +1442,7 @@ console.log(output);
 ## `intersection(...lists)`
 
 **Description**
+
 Alias for `intersect(...lists)`
 
 **Usage**
@@ -1416,6 +1477,7 @@ console.log(output);
 ## isEmpty
 
 **Description**
+
 Returns whether a list is empty
 
 **Usage**
@@ -1435,6 +1497,7 @@ console.log(output);
 ## isNotEmpty
 
 **Description**
+
 Returns whether a list is not empty
 
 **Usage**
@@ -1460,6 +1523,7 @@ console.log(output);
 - `postfix`
 
 **Description**
+
 Given a list of lists, joins each list with the given separator, prefix and postfix
 
 **Usage**
@@ -1479,6 +1543,7 @@ console.log(output);
 ## `joinTo(list, separator, prefix = "", postfix = "")`
 
 **Description**
+
 Joins a list using a `separator`, `prefix` and `postfix`, then appends that string to the end of a specified `list`.
 
 **Usage**
@@ -1499,6 +1564,7 @@ console.log(output);
 - `postfix`
 
 **Description**
+
 Given a list of strings, joins them with the given separator, prefix and postfix
 
 **Usage**
@@ -1519,6 +1585,7 @@ console.log(output);
 ## `lastHalf(keepMiddle = false)`
 
 **Description**
+
 Returns the second half of the list
 
 **Usage**
@@ -1538,6 +1605,7 @@ console.log(firstHalf);
 ## `lastIndex`
 
 **Description**
+
 Returns the last valid index of the list
 
 **Usage**
@@ -1554,6 +1622,7 @@ console.log(output);
 ## `lastOfEach()`
 
 **Description**
+
 Returns the last element of each element in the list
 
 ```js
@@ -1576,6 +1645,7 @@ console.log(output);
 ## `mapNotNull(transform)`
 
 **Description**
+
 Performs a map on all elements in the list that are not `null` or `undefined`
 
 **Usage**
@@ -1599,6 +1669,7 @@ console.log(output);
 ## `mapNotNullTo(destination, transform)`
 
 **Description**
+
 Performs a map on all elements in the list that are not null or undefined and appends it to the `destination` list
 
 **Note**
@@ -1627,6 +1698,7 @@ console.log(output);
 ## mapTo(destination, transform)
 
 **Description**
+
 Performs a `transform` on each element of the list and appends the result to a `destination` list
 
 **Usage**
@@ -1649,6 +1721,7 @@ console.log(output);
 ## `mapWith(list)`
 
 **Description**
+
 Given two lists, merges them into a map where the first list contains the keys and the second list contains the values.
 
 **Usage**
@@ -1666,6 +1739,7 @@ console.log(output);
 ## `match(predicate, nth = 1)`
 
 **Description**
+
 Returns the `nth` element in the list or the `nth` element that matches the `predicate`
 
 **Note**
@@ -1684,6 +1758,7 @@ Throws an error if no item matches the `predicate`
 ## `max()`
 
 **Description**
+
 Finds the largest number in the list
 
 **Usage**
@@ -1704,6 +1779,7 @@ console.log(output);
 ## `mean()`
 
 **Description**
+
 Returns the average of the list
 
 **Usage**
@@ -1718,6 +1794,7 @@ console.log(output);
 ## `median()`
 
 **Description**
+
 Returns the median number in the list
 
 **Usage**
@@ -1734,6 +1811,7 @@ console.log(output);
 ## `min()`
 
 **Description**
+
 Finds the smallest number in the list
 
 **Usage**
@@ -1754,6 +1832,7 @@ console.log(output);
 ## `minmax()`
 
 **Description**
+
 Returns a list containing the smallest and the largest numbers in the list
 
 **Usage**
@@ -1778,6 +1857,7 @@ console.log(output);
 ## `mode()`
 
 **Description**
+
 Returns the most frequently occuring element in the list
 
 **Usage**
@@ -1806,6 +1886,7 @@ console.log(output);
 ## none(predicate)
 
 **Description**
+
 Returns `true` if none of the items match the given `predicate`, else returns `false`. If no `predicate` is provided, returns `true` if the list is empty, else returns `false`.
 
 **Usage**
@@ -1825,6 +1906,7 @@ console.log(output);
 ## `nthOfEach(n)`
 
 **Description**
+
 Returns the `nth` element of each element in the list
 
 **Usage**
@@ -1841,6 +1923,7 @@ console.log(output);
 ## pairWith(list)
 
 **Description**
+
 Given two lists, merges them into an object where the first list contains the keys and the second list contains the values.
 
 **Usage**
@@ -1858,6 +1941,7 @@ console.log(output);
 ## `partition(predicate)`
 
 **Description**
+
 Splits the original collection into pair of lists, where the first list contains elements for which `predicate` yielded `true`, while the second list contains elements for which `predicate` yielded `false`.
 
 **Usage**
@@ -1881,6 +1965,7 @@ console.log(output);
 ## `postfix(string)`
 
 **Description**
+
 Postfixes each element in the list with a specified string
 
 **Usage**
@@ -1901,6 +1986,7 @@ console.log(output);
 ## `prefix(string)`
 
 **Description**
+
 Prefixes each element in the list with a specified string
 
 **Usage**
@@ -1917,6 +2003,7 @@ console.log(output);
 ## `product()`
 
 **Description**
+
 Returns the multiplication of all the numbers in the list.
 
 **Usage**
@@ -1933,6 +2020,7 @@ console.log(output);
 ## `random()`
 
 **Description**
+
 Returns a randomly chosen element within the list
 
 **Usage**
@@ -1952,6 +2040,7 @@ console.log(output);
 ## `range()`
 
 **Description**
+
 Returns a list of numbers counting from start to end.
 
 **Note**
@@ -1986,6 +2075,7 @@ console.log(output);
 ## `repeat(n=1)`
 
 **Description**
+
 Repeats the list `n` number of times and returns the result
 
 **Usage**
@@ -2006,6 +2096,7 @@ console.log(output);
 ## `replace(element, replacer, count = -1)`
 
 **Description**
+
 Replaces every occurence of an element in a list with a new value
 
 **Params**
@@ -2030,6 +2121,7 @@ console.log(output);
 ## `round()`
 
 **Description**
+
 Rounds all the numbers in the list to the nearest integer
 
 **Usage**
@@ -2048,6 +2140,7 @@ console.log(output);
 ## `sample(sampleSize, allowRepeats=true)`
 
 **Description**
+
 Returns a randomly chosen sample of elements within the list.
 
 **Note**
@@ -2083,6 +2176,7 @@ console.log(output);
 ## `scan(operation, initialValue = 0)`
 
 **Description**
+
 Returns a list containing successive accumulation values generated by applying operation from left to right to each element and current accumulator value that starts with an initial value.
 
 **Note**
@@ -2102,6 +2196,7 @@ console.log(output);
 ## `search(query, caseSensitive=false)`
 
 **Description**
+
 Searches for a string in an array and returns the search results as a list
 
 **Usage**
@@ -2137,6 +2232,7 @@ console.log(output);
 ## `secondHalf(keepMiddle=false)`
 
 **Description**
+
 Returns the second half of the list.
 
 **Note**
@@ -2163,6 +2259,7 @@ console.log(output);
 ## `segment(parts)`
 
 **Description**
+
 Splits a list down into a number of smaller parts as specified by `parts`
 
 **Note**
@@ -2202,6 +2299,7 @@ console.log(output);
 ## `shuffled()`
 
 **Description**
+
 Returns a new list with its original elements randomly shuffled
 
 **Usage**
@@ -2218,6 +2316,7 @@ console.log(output);
 ## `single(predicate)`
 
 **Description**
+
 Returns the single element matching the given predicate, or throws exception if there is none or more than one matching element.
 
 **Usage**
@@ -2245,6 +2344,7 @@ console.log(output);
 ## `singleOrNull(predicate)`
 
 **Description**
+
 Returns the single element matching the given predicate, or returns `null` if there is none or more than one matching element.
 
 **Usage**
@@ -2292,6 +2392,7 @@ console.log(output);
 ## `sortNumbers()`
 
 **Description**
+
 Given a list of numbers, sorts them in ascending order.
 
 **Note**
@@ -2327,6 +2428,7 @@ console.log(output);
 ## `sortNumbersDescending()`
 
 **Description**
+
 Given a list of numbers, sorts them in descending order
 
 ```js
@@ -2341,16 +2443,19 @@ console.log(output);
 ## sortedBy(selector)
 
 **Description**
+
 Alias for `sortBy()`
 
 ## sortedByDescending
 
 **Description**
+
 Alias for `sortByDescending()`
 
 ## `splitEach(...separators)`
 
 **Description**
+
 Given a list of separators, splits each string in the list at each of the given separators
 
 **Usage**
@@ -2378,6 +2483,7 @@ console.log(output);
 ## `stdev()`
 
 **Description**
+
 Calculates the standard deviation of a list of numbers
 
 **Usage**
@@ -2394,6 +2500,7 @@ console.log(output);
 ## `subList(fromIndex, toIndex)`
 
 **Description**
+
 Creates a sub list based on the `fromIndex` and `toIndex`
 
 **Note**
@@ -2413,6 +2520,7 @@ console.log(output);
 ## `sum()`
 
 **Description**
+
 Returns the sum of all numbers in a list
 
 **Usage**
@@ -2433,6 +2541,7 @@ console.log(output);
 ## `tail(n=1)`
 
 **Description**
+
 Returns the last `n` elements in a list
 
 **Usage**
@@ -2505,6 +2614,7 @@ console.log(output);
 ## `toFixed(digits)`
 
 **Description**
+
 Sets the decimal places of each number in the list
 
 **Usage**
@@ -2521,6 +2631,7 @@ console.log(output);
 ## `toLowerCase()`
 
 **Description**
+
 Converts all elements in the list to lower case
 
 **Usage**
@@ -2535,6 +2646,7 @@ console.log(output);
 ## `toMap()`
 
 **Description**
+
 Converts a list of lists to a map
 
 **Usage**
@@ -2549,6 +2661,7 @@ console.log(output);
 ## `toObject()`
 
 **Description**
+
 Converts a list of lists to an object
 
 **Usage**
@@ -2563,6 +2676,7 @@ console.log(output);
 ## `toUpperCase()`
 
 **Description**
+
 Converts all elements in the list to upper case
 
 **Usage**
@@ -2577,6 +2691,7 @@ console.log(output);
 ## `trimEach()`
 
 **Description**
+
 Trims each string in the list off its trailing whitespace
 
 **Usage**
@@ -2593,6 +2708,7 @@ console.log(output);
 ## `union(list)`
 
 **Description**
+
 Returns a `Set` containing all distinct elements from both collections.
 
 **Note**
@@ -2613,6 +2729,7 @@ console.log(output);
 ## `unique()`
 
 **Description**
+
 Returns all the unique elements in the list as a `Set` object
 
 **Note**
@@ -2636,6 +2753,7 @@ console.log(unique);
 ## `zip(...lists)`
 
 **Description**
+
 Given two or more lists, returns pairs of one element in one list with another element in the other list
 
 **Usage**
