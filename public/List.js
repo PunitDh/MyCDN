@@ -1,3 +1,5 @@
+const e = require("express");
+
 class IndexOutOfBoundsException extends Error {
   constructor(...args) {
     super(...args);
@@ -35,12 +37,12 @@ class List extends Array {
   }
 
   /**
-   * Returns the element at a particular index of a list
+   * Returns the element at a particular index, or returns the optional parameter if no element is found
    * @param {Number} index
    * @returns {*}
    */
-  get(index) {
-    return this[index];
+  get(index, optional) {
+    return Object.keys(this).includes(String(index)) ? this[index] : optional;
   }
 
   /**
@@ -59,15 +61,6 @@ class List extends Array {
    */
   containsAll(...elements) {
     return this.includesAll(...elements);
-  }
-
-  /**
-   * Returns the nth element in the list
-   * @param {Number} index
-   * @returns {*}
-   */
-  get(index) {
-    return this[index];
   }
 
   /**
@@ -1129,8 +1122,20 @@ class List extends Array {
    * @returns {Number}
    */
   maxOf(selector) {
+    return this.map(selector).max();
+  }
+
+  /**
+   * Returns the first element yielding the largest value of the given function.
+   * @param {Function} selector
+   * @param {Boolean} findAll
+   * @returns {*}
+   */
+  maxBy(selector, findAll = false) {
     const max = this.map(selector).max();
-    return this.find((it) => selector(it) === max);
+    return findAll
+      ? this.filter((it) => selector(it) === max)
+      : this.find((it) => selector(it) === max);
   }
 
   /**
@@ -1140,8 +1145,21 @@ class List extends Array {
    * @returns {Number}
    */
   minOf(selector) {
+    return this.map(selector).min();
+  }
+
+  /**
+   * Returns the smallest value among all values produced by selector
+   * function applied to each element in the collection.
+   * @param {Function} selector
+   * @param {Boolean} findAll
+   * @returns {Number}
+   */
+  minBy(selector, findAll = false) {
     const min = this.map(selector).min();
-    return this.find((it) => selector(it) === min);
+    return findAll
+      ? this.filter((it) => selector(it) === min)
+      : this.find((it) => selector(it) === min);
   }
 
   /**
@@ -1167,11 +1185,30 @@ class List extends Array {
    * @returns {List}
    */
   minmax() {
-    return new List(this.min(), this.max());
+    return { min: this.min(), max: this.max() };
   }
 
+  /**
+   * Returns an `Object` containing the smallest and largest values among all values produced by `selector` function applied to each element in the collection.
+   * @param {Function} selector
+   * @returns {Object}
+   */
   minmaxOf(selector) {
-    return new List(this.minOf(selector), this.maxOf(selector));
+    return { min: this.minOf(selector), max: this.maxOf(selector) };
+  }
+
+  /**
+   * Returns the first element yielding the smallest value of the given function.
+   * If `findAll` is set `true`, returns all the elements that yield the smallest value.
+   * @param {Function} selector
+   * @param {Boolean} findAll
+   * @returns {Object}
+   */
+  minmaxBy(selector, findAll = false) {
+    return {
+      min: this.minBy(selector, findAll),
+      max: this.maxBy(selector, findAll),
+    };
   }
 
   /**
@@ -1414,7 +1451,14 @@ class List extends Array {
    */
   groupByTo(destination, keySelector) {
     const grouped = this.groupBy(keySelector);
-    return { ...destination, ...grouped };
+    for (const key of Object.keys(grouped)) {
+      if (destination.hasOwnProperty(key)) {
+        destination[key] = [...destination[key], ...grouped[key]];
+      } else {
+        destination[key] = grouped[key];
+      }
+    }
+    return destination;
   }
 
   /**
@@ -1725,14 +1769,7 @@ class List extends Array {
    * @example listOf(3,4,8,8,7,6).mode() ==> 8
    */
   mode() {
-    const counts = {};
-    for (let i = 0; i < this.length; i++) {
-      if (counts[this[i]]) {
-        counts[this[i]] += 1;
-      } else {
-        counts[this[i]] = 1;
-      }
-    }
+    const counts = this.counts();
     const max = Math.max(...Object.values(counts));
     for (const [key, value] of Object.entries(counts)) {
       if (value === max) {
@@ -1812,6 +1849,14 @@ class List extends Array {
     const obj = {};
     for (const [idx, item] of this.entries()) {
       obj[item] = transform(item, idx);
+    }
+    return obj;
+  }
+
+  associateBy(keySelector) {
+    const obj = {};
+    for (const item of this) {
+      obj[keySelector(item)] = item;
     }
     return obj;
   }
@@ -2101,6 +2146,21 @@ class List extends Array {
    */
   static isList(object) {
     return object instanceof List;
+  }
+
+  /**
+   * Returns true if all the specified lists are of equal lengths, else returns false
+   * @param {List} lists
+   * @returns {Boolean}
+   */
+  equalsLength(...lists) {
+    return (
+      lists
+        .map((it) => it.length)
+        .toList()
+        .add(this.length)
+        .distinct().length === 1
+    );
   }
 
   /**

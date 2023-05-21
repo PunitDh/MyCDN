@@ -12,6 +12,7 @@ You can declare a list using a constructor.
 const { List } = require("./List.js");
 
 const list = new List(1, 2, 3, 4);
+
 console.log(list);
 // List(4) [ 1, 2, 3, 4 ]
 ```
@@ -24,6 +25,7 @@ You can also use the `listOf` function, similar to Kotlin.
 const { listOf } = require("./List.js");
 
 const list = listOf("a", "b", "c", "d");
+
 console.log(list);
 // List(4) [ 'a', 'b', 'c', 'd' ]
 ```
@@ -36,7 +38,9 @@ You can also convert a JavaScript array to a list.
 require("./List.js");
 
 const array = [9, 8, 7, 6];
+
 const list = array.toList();
+
 console.log(list);
 // List(4) [ 9, 8, 7, 6 ]
 ```
@@ -57,11 +61,11 @@ Adds elements to the list and returns the list.
 
 **Usage**
 
-**Usage**
-
 ```js
 const input = listOf("a", "b", "c");
+
 const output = input.add("d", "e");
+
 console.log(output);
 // List(4) [ 'a', 'b', 'c', 'd', 'e' ]
 ```
@@ -74,10 +78,9 @@ Checks whether _all_ the elements in the list matches a given `predicate`
 
 **Usage**
 
-**Usage**
-
 ```js
 const input = listOf(4, 5, 6);
+
 let output = input.all((item) => item > 3);
 console.log(output);
 // true
@@ -97,6 +100,7 @@ Checks whether _any_ of the elements in the list matches a given element
 
 ```js
 const input = listOf(4, 5, 6);
+
 let output = input.any((item) => item > 7);
 console.log(output);
 // false
@@ -110,16 +114,48 @@ console.log(output);
 
 **Description**
 
-Returns an object containing key-value pairs provided by transform function applied to each elements of the list
+Returns an object containing key-value pairs provided by `transform` function applied to each elements of the list
 
 **Usage**
 
 ```js
-const input = listOf("apple", "banana", "orange");
-let output = input.associate((item) => item.toUpperCase());
+const people = listOf(
+  { id: 1, name: "Alice" },
+  { id: 2, name: "Bob" },
+  { id: 3, name: "Charlie" }
+);
+
+const output = people.associate(
+  (it) => it.id,
+  (it) => it.name.toUpperCase()
+);
 
 console.log(output);
-// { apple: 'APPLE', banana: 'BANANA', orange: 'ORANGE' }
+// { '1': 'ALICE', '2': 'BOB', '3': 'CHARLIE' }
+```
+
+## `associateBy(keySelector)`
+
+**Description**
+Returns an object containing key-value pairs provided by `keySelector` function applied, where the key is the result of the `keySelector` function and the value is the item itself.
+
+**Usage**
+
+```js
+const people = listOf(
+  { id: 1, name: "Alice" },
+  { id: 2, name: "Bob" },
+  { id: 3, name: "Charlie" }
+);
+
+const output = people.associateBy((it) => it.id);
+
+console.log(output);
+// {
+//   '1': { id: 1, name: 'Alice' },
+//   '2': { id: 2, name: 'Bob' },
+//   '3': { id: 3, name: 'Charlie' }
+// }
 ```
 
 ## `associateWith(valueSelector)`
@@ -131,14 +167,14 @@ Returns a `Map` where keys are elements from the given collection and values are
 **Usage**
 
 ```js
-const fruits = listOf(
+const list = listOf(
   { name: "apple", type: "fruit" },
   { name: "banana", type: "fruit" },
   { name: "brocolli", type: "vegetable" }
 );
-let associated = list.associateWith((fruit) => fruit.type);
+let output = list.associateWith((fruit) => fruit.type);
 
-console.log(associated);
+console.log(output);
 // Map {
 //   { name: 'apple', type: 'fruit' } => 'fruit',
 //   { name: 'banana', type: 'fruit' } => 'fruit',
@@ -180,7 +216,9 @@ const users = listOf(
   { id: 39, name: "Fred" },
   { id: 105, name: "George" }
 );
+
 const result = users.binarySearchBy(28, (it) => it.id);
+
 console.log(result);
 // 3
 ```
@@ -189,24 +227,24 @@ console.log(result);
 
 **Description**
 
-Capitalizes the first letter of each word in the list
+Converts each word in the list to capitalized case
 
 **Usage**
 
 ```js
-const input = listOf("apple", "baNANA", "CARROT");
+const input = listOf("alice", "boB", "cHARLIE", "hello world");
 
 const output = input.capitalize();
 
 console.log(output);
-// List(3) [ 'Apple', 'Banana', 'Carrot' ]
+// List(4) [ 'Alice', 'Bob', 'Charlie', 'Hello World' ]
 ```
 
 ## `ceil()`
 
 **Description**
 
-Rounds up all the numbers in the list
+Rounds all numbers in the list up
 
 **Usage**
 
@@ -927,7 +965,7 @@ console.log(output);
 
 **Description**
 
-Appends all elements that are instances of specified `className` to the given `destination`.
+Appends all elements that are instances of specified `className` to the given `destinationList`.
 
 **Usage**
 
@@ -1127,7 +1165,7 @@ console.log(firstHalf);
 // List(4) [ 3, 4, 5, 6 ]
 ```
 
-## firstNotNullOf
+## firstNotNullOf()
 
 ###
 
@@ -1177,7 +1215,7 @@ console.log(output);
 // null
 ```
 
-## flatten(depth=1)
+## `flatten(depth=1)`
 
 **Description**
 
@@ -1207,7 +1245,7 @@ console.log(output);
 
 **Description**
 
-Rounds down all the numbers in the list
+Rounds all the numbers in the list down
 
 **Usage**
 
@@ -1240,17 +1278,104 @@ console.log(output);
 
 ###
 
-## get
+## get(index, defaultValue)
 
-###
+**Description**
 
-## groupBy
+Returns the element at a particular `index`, or returns the `defaultValue` parameter if that index doesn't exist.
 
-###
+**Usage**
 
-## groupByTo
+```js
+const list = listOf("a", "b", "c");
 
-###
+let output = list.get(2, "d");
+console.log(output);
+// c
+
+output = list.get(3, "d");
+console.log(output);
+// d
+```
+
+## `groupBy(keySelector)`
+
+**Description**
+
+Groups the items in a unique key-value pair based on the key selector
+
+**Usage**
+
+```js
+const list = listOf(
+  { name: "apple", type: "fruit" },
+  { name: "banana", type: "fruit" },
+  { name: "celery", type: "vegetable" },
+  { name: "spinach", type: "vegetable" },
+  { name: "wheat", type: "grain" }
+);
+
+const output = list.groupBy((it) => it.type);
+
+console.log(output);
+// {
+//   fruit: List(2) [
+//     { name: 'apple', type: 'fruit' },
+//     { name: 'banana', type: 'fruit' }
+//   ],
+//   vegetable: List(2) [
+//     { name: 'celery', type: 'vegetable' },
+//     { name: 'spinach', type: 'vegetable' }
+//   ],
+//   grain: List(1) [
+//     { name: 'wheat', type: 'grain' }
+//   ]
+// }
+```
+
+## `groupByTo(destination, keySelector)`
+
+**Description**
+
+Groups the items in a unique key-value pair based on the `keySelector` and adds them to a `destination` object
+
+**Usage**
+
+```js
+const stock = {
+  fruit: [{ name: "carrot", type: "vegetable" }],
+  grain: [{ name: "barley", type: "grain" }],
+  legumes: [{ name: "peas", type: "legumes" }],
+};
+
+const list = listOf(
+  { name: "apple", type: "fruit" },
+  { name: "banana", type: "fruit" },
+  { name: "celery", type: "vegetable" },
+  { name: "spinach", type: "vegetable" },
+  { name: "wheat", type: "grain" }
+);
+
+const output = list.groupByTo(stock, (it) => it.type);
+
+console.log(output);
+// {
+//   fruit: [
+//     { name: 'carrot', type: 'vegetable' },
+//     { name: 'apple', type: 'fruit' },
+//     { name: 'banana', type: 'fruit' }
+//   ],
+//   grain: [
+//     { name: 'barley', type: 'grain' },
+//     { name: 'wheat', type: 'grain' }
+//   ],
+//   legumes: [ { name: 'peas', type: 'legumes' } ],
+//   vegetable: List(2) [
+//     { name: 'celery', type: 'vegetable' },
+//     { name: 'spinach', type: 'vegetable' }
+//   ]
+// }
+```
 
 ## `halve(keepMiddle = true)`
 
@@ -1333,7 +1458,7 @@ console.log(output);
 
 **Description**
 
-If the list is not empty, return the defaultValue. Or else return the list.
+If the list is not empty, return the `defaultValue`. Or else return the list.
 
 **Usage**
 
@@ -1353,7 +1478,7 @@ console.log(output);
 
 **Description**
 
-Returns true if the list includes all the specified elements, else returns false
+Returns `true` if the list includes all the specified elements, else returns `false`
 
 **Usage**
 
@@ -1379,7 +1504,9 @@ Returns the valid indices of the list
 
 ```js
 let input = listOf(3, 4, 5);
+
 let output = input.indices;
+
 console.log(output);
 // List(3) [ 0, 1, 2 ]
 ```
@@ -1388,13 +1515,15 @@ console.log(output);
 
 **Description**
 
-Returns every index of the occurence of the element in the list
+Returns a list of indices where the `element` occurs in the list.
 
 **Usage**
 
 ```js
 const input = listOf("banana", "apple", "carrot", "grape", "apple", "peach");
+
 let output = input.indicesOf("apple");
+
 console.log(output);
 // List(2) [ 1, 4 ]
 ```
@@ -1403,12 +1532,13 @@ console.log(output);
 
 **Description**
 
-Finds all the elements that exist in all given lists
+Returns all the elements that exist in one or more given lists.
 
 **Note**
-Accepts multiple arguments
-Opposite of `difference()`
-Unlike `union()`, returns a `List` object instead of a `Set`
+
+- Accepts multiple arguments
+- Opposite of `difference()`
+- Unlike `union()`, returns a `List` object instead of a `Set`
 
 **Usage**
 
@@ -1474,11 +1604,11 @@ console.log(output);
 // List(1) [ 4 ]
 ```
 
-## isEmpty
+## `isEmpty()`
 
 **Description**
 
-Returns whether a list is empty
+Returns `true` if a list is empty
 
 **Usage**
 
@@ -1494,11 +1624,11 @@ console.log(output);
 // true
 ```
 
-## isNotEmpty
+## `isNotEmpty()`
 
 **Description**
 
-Returns whether a list is not empty
+Returns `true` if the list is not empty
 
 **Usage**
 
@@ -1559,13 +1689,9 @@ console.log(output);
 
 ## `joinWith(separator, prefix = "", postfix = "")`
 
-- `separator`
-- `prefix`
-- `postfix`
-
 **Description**
 
-Given a list of strings, joins them with the given separator, prefix and postfix
+Given a list of strings, joins them with the given `separator`, `prefix` and `postfix`
 
 **Usage**
 
@@ -1638,7 +1764,7 @@ console.log(output);
 
 ###
 
-## mapAsync
+## `mapAsync`
 
 ###
 
@@ -1646,7 +1772,7 @@ console.log(output);
 
 **Description**
 
-Performs a map on all elements in the list that are not `null` or `undefined`
+Performs a map on all elements in the list that are not `null` or `undefined`.
 
 **Usage**
 
@@ -1695,7 +1821,7 @@ console.log(output);
 // List(6) [ 'Chris', 'Jake', 'John', 'Michael', 'Smith', 'David' ]
 ```
 
-## mapTo(destination, transform)
+## `mapTo(destination, transform)`
 
 **Description**
 
@@ -1722,7 +1848,10 @@ console.log(output);
 
 **Description**
 
-Given two lists, merges them into a map where the first list contains the keys and the second list contains the values.
+Given two lists, merges them into a `Map` where the first list contains the keys and the second list contains the values.
+
+**Note**
+This method creates a `Map` object. In order to create an `Object` instead of a `Map`, use `pairWith()` instead.
 
 **Usage**
 
@@ -1740,7 +1869,7 @@ console.log(output);
 
 **Description**
 
-Returns the `nth` element in the list or the `nth` element that matches the `predicate`
+Returns the `nth` element in the list that matches the `predicate`, or the `nth` element in the list if no predicate is specified.
 
 **Note**
 Throws an error if no item matches the `predicate`
@@ -1748,12 +1877,44 @@ Throws an error if no item matches the `predicate`
 **Usage**
 
 ```js
+const input = listOf(7, 8, 9, 10, 11, 12, 13);
 
+let output = input.match((n) => n > 9, 3);
+console.log(output);
+// 12
+
+output = input.match(null, 3);
+console.log(output);
+// 9
+
+output = input.match((n) => n > 9, 5);
+console.log(output);
+// NoSuchElementException [Error]: No such element
 ```
 
-## matchOrNull
+## `matchOrNull(predicate, nth = 1)`
 
-###
+**Description**
+
+Returns the `nth` element in the list matches the predicate, or `null` if such an element does not exist.
+
+**Usage**
+
+```js
+const input = listOf(7, 8, 9, 10, 11, 12, 13);
+
+let output = input.match((n) => n > 9, 3);
+console.log(output);
+// 12
+
+output = input.match(null, 3);
+console.log(output);
+// 9
+
+output = input.match((n) => n > 9, 5);
+console.log(output);
+// null
+```
 
 ## `max()`
 
@@ -1772,9 +1933,59 @@ console.log(output);
 // 18
 ```
 
-## maxOf
+## `maxBy(selector, findAll=false)`
 
-###
+**Description**
+
+Returns the first element yielding the largest value of the given function.
+
+If `findAll` is set `true`, returns all the elements that yield the largest value.
+
+**Usage**
+
+```js
+const input = listOf(
+  { name: "Pizza", price: 23.99 },
+  { name: "Burger", price: 20.99 },
+  { name: "Sushi", price: 15.99 },
+  { name: "Cake", price: 15.99 },
+  { name: "Kebab", price: 23.99 },
+);
+
+let output = input.maxBy(item => item.price);
+console.log(output);
+// { name: 'Pizza', price: 23.99 }
+
+output = input.maxBy(item => item.price, true);
+console.log(output);
+// List(2) [
+//   { name: 'Pizza', price: 23.99 },
+//   { name: 'Kebab', price: 23.99 }
+// ]
+```
+
+## `maxOf(selector)`
+
+**Description**
+
+Returns the largest value among all values produced by `selector` function applied to each element in the collection.
+
+**Usage**
+
+```js
+const input = listOf(
+  { name: "Pizza", price: 23.99 },
+  { name: "Burger", price: 20.99 },
+  { name: "Sushi", price: 15.99 },
+  { name: "Cake", price: 15.99 },
+  { name: "Kebab", price: 23.99 }
+);
+
+const output = input.maxOf((item) => item.price);
+
+console.log(output);
+// 23.99
+```
 
 ## `mean()`
 
@@ -1786,7 +1997,9 @@ Returns the average of the list
 
 ```js
 const input = listOf(3, 18, -4, 15, 6, -17);
+
 let output = input.mean();
+
 console.log(output);
 // 3.5
 ```
@@ -1825,15 +2038,65 @@ console.log(output);
 // -17
 ```
 
-## minOf
+## `minBy(selector, findAll=false)`
 
-###
+**Description**
+
+Returns the first element yielding the smallest value of the given function.
+
+If `findAll` is set `true`, returns all the elements that yield the smallest value.
+
+**Usage**
+
+```js
+const input = listOf(
+  { name: "Pizza", price: 23.99 },
+  { name: "Burger", price: 20.99 },
+  { name: "Sushi", price: 15.99 },
+  { name: "Cake", price: 15.99 },
+  { name: "Kebab", price: 23.99 },
+);
+
+let output = input.minBy(item => item.price);
+console.log(output);
+// { name: 'Sushi', price: 15.99 }
+
+output = input.minBy(item => item.price, true);
+console.log(output);
+// List(2) [
+//   { name: 'Sushi', price: 15.99 },
+//   { name: 'Cake', price: 15.99 }
+// ]
+```
+
+## `minOf()`
+
+**Description**
+
+Returns the smallest value among all values produced by `selector` function applied to each element in the collection.
+
+**Usage**
+
+```js
+const input = listOf(
+  { name: "Pizza", price: 23.99 },
+  { name: "Burger", price: 20.99 },
+  { name: "Sushi", price: 15.99 },
+  { name: "Cake", price: 15.99 },
+  { name: "Kebab", price: 23.99 }
+);
+
+const output = input.minOf((item) => item.price);
+
+console.log(output);
+// 15.99
+```
 
 ## `minmax()`
 
 **Description**
 
-Returns a list containing the smallest and the largest numbers in the list
+Returns an `Object` containing the smallest and the largest numbers in the list
 
 **Usage**
 
@@ -1843,12 +2106,72 @@ const input = listOf(3, 18, -4, 15, 6, -17);
 let output = input.minmax();
 
 console.log(output);
-// List(2) [ -17, 18 ]
+// { min: -17, max: 18 }
 ```
 
-## minmaxOf
+## `minmaxBy(selector, findAll=false)`
 
-###
+**Description**
+
+Returns an object containing first elements yielding both the smallest and largest values of the given function applied to the list.
+
+If `findAll` is set `true`, returns all the elements that yield the values.
+
+**Usage**
+
+```js
+const input = listOf(
+  { name: "Pizza", price: 23.99 },
+  { name: "Burger", price: 20.99 },
+  { name: "Sushi", price: 15.99 },
+  { name: "Cake", price: 15.99 },
+  { name: "Kebab", price: 23.99 },
+);
+
+let output = input.minmaxBy(item => item.price);
+console.log(output);
+// {
+//   min: { name: 'Sushi', price: 15.99 },
+//   max: { name: 'Pizza', price: 23.99 }
+// }
+
+output = input.minmaxBy(item => item.price, true);
+console.log(output);
+// {
+//   min: List(2) [
+//     { name: 'Sushi', price: 15.99 },
+//     { name: 'Cake', price: 15.99 }
+//   ],
+//   max: List(2) [
+//     { name: 'Pizza', price: 23.99 },
+//     { name: 'Kebab', price: 23.99 }
+//   ]
+// }
+```
+
+## `minmaxOf(selector)`
+
+**Description**
+
+Returns an `Object` containing the smallest and largest values among all values produced by `selector` function applied to each element in the collection.
+
+**Usage**
+
+```js
+const input = listOf(
+  { name: "Pizza", price: 23.99 },
+  { name: "Burger", price: 20.99 },
+  { name: "Sushi", price: 15.99 },
+  { name: "Cake", price: 15.99 },
+  { name: "Kebab", price: 23.99 },
+);
+
+let output = input.minmaxOf(item => item.price);
+console.log(output);
+// { min: 15.99, max: 23.99 }
+```
+
+
 
 ## minus
 
@@ -1883,7 +2206,7 @@ console.log(output);
 
 ###
 
-## none(predicate)
+## `none(predicate)`
 
 **Description**
 
@@ -1920,11 +2243,11 @@ console.log(output);
 // List(3) [ 'b', 'a', 'e' ]
 ```
 
-## pairWith(list)
+## `pairWith(list)`
 
 **Description**
 
-Given two lists, merges them into an object where the first list contains the keys and the second list contains the values.
+Given two lists, merges them into an `Object` where the first list contains the keys and the second list contains the values.
 
 **Usage**
 
@@ -1942,7 +2265,7 @@ console.log(output);
 
 **Description**
 
-Splits the original collection into pair of lists, where the first list contains elements for which `predicate` yielded `true`, while the second list contains elements for which `predicate` yielded `false`.
+Splits the original collection into a pair of lists, where the first list contains elements for which `predicate` yielded `true`, while the second list contains elements for which `predicate` yielded `false`.
 
 **Usage**
 
@@ -1971,9 +2294,9 @@ Postfixes each element in the list with a specified string
 **Usage**
 
 ```js
-const numbers = listOf("John", "Michael", 1234);
+const input = listOf("John", "Michael", 1234);
 
-const output = numbers.postfix(": Name");
+const output = input.postfix(": Name");
 
 console.log(output);
 // List(3) [ 'John: Name', 'Michael: Name', '1234: Name' ]
@@ -2383,11 +2706,61 @@ console.log(output);
 
 ## `sortBy(selector)`
 
-###
+**Description**
+
+
+
+**Usage**
+
+```js
+const users = listOf(
+  { id: 39, name: "Fred" },
+  { id: 105, name: "George" },
+  { id: 1, name: "Tony" },
+  { id: 17, name: "Dave" },
+  { id: 28, name: "Pat" },
+  { id: 7, name: "Chris" }
+);
+
+const output = users.sortBy(it => it.id);
+
+console.log(output);
+// List(6) [
+//   { id: 1, name: 'Tony' },
+//   { id: 7, name: 'Chris' },
+//   { id: 17, name: 'Dave' },
+//   { id: 28, name: 'Pat' },
+//   { id: 39, name: 'Fred' },
+//   { id: 105, name: 'George' }
+// ]
+```
 
 ## `sortByDescending(selector)`
 
 ###
+
+```js
+const users = listOf(
+  { id: 39, name: "Fred" },
+  { id: 105, name: "George" },
+  { id: 1, name: "Tony" },
+  { id: 17, name: "Dave" },
+  { id: 28, name: "Pat" },
+  { id: 7, name: "Chris" }
+);
+
+const output = users.sortByDescending(it => it.id);
+
+console.log(output);
+// List(6) [
+//   { id: 105, name: 'George' },
+//   { id: 39, name: 'Fred' },
+//   { id: 28, name: 'Pat' },
+//   { id: 17, name: 'Dave' },
+//   { id: 7, name: 'Chris' },
+//   { id: 1, name: 'Tony' }
+// ]
+```
 
 ## `sortNumbers()`
 
@@ -2440,7 +2813,7 @@ console.log(output);
 // List(5) [ 100, 10, 1, -1, -10 ]
 ```
 
-## sortedBy(selector)
+## `sortedBy(selector)`
 
 **Description**
 
@@ -2534,9 +2907,27 @@ console.log(output);
 // 19
 ```
 
-## sumOf
+## `sumOf(selector)`
 
-###
+**Description**
+
+Returns the sum of all values produced by `selector` function applied to each element in the collection.
+
+**Usage**
+
+```js
+const input = listOf(
+  { name: "Pizza", price: 23 },
+  { name: "Burger", price: 20 },
+  { name: "Sushi", price: 15 },
+  { name: "Cake", price: 15 },
+  { name: "Kebab", price: 23 },
+);
+
+let output = input.sumOf(item => item.price);
+console.log(output);
+// 96
+```
 
 ## `tail(n=1)`
 
@@ -2557,21 +2948,84 @@ console.log(tail);
 // List(4) [ 8, 9, 10, 11 ]
 ```
 
-## take
+## `take(n)`
+
+**Description**
+
+Returns a list containing first `n` elements.
+
+**Note**
+
+This function is an alias for `head()`
+
+**Usage**
+
+```js
+const input = listOf(3, 4, 5, 6, 7);
+
+let output = input.take(3);
+
+console.log(output);
+// List(3) [ 3, 4, 5 ]
+```
 
 ###
 
-## takeLast
+## `takeLast(n)`
+
+**Description**
+
+Returns a list containing last `n` elements.
+
+**Note**
+
+This function is an alias for `tail()`
+
+
+**Usage**
+
+```js
+const input = listOf(3, 4, 5, 6, 7);
+
+let output = input.takeLast(3);
+
+console.log(output);
+// List(3) [ 5, 6, 7 ]
+```
 
 ###
 
-## takeLastWhile
+## `takeLastWhile(predicate)`
 
-###
+**Description**
+
+Returns a list containing the last elements satisfying the given `predicate`.
+
+**Usage**
+
+```js
+const input = listOf(2, 4, 6, 3, 8, 10);
+
+let output = input.takeLastWhile((it) => it % 2 === 0);
+console.log(output);
+// List(2) [ 8, 10 ]
+```
 
 ## takeWhile
 
-###
+**Description**
+
+Returns a list containing the first elements satisfying the given `predicate`.
+
+**Usage**
+
+```js
+const input = listOf(2, 4, 6, 3, 8, 10);
+
+let output = input.takeLastWhile((it) => it % 2 === 0);
+console.log(output);
+// List(3) [ 2, 4, 6 ]
+```
 
 ## tenth
 
@@ -2589,25 +3043,46 @@ console.log(tail);
 
 ###
 
-## toBoolean
+## `toBoolean()`
 
-###
+**Description**
 
-## `toEnglish()`
-
-###
+Casts each item in the list to Boolean
 
 **Usage**
 
 ```js
-const numbers = listOf(60, 3.5, 111111, 323_975_291_397);
-let output = numbers.toEnglish();
+const input = listOf(1, 0, "true", "test", false, undefined, null, "hello", true);
+
+let output = input.toBoolean();
 console.log(output);
-// List(4) [
+// List(9) [
+//   true,  false, true,
+//   true,  false, false,
+//   false, true,  true
+// ]
+```
+
+## `toEnglish()`
+
+**Description**
+
+Converts a list of numbers into their full english forms.
+
+**Usage**
+
+```js
+const numbers = listOf(60, 3.5, 111111, 323_975_291_397, -77.97);
+
+let output = numbers.toEnglish();
+
+console.log(output);
+// List(5) [
 //   'Sixty',
 //   'Three Point Five',
 //   'One Hundred and Eleven Thousand, One Hundred and Eleven',
-//   'Three Hundred and Twenty Three Billion, Nine Hundred and Seventy Five Million, Two Hundred and Ninety One Thousand, Three Hundred and Ninety Seven'
+//   'Three Hundred and Twenty Three Billion, Nine Hundred and Seventy Five Million, Two Hundred and Ninety One Thousand, Three Hundred and Ninety Seven',
+//   'Minus Seventy Seven Point Nine Seven'
 // ]
 ```
 
@@ -2653,7 +3128,9 @@ Converts a list of lists to a map
 
 ```js
 const numbers = listOf(["a", 1], ["b", 2], ["c", 3]);
+
 let output = numbers.toMap();
+
 console.log(output);
 // Map { 'a' => 1, 'b' => 2, 'c' => 3 }
 ```
@@ -2668,7 +3145,9 @@ Converts a list of lists to an object
 
 ```js
 const input = listOf(["a", 1], ["b", 2], ["c", 3]);
+
 let output = input.toObject();
+
 console.log(output);
 // { a: 1, b: 2, c: 3 }
 ```
@@ -2730,10 +3209,10 @@ console.log(output);
 
 **Description**
 
-Returns all the unique elements in the list as a `Set` object
+Returns all the unique elements in the list as a `Set` object.
 
 **Note**
-This is the same as the `distinct()` function, except that it returns a `Set` object instead of a `List`
+This is the same as the `distinct()` function, except that it returns a `Set` instead of a `List`.
 
 **Usage**
 
@@ -2746,15 +3225,36 @@ console.log(unique);
 // Set { 'apple', 'orange', 'banana', 'pear' }
 ```
 
-## unzip
+## `unzip()`
 
 **Description**
+
+Given a list of lists, pairs each value in the first list with corresponding values in subsequent lists.
+
+**Note**
+
+If the lists are of different sizes, the value of `undefined` will be stored in the place of the missing values.
+
+**Usage**
+
+```js
+const numbers = listOf([20, 30], listOf(40, 50), [-70]);
+
+let output = numbers.unzip();
+
+console.log(output);
+// List(2) [ [ 20, 40, -70 ], [ 30, 50, undefined ] ]
+```
 
 ## `zip(...lists)`
 
 **Description**
 
-Given two or more lists, returns pairs of one element in one list with another element in the other list
+Given two or more lists, returns "pairs" of one element in one list with another element in the other list
+
+**Note**
+
+If the lists are of different sizes, the resulting list will be the length of the original list. All other elements will be dropped.
 
 **Usage**
 

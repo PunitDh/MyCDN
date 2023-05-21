@@ -185,12 +185,16 @@ function timeInMilliseconds(str) {
   return timeInSeconds(str) * 1000;
 }
 
-// console.log("g-man".extend().capitalize());
+const numbers = listOf([20, 30], listOf(40, 50), [-70]);
 
-const list1 = listOf("id", "name");
-const list2 = listOf(12, "Jake");
-
-let output = list1.mapWith(list2);
+let output = numbers.unzip();
 
 console.log(output);
-// Map { 'id' => 12, 'name' => 'Jake' }
+// List(2) [ [ 20, 40, -70 ], [ 30, 50, undefined ] ]
+// List(5) [
+//   'Sixty',
+//   'Three Point Five',
+//   'One Hundred and Eleven Thousand, One Hundred and Eleven',
+//   'Three Hundred and Twenty Three Billion, Nine Hundred and Seventy Five Million, Two Hundred and Ninety One Thousand, Three Hundred and Ninety Seven',
+//   'Minus Seventy Seven Point Nine Seven'
+// ]
