@@ -185,16 +185,24 @@ function timeInMilliseconds(str) {
   return timeInSeconds(str) * 1000;
 }
 
-const numbers = listOf([20, 30], listOf(40, 50), [-70]);
+const people = listOf(
+  { id: 1, name: "Alice" },
+  { id: 2, name: "Bob" },
+  { id: 3, name: "Charlie" }
+);
 
-let output = numbers.unzip();
-
+let output = people.associateBy((it) => it.id);
 console.log(output);
-// List(2) [ [ 20, 40, -70 ], [ 30, 50, undefined ] ]
-// List(5) [
-//   'Sixty',
-//   'Three Point Five',
-//   'One Hundred and Eleven Thousand, One Hundred and Eleven',
-//   'Three Hundred and Twenty Three Billion, Nine Hundred and Seventy Five Million, Two Hundred and Ninety One Thousand, Three Hundred and Ninety Seven',
-//   'Minus Seventy Seven Point Nine Seven'
-// ]
+// {
+//   '1': { id: 1, name: 'Alice' },
+//   '2': { id: 2, name: 'Bob' },
+//   '3': { id: 3, name: 'Charlie' }
+// }
+
+output = people.associateBy((it) => it.name);
+console.log(output);
+// {
+//   Alice: { id: 1, name: 'Alice' },
+//   Bob: { id: 2, name: 'Bob' },
+//   Charlie: { id: 3, name: 'Charlie' }
+// }

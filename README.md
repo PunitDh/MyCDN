@@ -64,9 +64,9 @@ Adds elements to the list and returns the list.
 ```js
 const input = listOf("a", "b", "c");
 
-const output = input.add("d", "e");
+const result = input.add("d", "e");
 
-console.log(output);
+console.log(result);
 // List(4) [ 'a', 'b', 'c', 'd', 'e' ]
 ```
 
@@ -81,12 +81,12 @@ Checks whether _all_ the elements in the list matches a given `predicate`
 ```js
 const input = listOf(4, 5, 6);
 
-let output = input.all((item) => item > 3);
-console.log(output);
+let result = input.all((item) => item > 3);
+console.log(result);
 // true
 
-output = input.all((item) => item > 5);
-console.log(output);
+result = input.all((item) => item > 5);
+console.log(result);
 // false
 ```
 
@@ -101,12 +101,12 @@ Checks whether _any_ of the elements in the list matches a given element
 ```js
 const input = listOf(4, 5, 6);
 
-let output = input.any((item) => item > 7);
-console.log(output);
+let result = input.any((item) => item > 7);
+console.log(result);
 // false
 
-output = input.any((item) => item > 5);
-console.log(output);
+result = input.any((item) => item > 5);
+console.log(result);
 // true
 ```
 
@@ -119,19 +119,12 @@ Returns an object containing key-value pairs provided by `transform` function ap
 **Usage**
 
 ```js
-const people = listOf(
-  { id: 1, name: "Alice" },
-  { id: 2, name: "Bob" },
-  { id: 3, name: "Charlie" }
-);
+const people = listOf("Alice", "Bob", "Charlie");
 
-const output = people.associate(
-  (it) => it.id,
-  (it) => it.name.toUpperCase()
-);
+const result = people.associate((it) => it.toUpperCase());
 
-console.log(output);
-// { '1': 'ALICE', '2': 'BOB', '3': 'CHARLIE' }
+console.log(result);
+// { Alice: 'ALICE', Bob: 'BOB', Charlie: 'CHARLIE' }
 ```
 
 ## `associateBy(keySelector)`
@@ -148,13 +141,20 @@ const people = listOf(
   { id: 3, name: "Charlie" }
 );
 
-const output = people.associateBy((it) => it.id);
-
-console.log(output);
+let result = people.associateBy((it) => it.id);
+console.log(result);
 // {
 //   '1': { id: 1, name: 'Alice' },
 //   '2': { id: 2, name: 'Bob' },
 //   '3': { id: 3, name: 'Charlie' }
+// }
+
+result = people.associateBy((it) => it.name);
+console.log(result);
+// {
+//   Alice: { id: 1, name: 'Alice' },
+//   Bob: { id: 2, name: 'Bob' },
+//   Charlie: { id: 3, name: 'Charlie' }
 // }
 ```
 
@@ -162,7 +162,7 @@ console.log(output);
 
 **Description**
 
-Returns a `Map` where keys are elements from the given collection and values are produced by the valueSelector function applied to each element.
+Returns a `Map` where keys are elements from the given collection and values are produced by the `valueSelector` function applied to each element.
 
 **Usage**
 
@@ -172,9 +172,9 @@ const list = listOf(
   { name: "banana", type: "fruit" },
   { name: "brocolli", type: "vegetable" }
 );
-let output = list.associateWith((fruit) => fruit.type);
+let result = list.associateWith((fruit) => fruit.type);
 
-console.log(output);
+console.log(result);
 // Map {
 //   { name: 'apple', type: 'fruit' } => 'fruit',
 //   { name: 'banana', type: 'fruit' } => 'fruit',
@@ -182,7 +182,6 @@ console.log(output);
 // }
 ```
 
-###
 
 ## `binarySearch(element, fromIndex = 0, toIndex = this.length)`
 
@@ -194,7 +193,9 @@ Performs a binary search on a sorted list of elements and returns the index of t
 
 ```js
 const numbers = listOf(8, 34, 56, 89, 105);
+
 const result = numbers.binarySearch(56);
+
 console.log(result);
 // 2
 ```
@@ -234,9 +235,9 @@ Converts each word in the list to capitalized case
 ```js
 const input = listOf("alice", "boB", "cHARLIE", "hello world");
 
-const output = input.capitalize();
+const result = input.capitalize();
 
-console.log(output);
+console.log(result);
 // List(4) [ 'Alice', 'Bob', 'Charlie', 'Hello World' ]
 ```
 
@@ -268,9 +269,9 @@ Splits a list down into smaller chunks specified by the size
 ```js
 const input = listOf(2, 6, 9, -1, 3);
 
-const output = input.chunked(2);
+const result = input.chunked(2);
 
-console.log(output);
+console.log(result);
 // List(3) [
 //   List(2) [ 2, 6 ],
 //   List(2) [ 9, -1 ],
@@ -321,9 +322,9 @@ const input = listOf(
   true
 );
 
-const output = input.compact();
+const result = input.compact();
 
-console.log(output);
+console.log(result);
 // List(6) [ 1, 4, 8, 'test', 'foo', true ]
 ```
 
@@ -338,12 +339,12 @@ Checks if the list contains any of the given elements
 ```js
 const input = listOf(2, 6, 9, -1, 3);
 
-let output = input.contains(7, -1, 8);
-console.log(output);
+let result = input.contains(7, -1, 8);
+console.log(result);
 // true
 
-output = input.contains(7, -2, 8);
-console.log(output);
+result = input.contains(7, -2, 8);
+console.log(result);
 // false
 ```
 
@@ -380,18 +381,18 @@ Returns the number of elements matching a given `predicate`.
 
 ```js
 const input = listOf(2, 6, 9, -1, 3, 2, 2, 5);
-let output;
+let result;
 
-output = input.count();
-console.log(output);
+result = input.count();
+console.log(result);
 // 8
 
-output = input.count((it) => it > 5);
-console.log(output);
+result = input.count((it) => it > 5);
+console.log(result);
 // 2
 
-output = input.count(2);
-console.log(output);
+result = input.count(2);
+console.log(result);
 // 3
 ```
 
@@ -406,9 +407,9 @@ Counts unique occurences in the list and returns them as an object
 ```js
 const input = listOf("apple", "apple", "orange", "banana", "banana", "banana");
 
-const output = input.counts();
+const result = input.counts();
 
-console.log(output);
+console.log(result);
 
 // { apple: 2, orange: 1, banana: 3 }
 ```
@@ -468,9 +469,9 @@ This is the same as the `unique()` function, except that it returns a `List` obj
 ```js
 const input = listOf("apple", "apple", "orange", "banana", "banana", "pear");
 
-const output = input.distinct();
+const result = input.distinct();
 
-console.log(output);
+console.log(result);
 // List(4) [ 'apple', 'orange', 'banana', 'pear' ]
 ```
 
@@ -492,9 +493,9 @@ const input = listOf(
   { id: 32, name: "pear" }
 );
 
-const output = input.distinctBy((item) => item.name);
+const result = input.distinctBy((item) => item.name);
 
-console.log(output);
+console.log(result);
 // List(4) [
 //   { id: 3, name: 'apple' },
 //   { id: 5, name: 'orange' },
@@ -514,9 +515,9 @@ Divides each element in the list with a given `number`
 ```js
 const input = listOf(32, 78, 56, 19, 22, 31);
 
-const output = input.divide(4);
+const result = input.divide(4);
 
-console.log(output);
+console.log(result);
 // List(6) [ 8, 19.5, 14, 4.75, 5.5, 7.75 ]
 ```
 
@@ -531,9 +532,9 @@ Returns a list containing all elements except first `n` elements
 ```js
 const input = listOf(32, 78, 56, 19, 22, 31);
 
-const output = input.drop(4);
+const result = input.drop(4);
 
-console.log(output);
+console.log(result);
 // List(2) [ 22, 31 ]
 ```
 
@@ -602,16 +603,16 @@ Throws an error if the element is not found.
 ```js
 let input = listOf(32, 78, 56, 19, 22, 31, 40, 21, 29, 39, 20, 55, 43, 19, 39);
 
-let output = input.eighth();
-console.log(output);
+let result = input.eighth();
+console.log(result);
 // 21
 
-output = input.eighth((it) => it > 30);
-console.log(output);
+result = input.eighth((it) => it > 30);
+console.log(result);
 // 43
 
-output = input.eighth((it) => it > 40);
-console.log(output);
+result = input.eighth((it) => it > 40);
+console.log(result);
 // NoSuchElementException [Error]: No such element
 ```
 
@@ -713,12 +714,12 @@ Returns an element at the given `index` or `null` if the `index` is out of bound
 ```js
 const input = listOf(32, 78, 56);
 
-let output = input.elementAtOrNull(2);
-console.log(output);
+let result = input.elementAtOrNull(2);
+console.log(result);
 // 56
 
-output = input.elementAtOrNull(4);
-console.log(output);
+result = input.elementAtOrNull(4);
+console.log(result);
 // null
 ```
 
@@ -735,12 +736,12 @@ const numbers1 = listOf(32, listOf(22, 33), 56);
 const numbers2 = listOf(32, listOf(22, 13), 56);
 const numbers3 = listOf(32, listOf(22, 33), 56);
 
-let output = numbers1.equals(numbers2);
-console.log(output);
+let result = numbers1.equals(numbers2);
+console.log(result);
 // false
 
-output = numbers1.equals(numbers3);
-console.log(output);
+result = numbers1.equals(numbers3);
+console.log(result);
 // true
 ```
 
@@ -757,7 +758,7 @@ Does not modify original list. To modify original list, use `delete()` instead.
 
 ```js
 const input = listOf("z", "a", "d", "b", "e", "c", "f");
-const output = input.exclude("a", "b", "c");
+const result = input.exclude("a", "b", "c");
 
 console.log(input);
 // List(7) [
@@ -767,7 +768,7 @@ console.log(input);
 // ]
 //
 
-console.log(output);
+console.log(result);
 // List(4) [ 'z', 'd', 'e', 'f' ]
 ```
 
@@ -785,16 +786,16 @@ The `predicate` can either be a function or a value
 ```js
 const items = listOf("apple", "carrot", "orange", "banana", "celery");
 
-let output = items.exists("apple");
-console.log(output);
+let result = items.exists("apple");
+console.log(result);
 // true
 
-output = items.exists((item) => item.startsWith("c"));
-console.log(output);
+result = items.exists((item) => item.startsWith("c"));
+console.log(result);
 // true
 
-output = items.exists((item) => item.startsWith("d"));
-console.log(output);
+result = items.exists((item) => item.startsWith("d"));
+console.log(result);
 // false
 ```
 
@@ -812,16 +813,16 @@ Throws an error if the element is not found.
 ```js
 let input = listOf(32, 78, 56, 19, 22, 31, 40, 21, 29, 39, 20, 55, 43, 19, 39);
 
-let output = input.fifth();
-console.log(output);
+let result = input.fifth();
+console.log(result);
 // 22
 
-output = input.fifth((it) => it > 30);
-console.log(output);
+result = input.fifth((it) => it > 30);
+console.log(result);
 // 40
 
-output = input.fifth((it) => it > 40);
-console.log(output);
+result = input.fifth((it) => it > 40);
+console.log(result);
 // NoSuchElementException [Error]: No such element
 ```
 
@@ -836,16 +837,16 @@ Returns the fifth element in the list or the fifth element that matches the pred
 ```js
 let input = listOf(32, 78, 56, 19, 22, 31, 40, 21, 29, 39, 20, 55, 43, 19, 39);
 
-let output = input.fifthOrNull();
-console.log(output);
+let result = input.fifthOrNull();
+console.log(result);
 // 22
 
-output = input.fifthOrNull((it) => it > 30);
-console.log(output);
+result = input.fifthOrNull((it) => it > 30);
+console.log(result);
 // 40
 
-output = input.fifthOrNull((it) => it > 40);
-console.log(output);
+result = input.fifthOrNull((it) => it > 40);
+console.log(result);
 // null
 ```
 
@@ -860,9 +861,9 @@ Returns all the even numbers in the list
 ```js
 const numbers = listOf(1, 2, 4, 7, 9);
 
-const output = numbers.filterEvenNumbers();
+const result = numbers.filterEvenNumbers();
 
-console.log(output);
+console.log(result);
 // List(2) [ 2, 4 ]
 ```
 
@@ -901,9 +902,9 @@ Filters out the first `null` element, but keeps the rest
 ```js
 const input = listOf(12, null, 32, null, 78, 56);
 
-const output = input.filterFirstNotNull();
+const result = input.filterFirstNotNull();
 
-console.log(output);
+console.log(result);
 // List(5) [ 12, 32, null, 78, 56 ]
 ```
 
@@ -943,12 +944,12 @@ const animals = listOf(
   new Animal("cheetah")
 );
 
-let output = animals.filterIsInstance(Dog);
-console.log(output);
+let result = animals.filterIsInstance(Dog);
+console.log(result);
 // List(1) [ Dog { type: 'dog', color: 'grey' } ]
 
-output = animals.filterIsInstance(Animal);
-console.log(output);
+result = animals.filterIsInstance(Animal);
+console.log(result);
 // List(4) [
 //   Animal { type: 'tiger' },
 //   Animal { type: 'lion' },
@@ -956,8 +957,8 @@ console.log(output);
 //   Animal { type: 'cheetah' }
 // ]
 
-output = animals.filterIsInstance(Insect);
-console.log(output);
+result = animals.filterIsInstance(Insect);
+console.log(result);
 // List(0) []
 ```
 
@@ -990,9 +991,9 @@ const input = listOf(
   new Animal("cheetah")
 );
 
-let output = input.filterIsInstanceTo(animals, Animal);
+let result = input.filterIsInstanceTo(animals, Animal);
 
-console.log(output);
+console.log(result);
 // List(4) [
 //   Animal { type: 'dog' },
 //   Animal { type: 'cat' },
@@ -1011,9 +1012,9 @@ Returns a list containing all elements _not_ matching the given `predicate`.
 
 ```js
 const input = listOf(3, 7, 9, 1, 2, 7, 8, 10);
-const output = input.filterNot((it) => it > 5);
+const result = input.filterNot((it) => it > 5);
 
-console.log(output);
+console.log(result);
 // List(3) [ 3, 1, 2 ]
 ```
 
@@ -1052,9 +1053,9 @@ Filters out all the elements in the list that are not `undefined`. Keeps `null` 
 ```js
 const items = listOf(null, "apple", "carrot", undefined, null, null, "ginger");
 
-const output = items.filterNotUndefined();
+const result = items.filterNotUndefined();
 
-console.log(output);
+console.log(result);
 // List(6) [ null, 'apple', 'carrot', null, null, 'ginger' ]
 ```
 
@@ -1069,9 +1070,9 @@ Returns all the odd numbers in the list
 ```js
 const input = listOf(1, 2, 4, 7, 9);
 
-const output = input.filterOddNumbers();
+const result = input.filterOddNumbers();
 
-console.log(output);
+console.log(result);
 // List(2) [ 1, 7, 9 ]
 ```
 
@@ -1086,9 +1087,9 @@ Returns all the prime numbers in the list
 ```js
 const input = listOf(16, 17, 18, 19, 20, 21, 22, 23);
 
-let output = input.filterPrimeNumbers();
+let result = input.filterPrimeNumbers();
 
-console.log(output);
+console.log(result);
 // List(3) [ 17, 19, 23 ]
 ```
 
@@ -1107,12 +1108,12 @@ Filters out all values that are truthy. Value of '0' is treated as truthy by def
 ```js
 const input = listOf(3, 4, null, 7, undefined, 0, 8);
 
-let output = input.filterTruthy();
-console.log(output);
+let result = input.filterTruthy();
+console.log(result);
 // List(5) [ 3, 4, 7, 0, 8 ]
 
-output = input.filterTruthy(false);
-console.log(output);
+result = input.filterTruthy(false);
+console.log(result);
 // List(4) [ 3, 4, 7, 8 ]
 ```
 
@@ -1131,16 +1132,16 @@ Throws an error if element is not found.
 ```js
 const input = listOf(32, 78, 56);
 
-let output = input.first();
-console.log(output);
+let result = input.first();
+console.log(result);
 // 32
 
-output = input.first((it) => it > 60);
-console.log(output);
+result = input.first((it) => it > 60);
+console.log(result);
 // 78
 
-output = input.first((it) => it > 80);
-console.log(output);
+result = input.first((it) => it > 80);
+console.log(result);
 // NoSuchElementException [Error]: No such element
 ```
 
@@ -1182,9 +1183,9 @@ Returns the first element of each element in the list
 ```js
 const input = listOf("apple", ["pear", "banana"], "carrot");
 
-let output = input.firstOfEach();
+let result = input.firstOfEach();
 
-console.log(output);
+console.log(result);
 // List(3) [ 'a', 'pear', 'c' ]
 ```
 
@@ -1202,16 +1203,16 @@ If no `predicate` is specified, returns the first value in the list.
 ```js
 const input = listOf(32, 78, 56);
 
-let output = input.firstOrNull();
-console.log(output);
+let result = input.firstOrNull();
+console.log(result);
 // 32
 
-output = input.firstOrNull((it) => it > 60);
-console.log(output);
+result = input.firstOrNull((it) => it > 60);
+console.log(result);
 // 78
 
-output = input.firstOrNull((it) => it > 80);
-console.log(output);
+result = input.firstOrNull((it) => it > 80);
+console.log(result);
 // null
 ```
 
@@ -1229,12 +1230,12 @@ This function is an alias for `flat()`
 ```js
 let input = listOf([32, 78], [56, 23], listOf(21, listOf(22, 24)));
 
-let output = input.flatten();
-console.log(output);
+let result = input.flatten();
+console.log(result);
 // List(6) [ 32, 78, 56, 23, 21, List(2) [ 22, 24 ] ]
 
-output = input.flatten(2);
-console.log(output);
+result = input.flatten(2);
+console.log(result);
 // List(7) [
 //   32, 78, 56, 23,
 //   21, 22, 24
@@ -1252,9 +1253,9 @@ Rounds all the numbers in the list down
 ```js
 const numbers = listOf(3.14, 4.45, -5.34, 6.98, -7.47, 8.57, -9.35, -10.22, 11);
 
-const output = numbers.floor();
+const result = numbers.floor();
 
-console.log(output);
+console.log(result);
 // Output:
 // List(9) [
 //   3,   4,  -6,  6, -8,
@@ -1289,12 +1290,12 @@ Returns the element at a particular `index`, or returns the `defaultValue` param
 ```js
 const list = listOf("a", "b", "c");
 
-let output = list.get(2, "d");
-console.log(output);
+let result = list.get(2, "d");
+console.log(result);
 // c
 
-output = list.get(3, "d");
-console.log(output);
+result = list.get(3, "d");
+console.log(result);
 // d
 ```
 
@@ -1315,9 +1316,9 @@ const list = listOf(
   { name: "wheat", type: "grain" }
 );
 
-const output = list.groupBy((it) => it.type);
+const result = list.groupBy((it) => it.type);
 
-console.log(output);
+console.log(result);
 // {
 //   fruit: List(2) [
 //     { name: 'apple', type: 'fruit' },
@@ -1356,9 +1357,9 @@ const list = listOf(
   { name: "wheat", type: "grain" }
 );
 
-const output = list.groupByTo(stock, (it) => it.type);
+const result = list.groupByTo(stock, (it) => it.type);
 
-console.log(output);
+console.log(result);
 // {
 //   fruit: [
 //     { name: 'carrot', type: 'vegetable' },
@@ -1390,15 +1391,15 @@ Halves the list into two and returns the two parts.
 
 ```js
 const input = listOf(3, 4, 5, 6, 7, 8, 9, 10, 11);
-let output = input.halve();
-console.log(output);
+let result = input.halve();
+console.log(result);
 // List(2) [
 //  List(4) [ 3, 4, 5, 6 ],
 //  List(5) [ 7, 8, 9, 10, 11 ]
 // ]
 
-output = input.halve(false);
-console.log(output);
+result = input.halve(false);
+console.log(result);
 // List(2) [
 //  List(5) [ 3, 4, 5, 6, 7 ],
 //  List(4) [ 8, 9, 10, 11 ]
@@ -1444,13 +1445,13 @@ If the list is empty, return the `defaultValue`. Or else returns the list.
 
 ```js
 let numbers = listOf(3, 4, 5);
-let output = numbers.ifEmpty(listOf(5, 6, 7));
-console.log(output);
+let result = numbers.ifEmpty(listOf(5, 6, 7));
+console.log(result);
 // List(3) [ 3, 4, 5 ]
 
 numbers = listOf();
-output = numbers.ifEmpty(listOf(5, 6, 7));
-console.log(output);
+result = numbers.ifEmpty(listOf(5, 6, 7));
+console.log(result);
 // List(3) [ 5, 6, 7 ]
 ```
 
@@ -1464,13 +1465,13 @@ If the list is not empty, return the `defaultValue`. Or else return the list.
 
 ```js
 let input = listOf(3, 4, 5);
-let output = input.ifNotEmpty(listOf(5, 6, 7));
-console.log(output);
+let result = input.ifNotEmpty(listOf(5, 6, 7));
+console.log(result);
 // List(3) [ 5, 6, 7 ]
 
 input = listOf();
-output = input.ifNotEmpty(listOf(5, 6, 7));
-console.log(output);
+result = input.ifNotEmpty(listOf(5, 6, 7));
+console.log(result);
 // List(0) []
 ```
 
@@ -1484,13 +1485,13 @@ Returns `true` if the list includes all the specified elements, else returns `fa
 
 ```js
 let input = listOf(3, 4, 5);
-let output = input.includesAll(5, 6, 7);
-console.log(output);
+let result = input.includesAll(5, 6, 7);
+console.log(result);
 // false
 
 input = listOf(3, 4, 5, 6, 7, 8);
-output = input.includesAll(5, 6, 7);
-console.log(output);
+result = input.includesAll(5, 6, 7);
+console.log(result);
 // true
 ```
 
@@ -1505,9 +1506,9 @@ Returns the valid indices of the list
 ```js
 let input = listOf(3, 4, 5);
 
-let output = input.indices;
+let result = input.indices;
 
-console.log(output);
+console.log(result);
 // List(3) [ 0, 1, 2 ]
 ```
 
@@ -1522,9 +1523,9 @@ Returns a list of indices where the `element` occurs in the list.
 ```js
 const input = listOf("banana", "apple", "carrot", "grape", "apple", "peach");
 
-let output = input.indicesOf("apple");
+let result = input.indicesOf("apple");
 
-console.log(output);
+console.log(result);
 // List(2) [ 1, 4 ]
 ```
 
@@ -1550,22 +1551,22 @@ const list4 = [4, 6, 8, 10];
 
 const input = listOf(1, 2, 3, 4, 5, 6);
 
-let output;
+let result;
 
-output = input.intersect(list1);
-console.log(output);
+result = input.intersect(list1);
+console.log(result);
 // List(4) [ 1, 2, 3, 4 ]
 
-output = input.intersect(list1, list2);
-console.log(output);
+result = input.intersect(list1, list2);
+console.log(result);
 // List(2) [ 2, 4 ]
 
-output = input.intersect(list1, list2, list3); // Output: [4]
-console.log(output);
+result = input.intersect(list1, list2, list3); // Output: [4]
+console.log(result);
 // List(1) [ 4 ]
 
-output = input.intersect(list1, list2, list3, list4);
-console.log(output);
+result = input.intersect(list1, list2, list3, list4);
+console.log(result);
 // List(1) [ 4 ]
 ```
 
@@ -1585,22 +1586,22 @@ const list4 = [4, 6, 8, 10];
 
 const input = listOf(1, 2, 3, 4, 5, 6);
 
-let output;
+let result;
 
-output = input.intersection(list1);
-console.log(output);
+result = input.intersection(list1);
+console.log(result);
 // List(4) [ 1, 2, 3, 4 ]
 
-output = input.intersection(list1, list2);
-console.log(output);
+result = input.intersection(list1, list2);
+console.log(result);
 // List(2) [ 2, 4 ]
 
-output = input.intersection(list1, list2, list3); // Output: [4]
-console.log(output);
+result = input.intersection(list1, list2, list3); // Output: [4]
+console.log(result);
 // List(1) [ 4 ]
 
-output = input.intersection(list1, list2, list3, list4);
-console.log(output);
+result = input.intersection(list1, list2, list3, list4);
+console.log(result);
 // List(1) [ 4 ]
 ```
 
@@ -1614,13 +1615,13 @@ Returns `true` if a list is empty
 
 ```js
 let input = listOf(3, 4, 5, 6);
-let output = input.isEmpty();
-console.log(output);
+let result = input.isEmpty();
+console.log(result);
 // false
 
 input = listOf();
-output = input.isEmpty();
-console.log(output);
+result = input.isEmpty();
+console.log(result);
 // true
 ```
 
@@ -1634,13 +1635,13 @@ Returns `true` if the list is not empty
 
 ```js
 let input = listOf(3, 4, 5, 6);
-let output = input.isNotEmpty();
-console.log(output);
+let result = input.isNotEmpty();
+console.log(result);
 // true
 
 input = listOf();
-output = input.isNotEmpty();
-console.log(output);
+result = input.isNotEmpty();
+console.log(result);
 // false
 ```
 
@@ -1661,12 +1662,12 @@ Given a list of lists, joins each list with the given separator, prefix and post
 ```js
 const input = listOf(["Foo", "Bar"], listOf("Baz", "Test"), ["Hello", "World"]);
 
-let output = input.joinEach(":");
-console.log(output);
+let result = input.joinEach(":");
+console.log(result);
 // List(3) [ 'Foo:Bar', 'Baz:Test', 'Hello:World' ]
 
-output = input.joinEach(":", "<b>", "</b>");
-console.log(output);
+result = input.joinEach(":", "<b>", "</b>");
+console.log(result);
 // List(3) [ '<b>Foo:Bar</b>', '<b>Baz:Test</b>', '<b>Hello:World</b>' ]
 ```
 
@@ -1682,8 +1683,8 @@ Joins a list using a `separator`, `prefix` and `postfix`, then appends that stri
 const input1 = listOf("Hello", "World");
 const input2 = listOf("Foo", "Bar");
 
-let output = input1.joinTo(input2, "-", "<b>", "</b>");
-console.log(output);
+let result = input1.joinTo(input2, "-", "<b>", "</b>");
+console.log(result);
 // List(3) [ 'Foo', 'Bar', '<b>Hello-World</b>' ]
 ```
 
@@ -1698,9 +1699,9 @@ Given a list of strings, joins them with the given `separator`, `prefix` and `po
 ```js
 let input = listOf("h", "t", "m", "l");
 
-let output = input.joinWith("", "<", ">");
+let result = input.joinWith("", "<", ">");
 
-console.log(output);
+console.log(result);
 // <html>
 ```
 
@@ -1739,9 +1740,9 @@ Returns the last valid index of the list
 ```js
 const input = listOf(3, 4, 5, 6);
 
-let output = input.lastIndex;
+let result = input.lastIndex;
 
-console.log(output);
+console.log(result);
 // 3
 ```
 
@@ -1754,9 +1755,9 @@ Returns the last element of each element in the list
 ```js
 const input = listOf("apple", ["pear", "banana"], "carrot");
 
-let output = input.lastOfEach();
+let result = input.lastOfEach();
 
-console.log(output);
+console.log(result);
 // List(3) [ 'e', 'banana', 't' ]
 ```
 
@@ -1786,9 +1787,9 @@ let input = listOf(
   { id: 34, name: "David" }
 );
 
-let output = input.mapNotNull((it) => it.name);
+let result = input.mapNotNull((it) => it.name);
 
-console.log(output);
+console.log(result);
 // List(4) [ 'John', 'Michael', 'Smith', 'David' ]
 ```
 
@@ -1815,9 +1816,9 @@ let input = listOf(
 
 const list = listOf("Chris", "Jake");
 
-let output = input.mapNotNullTo(list, (it) => it.name);
+let result = input.mapNotNullTo(list, (it) => it.name);
 
-console.log(output);
+console.log(result);
 // List(6) [ 'Chris', 'Jake', 'John', 'Michael', 'Smith', 'David' ]
 ```
 
@@ -1838,9 +1839,9 @@ let input = listOf(
 
 const list = listOf("Chris", "Jake");
 
-let output = input.mapTo(list, (it) => it.name);
+let result = input.mapTo(list, (it) => it.name);
 
-console.log(output);
+console.log(result);
 // List(5) [ 'Chris', 'Jake', 'John', 'Michael', 'Smith' ]
 ```
 
@@ -1859,9 +1860,9 @@ This method creates a `Map` object. In order to create an `Object` instead of a 
 const list1 = listOf("id", "name");
 const list2 = listOf(12, "Jake");
 
-let output = list1.mapWith(list2);
+let result = list1.mapWith(list2);
 
-console.log(output);
+console.log(result);
 // Map { 'id' => 12, 'name' => 'Jake' }
 ```
 
@@ -1879,16 +1880,16 @@ Throws an error if no item matches the `predicate`
 ```js
 const input = listOf(7, 8, 9, 10, 11, 12, 13);
 
-let output = input.match((n) => n > 9, 3);
-console.log(output);
+let result = input.match((n) => n > 9, 3);
+console.log(result);
 // 12
 
-output = input.match(null, 3);
-console.log(output);
+result = input.match(null, 3);
+console.log(result);
 // 9
 
-output = input.match((n) => n > 9, 5);
-console.log(output);
+result = input.match((n) => n > 9, 5);
+console.log(result);
 // NoSuchElementException [Error]: No such element
 ```
 
@@ -1903,16 +1904,16 @@ Returns the `nth` element in the list matches the predicate, or `null` if such a
 ```js
 const input = listOf(7, 8, 9, 10, 11, 12, 13);
 
-let output = input.match((n) => n > 9, 3);
-console.log(output);
+let result = input.match((n) => n > 9, 3);
+console.log(result);
 // 12
 
-output = input.match(null, 3);
-console.log(output);
+result = input.match(null, 3);
+console.log(result);
 // 9
 
-output = input.match((n) => n > 9, 5);
-console.log(output);
+result = input.match((n) => n > 9, 5);
+console.log(result);
 // null
 ```
 
@@ -1927,9 +1928,9 @@ Finds the largest number in the list
 ```js
 const input = listOf(3, 18, -4, 15, 6, -17);
 
-let output = input.max();
+let result = input.max();
 
-console.log(output);
+console.log(result);
 // 18
 ```
 
@@ -1952,12 +1953,12 @@ const input = listOf(
   { name: "Kebab", price: 23.99 },
 );
 
-let output = input.maxBy(item => item.price);
-console.log(output);
+let result = input.maxBy(item => item.price);
+console.log(result);
 // { name: 'Pizza', price: 23.99 }
 
-output = input.maxBy(item => item.price, true);
-console.log(output);
+result = input.maxBy(item => item.price, true);
+console.log(result);
 // List(2) [
 //   { name: 'Pizza', price: 23.99 },
 //   { name: 'Kebab', price: 23.99 }
@@ -1981,9 +1982,9 @@ const input = listOf(
   { name: "Kebab", price: 23.99 }
 );
 
-const output = input.maxOf((item) => item.price);
+const result = input.maxOf((item) => item.price);
 
-console.log(output);
+console.log(result);
 // 23.99
 ```
 
@@ -1998,9 +1999,9 @@ Returns the average of the list
 ```js
 const input = listOf(3, 18, -4, 15, 6, -17);
 
-let output = input.mean();
+let result = input.mean();
 
-console.log(output);
+console.log(result);
 // 3.5
 ```
 
@@ -2015,9 +2016,9 @@ Returns the median number in the list
 ```js
 const input = listOf(3, 18, -4, 15, 6, -17);
 
-let output = input.median();
+let result = input.median();
 
-console.log(output);
+console.log(result);
 // 6
 ```
 
@@ -2032,9 +2033,9 @@ Finds the smallest number in the list
 ```js
 const input = listOf(3, 18, -4, 15, 6, -17);
 
-let output = input.min();
+let result = input.min();
 
-console.log(output);
+console.log(result);
 // -17
 ```
 
@@ -2057,12 +2058,12 @@ const input = listOf(
   { name: "Kebab", price: 23.99 },
 );
 
-let output = input.minBy(item => item.price);
-console.log(output);
+let result = input.minBy(item => item.price);
+console.log(result);
 // { name: 'Sushi', price: 15.99 }
 
-output = input.minBy(item => item.price, true);
-console.log(output);
+result = input.minBy(item => item.price, true);
+console.log(result);
 // List(2) [
 //   { name: 'Sushi', price: 15.99 },
 //   { name: 'Cake', price: 15.99 }
@@ -2086,9 +2087,9 @@ const input = listOf(
   { name: "Kebab", price: 23.99 }
 );
 
-const output = input.minOf((item) => item.price);
+const result = input.minOf((item) => item.price);
 
-console.log(output);
+console.log(result);
 // 15.99
 ```
 
@@ -2103,9 +2104,9 @@ Returns an `Object` containing the smallest and the largest numbers in the list
 ```js
 const input = listOf(3, 18, -4, 15, 6, -17);
 
-let output = input.minmax();
+let result = input.minmax();
 
-console.log(output);
+console.log(result);
 // { min: -17, max: 18 }
 ```
 
@@ -2128,15 +2129,15 @@ const input = listOf(
   { name: "Kebab", price: 23.99 },
 );
 
-let output = input.minmaxBy(item => item.price);
-console.log(output);
+let result = input.minmaxBy(item => item.price);
+console.log(result);
 // {
 //   min: { name: 'Sushi', price: 15.99 },
 //   max: { name: 'Pizza', price: 23.99 }
 // }
 
-output = input.minmaxBy(item => item.price, true);
-console.log(output);
+result = input.minmaxBy(item => item.price, true);
+console.log(result);
 // {
 //   min: List(2) [
 //     { name: 'Sushi', price: 15.99 },
@@ -2166,8 +2167,8 @@ const input = listOf(
   { name: "Kebab", price: 23.99 },
 );
 
-let output = input.minmaxOf(item => item.price);
-console.log(output);
+let result = input.minmaxOf(item => item.price);
+console.log(result);
 // { min: 15.99, max: 23.99 }
 ```
 
@@ -2188,9 +2189,9 @@ Returns the most frequently occuring element in the list
 ```js
 const input = listOf("apple", "banana", "lettuce", "carrot", "banana");
 
-let output = input.mode();
+let result = input.mode();
 
-console.log(output);
+console.log(result);
 // banana
 ```
 
@@ -2217,12 +2218,12 @@ Returns `true` if none of the items match the given `predicate`, else returns `f
 ```js
 const input = listOf(4, 5, 6);
 
-let output = input.none((item) => item > 7);
-console.log(output);
+let result = input.none((item) => item > 7);
+console.log(result);
 // true
 
-output = input.none((item) => item > 5);
-console.log(output);
+result = input.none((item) => item > 5);
+console.log(result);
 // false
 ```
 
@@ -2237,9 +2238,9 @@ Returns the `nth` element of each element in the list
 ```js
 const input = listOf(["a", "b", "c"], ["d", "a", "f"], "test");
 
-output = input.nthOfEach(1);
+result = input.nthOfEach(1);
 
-console.log(output);
+console.log(result);
 // List(3) [ 'b', 'a', 'e' ]
 ```
 
@@ -2255,9 +2256,9 @@ Given two lists, merges them into an `Object` where the first list contains the 
 const list1 = listOf("fruit", "animal", "test");
 const list2 = listOf("apple", "dog", "test123");
 
-output = list1.pairWith(list2);
+result = list1.pairWith(list2);
 
-console.log(output);
+console.log(result);
 // { fruit: 'apple', animal: 'dog', test: 'test123' }
 ```
 
@@ -2272,9 +2273,9 @@ Splits the original collection into a pair of lists, where the first list contai
 ```js
 const input = listOf(1, 2, 3, 4, 5, 6, 7, 8, 9);
 
-output = input.partition((it) => it > 5);
+result = input.partition((it) => it > 5);
 
-console.log(output);
+console.log(result);
 // List(2) [
 //   List(4) [ 6, 7, 8, 9 ],
 //   List(5) [ 1, 2, 3, 4, 5 ]
@@ -2296,9 +2297,9 @@ Postfixes each element in the list with a specified string
 ```js
 const input = listOf("John", "Michael", 1234);
 
-const output = input.postfix(": Name");
+const result = input.postfix(": Name");
 
-console.log(output);
+console.log(result);
 // List(3) [ 'John: Name', 'Michael: Name', '1234: Name' ]
 ```
 
@@ -2317,9 +2318,9 @@ Prefixes each element in the list with a specified string
 ```js
 const numbers = listOf("John", "Michael", 1234);
 
-const output = numbers.prefix("Name: ");
+const result = numbers.prefix("Name: ");
 
-console.log(output);
+console.log(result);
 // List(3) [ 'Name: John', 'Name: Michael', 'Name: 1234' ]
 ```
 
@@ -2334,9 +2335,9 @@ Returns the multiplication of all the numbers in the list.
 ```js
 const input = listOf(4, 5, 10, 20);
 
-let output = input.product();
+let result = input.product();
 
-console.log(output);
+console.log(result);
 // 4000
 ```
 
@@ -2351,12 +2352,12 @@ Returns a randomly chosen element within the list
 ```js
 const input = listOf("apple", "banana", "lettuce", "carrot");
 
-let output = input.random();
-console.log(output);
+let result = input.random();
+console.log(result);
 // banana
 
-output = input.random();
-console.log(output);
+result = input.random();
+console.log(result);
 // lettuce
 ```
 
@@ -2370,19 +2371,19 @@ Returns a list of numbers counting from start to end.
 The list must contain only 2 elements, both of which are numbers.
 
 ```js
-let input, output;
+let input, result;
 
 input = listOf(4, 10);
-output = input.range();
-console.log(output);
+result = input.range();
+console.log(result);
 // List(7) [
 //   4, 5,  6, 7,
 //   8, 9, 10
 // ]
 
 input = listOf(10, -4);
-output = input.range();
-console.log(output);
+result = input.range();
+console.log(result);
 // List(15) [
 //   10,  9,  8, 7, 6,  5,
 //    4,  3,  2, 1, 0, -1,
@@ -2390,8 +2391,8 @@ console.log(output);
 // ]
 
 input = listOf("a", 2);
-output = input.range();
-console.log(output);
+result = input.range();
+console.log(result);
 // Error: Invalid list parameters
 ```
 
@@ -2406,9 +2407,9 @@ Repeats the list `n` number of times and returns the result
 ```js
 const input = listOf("a", "b", "c");
 
-let output = input.repeat(3);
+let result = input.repeat(3);
 
-console.log(output);
+console.log(result);
 // List(9) [
 //   'a', 'b', 'c',
 //   'a', 'b', 'c',
@@ -2432,12 +2433,12 @@ Replaces every occurence of an element in a list with a new value
 
 ```js
 const input = listOf("a", "b", "c", "a", "b");
-let output = input.replace("a", "d");
-console.log(output);
+let result = input.replace("a", "d");
+console.log(result);
 // List(5) [ 'd', 'b', 'c', 'd', 'b' ]
 
-output = input.replace("a", "d", 1);
-console.log(output);
+result = input.replace("a", "d", 1);
+console.log(result);
 // List(5) [ 'd', 'b', 'c', 'a', 'b' ]
 ```
 
@@ -2452,8 +2453,8 @@ Rounds all the numbers in the list to the nearest integer
 ```js
 const numbers = listOf(3.14, 4.45, -5.34, 6.98, -7.47, 8.57, -9.35, -10.22, 11);
 
-const output = numbers.round();
-console.log(output);
+const result = numbers.round();
+console.log(result);
 // List(9) [
 //   3,  4,  -5,  7, -7,
 //   9, -9, -10, 11
@@ -2474,12 +2475,12 @@ If `allowRepeats` is set to `false`, `sampleSize` cannot be greater than the lis
 ```js
 const input = listOf("apple", "banana", "carrot", "lettuce", "eggplant");
 
-let output = input.sample(3);
-console.log(output);
+let result = input.sample(3);
+console.log(result);
 // List(3) [ 'lettuce', 'eggplant', 'apple' ]
 
-output = input.sample(7);
-console.log(output);
+result = input.sample(7);
+console.log(result);
 // List(7) [
 //   'lettuce', 'carrot',
 //   'apple',   'apple',
@@ -2487,12 +2488,12 @@ console.log(output);
 //   'carrot'
 // ]
 
-output = input.sample(3, false);
-console.log(output);
+result = input.sample(3, false);
+console.log(result);
 // List(3) [ 'eggplant', 'banana', 'carrot' ]
 
-output = input.sample(6, false);
-console.log(output);
+result = input.sample(6, false);
+console.log(result);
 // Error: Sample size '6' is greater than list length '5'
 ```
 
@@ -2510,9 +2511,9 @@ This function is similar to performing a `reduce` operation on an array, except 
 ```js
 const input = listOf(1, 2, 3, 4, 5);
 
-let output = input.scan((acc, cur) => acc + cur, 0);
+let result = input.scan((acc, cur) => acc + cur, 0);
 
-console.log(output);
+console.log(result);
 // List(6) [ 0, 1, 3, 6, 10, 15 ]
 ```
 
@@ -2534,8 +2535,8 @@ const input = listOf(
 );
 
 // Case insensitive
-let output = input.search("Chocolate");
-console.log(output);
+let result = input.search("Chocolate");
+console.log(result);
 // List(3) [
 //   'Chocolate milkshake',
 //   'Chocolate cake',
@@ -2543,8 +2544,8 @@ console.log(output);
 // ]
 
 // Case sensitive
-output = input.search("Chocolate", true);
-console.log(output);
+result = input.search("Chocolate", true);
+console.log(result);
 // List(2) [ 'Chocolate milkshake', 'Chocolate cake' ]
 ```
 
@@ -2566,12 +2567,12 @@ By default, if the list contains an odd number of elements, the middle value wil
 ```js
 const input = listOf(3, 4, 5, 6, 7, 8, 9, 10, 11);
 
-let output = input.secondHalf();
-console.log(output);
+let result = input.secondHalf();
+console.log(result);
 // List(4) [ 8, 9, 10, 11 ]
 
-output = input.secondHalf(true);
-console.log(output);
+result = input.secondHalf(true);
+console.log(result);
 // List(5) [ 7, 8, 9, 10, 11 ]
 ```
 
@@ -2593,16 +2594,16 @@ This method is different from `chunked()`, which splits the list into equal-size
 ```js
 const input = listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12);
 
-let output = input.segment(3);
-console.log(output);
+let result = input.segment(3);
+console.log(result);
 // List(3) [
 //   List(4) [ 1, 2, 3, 4 ],
 //   List(4) [ 5, 6, 7, 8 ],
 //   List(4) [ 9, 10, 11, 12 ]
 // ]
 
-output = input.segment(4);
-console.log(output);
+result = input.segment(4);
+console.log(result);
 // List(4) [
 //   List(3) [ 1, 2, 3 ],
 //   List(3) [ 4, 5, 6 ],
@@ -2630,9 +2631,9 @@ Returns a new list with its original elements randomly shuffled
 ```js
 const input = listOf("a", "b", "c", "d", "e", "f");
 
-let output = input.shuffled();
+let result = input.shuffled();
 
-console.log(output);
+console.log(result);
 // List(6) [ 'b', 'a', 'd', 'c', 'f', 'e' ]
 ```
 
@@ -2647,20 +2648,20 @@ Returns the single element matching the given predicate, or throws exception if 
 ```js
 const input = listOf(3, 4, 5, 6);
 
-let output = input.single((it) => it > 5);
-console.log(output);
+let result = input.single((it) => it > 5);
+console.log(result);
 // 6
 
-output = input.single((it) => it > 4 && it < 6);
-console.log(output);
+result = input.single((it) => it > 4 && it < 6);
+console.log(result);
 // 5
 
-output = input.single((it) => it < 6);
-console.log(output);
+result = input.single((it) => it < 6);
+console.log(result);
 // Error: NoSuchElementException [Error]: No single element matches the given predicate Found: (3)
 
-output = input.single((it) => it < 3);
-console.log(output);
+result = input.single((it) => it < 3);
+console.log(result);
 // Error: NoSuchElementException [Error]: No single element matches the given predicate Found: (0)
 ```
 
@@ -2675,20 +2676,20 @@ Returns the single element matching the given predicate, or returns `null` if th
 ```js
 const input = listOf(3, 4, 5, 6);
 
-let output = input.singleOrNull((it) => it > 5);
-console.log(output);
+let result = input.singleOrNull((it) => it > 5);
+console.log(result);
 // 6
 
-output = input.singleOrNull((it) => it > 4 && it < 6);
-console.log(output);
+result = input.singleOrNull((it) => it > 4 && it < 6);
+console.log(result);
 // 5
 
-output = input.singleOrNull((it) => it < 6);
-console.log(output);
+result = input.singleOrNull((it) => it < 6);
+console.log(result);
 // null
 
-output = input.singleOrNull((it) => it < 3);
-console.log(output);
+result = input.singleOrNull((it) => it < 3);
+console.log(result);
 // null
 ```
 
@@ -2722,9 +2723,9 @@ const users = listOf(
   { id: 7, name: "Chris" }
 );
 
-const output = users.sortBy(it => it.id);
+const result = users.sortBy(it => it.id);
 
-console.log(output);
+console.log(result);
 // List(6) [
 //   { id: 1, name: 'Tony' },
 //   { id: 7, name: 'Chris' },
@@ -2749,9 +2750,9 @@ const users = listOf(
   { id: 7, name: "Chris" }
 );
 
-const output = users.sortByDescending(it => it.id);
+const result = users.sortByDescending(it => it.id);
 
-console.log(output);
+console.log(result);
 // List(6) [
 //   { id: 105, name: 'George' },
 //   { id: 39, name: 'Fred' },
@@ -2773,13 +2774,13 @@ The default JavaScript `sort()` method does not sort numbers correctly without s
 
 ```js
 const input = listOf(10, 1, -1, 100, -10);
-let output = input.sort();
+let result = input.sort();
 ```
 
 Will result in:
 
 ```js
-console.log(output);
+console.log(result);
 // List(5) [ -1, -10, 1, 10, 100 ]
 ```
 
@@ -2792,9 +2793,9 @@ This function `sortNumbers()` sorts the numbers correctly, as follows.
 ```js
 const input = listOf(10, 1, -1, 100, -10);
 
-let output = input.sortNumbers();
+let result = input.sortNumbers();
 
-console.log(output);
+console.log(result);
 // List(5) [ -10, -1, 1, 10, 100 ]
 ```
 
@@ -2807,9 +2808,9 @@ Given a list of numbers, sorts them in descending order
 ```js
 const input = listOf(10, 1, -1, 100, -10);
 
-let output = input.sortNumbersDescending();
+let result = input.sortNumbersDescending();
 
-console.log(output);
+console.log(result);
 // List(5) [ 100, 10, 1, -1, -10 ]
 ```
 
@@ -2836,16 +2837,16 @@ Given a list of separators, splits each string in the list at each of the given 
 ```js
 const input = listOf("Foo:Bar", "Baz:Test", "Hello_World");
 
-let output = input.splitEach(":");
-console.log(output);
+let result = input.splitEach(":");
+console.log(result);
 // List(3) [
 //   List(2) [ 'Foo', 'Bar' ],
 //   List(2) [ 'Baz', 'Test' ],
 //   List(1) [ 'Hello_World' ]
 // ]
 
-output = input.splitEach(":", "_");
-console.log(output);
+result = input.splitEach(":", "_");
+console.log(result);
 // List(3) [
 //   List(2) [ 'Foo', 'Bar' ],
 //   List(2) [ 'Baz', 'Test' ],
@@ -2864,9 +2865,9 @@ Calculates the standard deviation of a list of numbers
 ```js
 const input = listOf(5, 17, -15, 3, 1, 8);
 
-let output = input.stdev();
+let result = input.stdev();
 
-console.log(output);
+console.log(result);
 // 9.598900399987954
 ```
 
@@ -2884,9 +2885,9 @@ This method is an alias for JavaScript `slice()`
 ```js
 const input = listOf(16, 17, 18, 19, 20, 21, 22, 23);
 
-let output = input.subList(3, 7);
+let result = input.subList(3, 7);
 
-console.log(output);
+console.log(result);
 // List(4) [ 19, 20, 21, 22 ]
 ```
 
@@ -2901,9 +2902,9 @@ Returns the sum of all numbers in a list
 ```js
 const input = listOf(5, 17, -15, 3, 1, 8);
 
-let output = input.sum();
+let result = input.sum();
 
-console.log(output);
+console.log(result);
 // 19
 ```
 
@@ -2924,8 +2925,8 @@ const input = listOf(
   { name: "Kebab", price: 23 },
 );
 
-let output = input.sumOf(item => item.price);
-console.log(output);
+let result = input.sumOf(item => item.price);
+console.log(result);
 // 96
 ```
 
@@ -2963,9 +2964,9 @@ This function is an alias for `head()`
 ```js
 const input = listOf(3, 4, 5, 6, 7);
 
-let output = input.take(3);
+let result = input.take(3);
 
-console.log(output);
+console.log(result);
 // List(3) [ 3, 4, 5 ]
 ```
 
@@ -2987,9 +2988,9 @@ This function is an alias for `tail()`
 ```js
 const input = listOf(3, 4, 5, 6, 7);
 
-let output = input.takeLast(3);
+let result = input.takeLast(3);
 
-console.log(output);
+console.log(result);
 // List(3) [ 5, 6, 7 ]
 ```
 
@@ -3006,8 +3007,8 @@ Returns a list containing the last elements satisfying the given `predicate`.
 ```js
 const input = listOf(2, 4, 6, 3, 8, 10);
 
-let output = input.takeLastWhile((it) => it % 2 === 0);
-console.log(output);
+let result = input.takeLastWhile((it) => it % 2 === 0);
+console.log(result);
 // List(2) [ 8, 10 ]
 ```
 
@@ -3022,8 +3023,8 @@ Returns a list containing the first elements satisfying the given `predicate`.
 ```js
 const input = listOf(2, 4, 6, 3, 8, 10);
 
-let output = input.takeLastWhile((it) => it % 2 === 0);
-console.log(output);
+let result = input.takeLastWhile((it) => it % 2 === 0);
+console.log(result);
 // List(3) [ 2, 4, 6 ]
 ```
 
@@ -3054,8 +3055,8 @@ Casts each item in the list to Boolean
 ```js
 const input = listOf(1, 0, "true", "test", false, undefined, null, "hello", true);
 
-let output = input.toBoolean();
-console.log(output);
+let result = input.toBoolean();
+console.log(result);
 // List(9) [
 //   true,  false, true,
 //   true,  false, false,
@@ -3074,9 +3075,9 @@ Converts a list of numbers into their full english forms.
 ```js
 const numbers = listOf(60, 3.5, 111111, 323_975_291_397, -77.97);
 
-let output = numbers.toEnglish();
+let result = numbers.toEnglish();
 
-console.log(output);
+console.log(result);
 // List(5) [
 //   'Sixty',
 //   'Three Point Five',
@@ -3097,9 +3098,9 @@ Sets the decimal places of each number in the list
 ```js
 const numbers = listOf(2.34324, 9.6735, -0.5656, 99.998);
 
-const output = numbers.toFixed(2);
+const result = numbers.toFixed(2);
 
-console.log(output);
+console.log(result);
 // List(4) [ '2.34', '9.67', '-0.57', '100.00' ]
 ```
 
@@ -3113,8 +3114,8 @@ Converts all elements in the list to lower case
 
 ```js
 const input = listOf("Apple", "Banana", "CARROT");
-const output = input.toLowerCase();
-console.log(output);
+const result = input.toLowerCase();
+console.log(result);
 // List(3) [ 'apple', 'banana', 'carrot' ]
 ```
 
@@ -3129,9 +3130,9 @@ Converts a list of lists to a map
 ```js
 const numbers = listOf(["a", 1], ["b", 2], ["c", 3]);
 
-let output = numbers.toMap();
+let result = numbers.toMap();
 
-console.log(output);
+console.log(result);
 // Map { 'a' => 1, 'b' => 2, 'c' => 3 }
 ```
 
@@ -3146,9 +3147,9 @@ Converts a list of lists to an object
 ```js
 const input = listOf(["a", 1], ["b", 2], ["c", 3]);
 
-let output = input.toObject();
+let result = input.toObject();
 
-console.log(output);
+console.log(result);
 // { a: 1, b: 2, c: 3 }
 ```
 
@@ -3162,8 +3163,8 @@ Converts all elements in the list to upper case
 
 ```js
 const input = listOf("Apple", "Banana", "CARROT");
-const output = input.toUpperCase();
-console.log(output);
+const result = input.toUpperCase();
+console.log(result);
 // List(3) [ 'APPLE', 'BANANA', 'CARROT' ]
 ```
 
@@ -3178,9 +3179,9 @@ Trims each string in the list off its trailing whitespace
 ```js
 const input = listOf("   foo", "  bar   ", "baz    ", "   te st");
 
-const output = input.trimEach();
+const result = input.trimEach();
 
-console.log(output);
+console.log(result);
 // List(4) [ 'foo', 'bar', 'baz', 'te st' ]
 ```
 
@@ -3199,9 +3200,9 @@ Unlike `intersection()`, returns a `Set` object containing only unique entries i
 const list1 = listOf(3, 4, 5, 6, 7);
 const list2 = listOf(6, 7, 5, 8, 9);
 
-let output = list1.union(list2);
+let result = list1.union(list2);
 
-console.log(output);
+console.log(result);
 // Set { 6, 7, 5 }
 ```
 
@@ -3240,9 +3241,9 @@ If the lists are of different sizes, the value of `undefined` will be stored in 
 ```js
 const numbers = listOf([20, 30], listOf(40, 50), [-70]);
 
-let output = numbers.unzip();
+let result = numbers.unzip();
 
-console.log(output);
+console.log(result);
 // List(2) [ [ 20, 40, -70 ], [ 30, 50, undefined ] ]
 ```
 
@@ -3263,16 +3264,16 @@ const list1 = listOf("fruit", "animal", "test");
 const list2 = listOf("apple", "dog", "test123");
 const list3 = listOf("banana", "cat", "test456", "hello world");
 
-let output = list1.zip(list2);
-console.log(output);
+let result = list1.zip(list2);
+console.log(result);
 // List(3) [
 //   List(2) [ 'fruit', 'apple' ],
 //   List(2) [ 'animal', 'dog' ],
 //   List(2) [ 'test', 'test123' ]
 // ]
 
-output = list1.zip(list2, list3);
-console.log(output);
+result = list1.zip(list2, list3);
+console.log(result);
 // List(3) [
 //   List(3) [ 'fruit', 'apple', 'banana' ],
 //   List(3) [ 'animal', 'dog', 'cat' ],
