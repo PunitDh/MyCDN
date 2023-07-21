@@ -16,8 +16,6 @@ class IllegalArgumentException extends Error {
   }
 }
 
-class ImmutableList extends Array {}
-
 class List extends Array {
   /**
    * Size of the list
@@ -2278,14 +2276,12 @@ class List extends Array {
 
   /**
    * Returns a list containing the "types" of each element in the list
+   * @param {Boolean} primitives - Controls whether the function should return primitive types or class names if they exist
    * @returns {List}
-   * @example
    */
-  instanceTypes() {
+  instanceTypes(primitives = false) {
     return this.map((item) =>
-      item === null
-        ? null
-        : typeof item === "object"
+      typeof item === "object" && item !== null && !primitives
         ? item.constructor.name
         : typeof item
     );
@@ -2296,8 +2292,7 @@ class List extends Array {
    * @returns {Boolean}
    */
   isNumberList() {
-    const instanceTypes = this.instanceTypes().unique();
-    return instanceTypes.length === 1 && instanceTypes[0] === "number";
+    return this.every((item) => !isNaN(item));
   }
 
   /**
@@ -2434,6 +2429,12 @@ class SortedSet extends Set {
   constructor(arrayLikeObject) {
     const list = listOf(...arrayLikeObject);
     super(list.isNumberList() ? list.sortNumbers() : list.sort());
+  }
+}
+
+class ImmutableList extends List {
+  constructor(...args) {
+    Object.freeze(super(...args));
   }
 }
 
@@ -2974,6 +2975,7 @@ module.exports = {
   pairOf,
   tripleOf,
   mapOf,
+  ImmutableList,
   Pair,
   Triple,
   List,

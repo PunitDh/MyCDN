@@ -10,6 +10,7 @@ const {
   SortedSet,
   setOf,
   sortedSetOf,
+  ImmutableList,
 } = require("./public/List");
 
 // const l = listOf("Foo:Test", "Boo:Best", "Bar:Jest", "Baz:Test1");
@@ -145,6 +146,38 @@ const l = listOf(
   { id: 32, name: "pear" }
 );
 
+class CustomIterable {
+  #items;
+
+  constructor(...items) {
+    this.#items = items;
+  }
+
+  *[Symbol.iterator]() {
+    for (const item of this.#items) {
+      yield item;
+    }
+  }
+}
+
+Object.prototype[Symbol.iterator] = function* () {
+  for (const [key, value] of Object.entries(this)) {
+    yield [key, value];
+  }
+};
+
+Object.prototype.forEach = function (callback) {
+  for (const it of this) {
+    callback(it);
+  }
+};
+
+Object.prototype.map = function (callback) {
+  for (const it of this) {
+    callback(it);
+  }
+};
+
 // console.log(l.reduce((acc,cur) => acc+cur.id, it => it.id, 0));
 
 function timeInSeconds(str) {
@@ -189,7 +222,42 @@ function timeInMilliseconds(str) {
   return timeInSeconds(str) * 1000;
 }
 
-const array = [5, 5, 5, 5, 1, 2, 3, 4, 4, 4, 4];
-const set = new Set([1, 2, 2, 2]);
+const list = listOf(
+  66,
+  "666",
+  1n,
+  false,
+  new Date(),
+  undefined,
+  new Set([1, 1]),
+  null,
+  [],
+  () => {},
+  class Animal {},
+  +"12",
+  Symbol(9)
+);
+const primitiveTypes = list.instanceTypes(true);
+const nonPrimitiveTypes = list.instanceTypes();
 
-console.log(set);
+console.log(primitiveTypes);
+// List(13) [
+//   'number',   'string',
+//   'bigint',   'boolean',
+//   'object',   'undefined',
+//   'object',   'object',
+//   'object',   'function',
+//   'function', 'number',
+//   'symbol'
+// ]
+
+console.log(nonPrimitiveTypes);
+// List(13) [
+//   'number',   'string',
+//   'bigint',   'boolean',
+//   'Date',     'undefined',
+//   'Set',      'object',
+//   'Array',    'function',
+//   'function', 'number',
+//   'symbol'
+// ]

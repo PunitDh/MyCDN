@@ -1702,6 +1702,61 @@ console.log(result);
 // List(2) [ 1, 4 ]
 ```
 
+## `instanceTypes(primitives = false)`
+
+**Description**
+
+Returns a list containing the "types" of each element in the list
+
+**Params**
+
+- `primitives` (Boolean) - Controls whether the function should return primitive types or class names (if they exist)
+
+**Usage**
+
+```js
+const list = listOf(
+  66,
+  "666",
+  1n,
+  false,
+  new Date(),
+  undefined,
+  new Set([1, 1]),
+  null,
+  [],
+  () => {},
+  class Animal {},
+  +"12",
+  Symbol(9)
+);
+
+const primitiveTypes = list.instanceTypes(true);
+const nonPrimitiveTypes = list.instanceTypes();
+
+console.log(primitiveTypes);
+// List(13) [
+//   'number',   'string',
+//   'bigint',   'boolean',
+//   'object',   'undefined',
+//   'object',   'object',
+//   'object',   'function',
+//   'function', 'number',
+//   'symbol'
+// ]
+
+console.log(nonPrimitiveTypes);
+// List(13) [
+//   'number',   'string',
+//   'bigint',   'boolean',
+//   'Date',     'undefined',
+//   'Set',      'object',
+//   'Array',    'function',
+//   'function', 'number',
+//   'symbol'
+// ]
+```
+
 ## `intersect(list)`
 
 **Description**
