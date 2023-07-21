@@ -10,20 +10,7 @@ The `List` extends `Array`, so all functionality that is available on a regular 
 
 There are several ways to declare a list.
 
-You can declare a list using a constructor.
-
-**Usage**
-
-```js
-const { List } = require("./List.js");
-
-const list = new List(1, 2, 3, 4);
-
-console.log(list);
-// List(4) [ 1, 2, 3, 4 ]
-```
-
-You can also use the `listOf` function, similar to Kotlin.
+You can use the `listOf` function, similar to Kotlin.
 
 **Usage**
 
@@ -34,6 +21,19 @@ const list = listOf("a", "b", "c", "d");
 
 console.log(list);
 // List(4) [ 'a', 'b', 'c', 'd' ]
+```
+
+You can also declare a list using the `List` constructor.
+
+**Usage**
+
+```js
+const { List } = require("./List.js");
+
+const list = new List(1, 2, 3, 4);
+
+console.log(list);
+// List(4) [ 1, 2, 3, 4 ]
 ```
 
 You can also convert a JavaScript `Array` to a `List` using the `toList()` function.
