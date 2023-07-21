@@ -1,5 +1,3 @@
-const e = require("express");
-
 class IndexOutOfBoundsException extends Error {
   constructor(...args) {
     super(...args);
@@ -7,6 +5,12 @@ class IndexOutOfBoundsException extends Error {
 }
 
 class NoSuchElementException extends Error {
+  constructor(...args) {
+    super(...args);
+  }
+}
+
+class IllegalArgumentException extends Error {
   constructor(...args) {
     super(...args);
   }
@@ -37,12 +41,30 @@ class List extends Array {
   }
 
   /**
+   * Returns the depth of the list
+   */
+  get depth() {
+    function getDepth(list, depth = 0) {
+      for (const item of list) {
+        if (Array.isArray(item) || List.isList(item)) {
+          return getDepth(item, depth + 1);
+        }
+      }
+      return depth;
+    }
+    return getDepth(this);
+  }
+
+  /**
    * Returns the element at a particular index, or returns the optional parameter if no element is found
    * @param {Number} index
    * @returns {*}
    */
   get(index, optional) {
-    return Object.keys(this).includes(String(index)) ? this[index] : optional;
+    const adjustedIndex = index < 0 ? this.length + index : index;
+    return Object.keys(this).includes(String(adjustedIndex))
+      ? this[adjustedIndex]
+      : optional;
   }
 
   /**
@@ -289,7 +311,7 @@ class List extends Array {
    * @throws {NoSuchElementException}
    */
   last(predicate) {
-    return this.reverse().first(predicate);
+    return this.reversed().first(predicate);
   }
 
   /**
@@ -297,7 +319,7 @@ class List extends Array {
    * @returns {*}
    */
   lastOrNull(predicate) {
-    return this.reverse().firstOrNull(predicate);
+    return this.reversed().firstOrNull(predicate);
   }
 
   /**
@@ -354,7 +376,7 @@ class List extends Array {
    * @example listOf(['a','b','c'], ['d','e','f'], ['x','y','z']).firstOfEach() ==> ['a','d','x']
    */
   firstOfEach() {
-    return this.map((list) => list[0]);
+    return this.nthOfEach(0);
   }
 
   /**
@@ -378,9 +400,9 @@ class List extends Array {
 
   /**
    * Given a list of strings, joins each string with the given separator, prefix and postfix
-   * @param {*} separator
-   * @param {*} prefix
-   * @param {*} postfix
+   * @param {String} separator
+   * @param {String} prefix
+   * @param {String} postfix
    * @returns {String}
    */
   joinWith(separator, prefix = "", postfix = "") {
@@ -573,7 +595,7 @@ class List extends Array {
   takeLastWhile(predicate) {
     const filtered = listOf();
     let found = false;
-    for (const item of this.reverse()) {
+    for (const item of this.reversed()) {
       if (predicate(item)) {
         filtered.push(item);
         found = true;
@@ -616,7 +638,7 @@ class List extends Array {
   dropLastWhile(predicate) {
     let dropped = false;
     const droppedList = listOf();
-    for (const it of this.reverse()) {
+    for (const it of this.reversed()) {
       if (predicate(it) && !dropped) {
         dropped = true;
       } else {
@@ -632,8 +654,9 @@ class List extends Array {
    * @returns {*}
    */
   elementAt(index) {
-    if (this[index]) {
-      return this[index];
+    const adjustedIndex = index < 0 ? this.length + index : index;
+    if (this[adjustedIndex] !== undefined) {
+      return this[adjustedIndex];
     }
     const error = `Index out of bounds: ${index}`;
     throw new IndexOutOfBoundsException(error);
@@ -646,8 +669,9 @@ class List extends Array {
    * @returns {*}
    */
   elementAtOrElse(index, defaultValue) {
-    return index < this.length
-      ? this[index]
+    const adjustedIndex = index < 0 ? this.length + index : index;
+    return this[adjustedIndex] !== undefined
+      ? this[adjustedIndex]
       : isFn(defaultValue)
       ? defaultValue()
       : defaultValue;
@@ -659,7 +683,8 @@ class List extends Array {
    * @returns {*}
    */
   elementAtOrNull(index) {
-    return this[index] ? this[index] : null;
+    const adjustedIndex = index < 0 ? this.length + index : index;
+    return this[adjustedIndex] !== undefined ? this[adjustedIndex] : null;
   }
 
   /**
@@ -719,6 +744,15 @@ class List extends Array {
    */
   filterNotNull() {
     return this.filter((value) => value !== null);
+  }
+
+  /**
+   * Filters out all the elements in the list that are not null or undefined.
+   * @returns {List}
+   * @example listOf(3,4,5,null,7,undefined).filterNotNull() ==> [3,4,5,7,undefined]
+   */
+  filterNotNullish() {
+    return this.filter((value) => value != null);
   }
 
   /**
@@ -878,6 +912,16 @@ class List extends Array {
   }
 
   /**
+   * Performs the given action on each element and returns the list itself afterwards.
+   * @param {Function} callback
+   * @returns {List}
+   */
+  onEach(callback) {
+    this.forEach(callback);
+    return this;
+  }
+
+  /**
    * Takes in a number of arguments and excludes them from the list. Does not modify original list.
    * @returns {List}
    * @example listOf('z','a','d','b','e','c','f').exclude('a','b','c') ==> ['z','d','e','f']
@@ -892,7 +936,7 @@ class List extends Array {
    * @example listOf('a','a','b','b','e','e','f').distinct() ==> ['a','b','e','f']
    */
   distinct() {
-    return listOf(...this.unique());
+    return this.unique();
   }
 
   /**
@@ -919,7 +963,7 @@ class List extends Array {
    * @example listOf('a','a','b','b','e','e','f').distinct() ==> Set {'a','b','e','f'}
    */
   unique() {
-    return new Set(this);
+    return new Set(this).toList();
   }
 
   /**
@@ -953,8 +997,8 @@ class List extends Array {
    * @returns {Number}
    * @example listOf(1,2,3,4).sum() ==> 10
    */
-  sum() {
-    return this.reduce((acc, cur) => +acc + cur, 0);
+  sum(initialValue = 0) {
+    return this.reduce((acc, cur) => +acc + cur, initialValue);
   }
 
   /**
@@ -962,24 +1006,27 @@ class List extends Array {
    * @returns {Number}
    * @example listOf({ item: 'apple', price: 2 }, { item: 'banana', price: 5 }).sumOf(it => it.price) ==> 7
    */
-  sumOf(selector) {
-    return this.map(selector).sum();
+  sumOf(selector, initialValue = 0) {
+    if (typeof selector === "function")
+      return this.map(selector).sum(initialValue);
+    if (typeof selector === "string" || selector instanceof String)
+      return this.reduce((a, c) => +a + c[selector], initialValue);
   }
 
   /**
    * Returns the multiplication product of all elements in a list
    * @returns {Number}
    */
-  product() {
-    return this.reduce((acc, cur) => acc * cur, 1);
+  product(initialValue = 1) {
+    return this.reduce((acc, cur) => acc * cur, initialValue);
   }
 
   /**
    * Returns the multiplication product of all elements in a list given a selector function
    * @returns {Number}
    */
-  productOf(selector) {
-    return this.map(selector).product();
+  productOf(selector, initialValue = 1) {
+    return this.map(selector).product(initialValue);
   }
 
   /**
@@ -1049,15 +1096,11 @@ class List extends Array {
 
   /**
    * Finds all the elements that exist in all lists
-   * @param {...List} lists
+   * @param {List} list
    * @returns {List}
    */
-  intersection(...lists) {
-    if (!lists.every((list) => list instanceof Array)) return null;
-
-    return lists.reduce((result, list) => {
-      return result.filter((item) => list.includes(item));
-    });
+  intersection(list) {
+    return new Set(this.filter((item) => list.includes(item))).toList();
   }
 
   /**
@@ -1067,27 +1110,21 @@ class List extends Array {
    */
   difference(list) {
     if (!list || !(list instanceof Array)) return null;
-    const diff = listOf();
-    list.forEach((item) => {
-      if (!this.includes(item)) {
-        diff.push(item);
-      }
-    });
-    this.forEach((item) => {
-      if (!list.includes(item)) {
-        diff.push(item);
-      }
-    });
-    return diff;
+
+    return new Set(
+      this.concat(list).filter(
+        (item) => !(this.includes(item) && list.includes(item))
+      )
+    ).toList();
   }
 
   /**
    * Returns a set containing all distinct elements from both collections.
    * @param {List} list
-   * @returns {Set}
+   * @returns {List}
    */
   union(list) {
-    return new Set(this.intersect(list));
+    return new Set([...this, ...list]).toList();
   }
 
   /**
@@ -1122,7 +1159,9 @@ class List extends Array {
    * @returns {Number}
    */
   maxOf(selector) {
-    return this.map(selector).max();
+    if (typeof selector === "function") return this.map(selector).max();
+    if (typeof selector === "string" || selector instanceof String)
+      return this.map((it) => it[selector]).max();
   }
 
   /**
@@ -1145,7 +1184,9 @@ class List extends Array {
    * @returns {Number}
    */
   minOf(selector) {
-    return this.map(selector).min();
+    if (typeof selector === "function") return this.map(selector).min();
+    if (typeof selector === "string" || selector instanceof String)
+      return this.map((it) => it[selector]).min();
   }
 
   /**
@@ -1212,6 +1253,52 @@ class List extends Array {
   }
 
   /**
+   * Returns the nth largest element in the list.
+   * @param {Number} n
+   * @returns {Number}
+   */
+  nthLargest(n) {
+    return this.sortNumbersDescending().distinct()[n - 1];
+  }
+
+  /**
+   * Returns the nth largest element in the list created by applying the selector function.
+   * @param {Number} n
+   * @returns {Number}
+   */
+  nthLargestOf(selector, n) {
+    if (typeof selector === "function")
+      return this.map(selector).sortNumbersDescending().distinct()[n - 1];
+    if (typeof selector === "string" || selector instanceof String)
+      return this.map((it) => it[selector])
+        .sortNumbersDescending()
+        .distinct()[n - 1];
+  }
+
+  /**
+   * Returns the nth smallest element in the list.
+   * @param {Number} n
+   * @returns {Number}
+   */
+  nthSmallest(n) {
+    return this.sortNumbers().distinct()[n - 1];
+  }
+
+  /**
+   * Returns the nth smallest element in the list created by applying the selector function.
+   * @param {Number} n
+   * @returns {Number}
+   */
+  nthSmallestOf(selector, n) {
+    if (typeof selector === "function")
+      return this.map(selector).sortNumbers().distinct()[n - 1];
+    if (typeof selector === "string" || selector instanceof String)
+      return this.map((it) => it[selector])
+        .sortNumbers()
+        .distinct()[n - 1];
+  }
+
+  /**
    * Adds all the elements to the list
    * @param  {...any} elements
    * @returns {List}
@@ -1221,7 +1308,7 @@ class List extends Array {
   }
 
   /**
-   * Removes all the elements from the list
+   * Returns a list with all the specified elements excluded
    * @param  {...any} elements
    * @returns {List}
    */
@@ -1254,7 +1341,7 @@ class List extends Array {
    * @returns {*}
    */
   single(predicate) {
-    const found = this.filter(predicate);
+    const found = listOf(...this.filter(predicate));
     if (found.length !== 1) {
       const error = `No single element matches the given predicate Found: (${found.length})`;
       throw new NoSuchElementException(error);
@@ -1291,7 +1378,7 @@ class List extends Array {
    * @returns {List<Number>}
    */
   ceil() {
-    return this.map((item) => Math.ceil(item));
+    return this.map(Math.ceil);
   }
 
   /**
@@ -1300,7 +1387,7 @@ class List extends Array {
    * @returns {List<Number>}
    */
   floor() {
-    return this.map((item) => Math.floor(item));
+    return this.map(Math.floor);
   }
 
   /**
@@ -1579,6 +1666,32 @@ class List extends Array {
   }
 
   /**
+   * Returns a list of snapshots of the window of the given size sliding along
+   * this collection with the given step, where each snapshot is a list.
+   * @param {Number} size
+   * @param {Number} step
+   * @param {Boolean} partialWindows
+   * @returns {List<List<Number>>}
+   */
+  windowed(size, step = 1, partialWindows = false) {
+    if (size < 1 || step < 1) {
+      throw new IllegalArgumentException(
+        `Both 'size' and 'step' must be greater than zero. Found: size ${size} step ${step}`
+      );
+    }
+    const output = listOf();
+    let [start, end] = [0, size];
+
+    do {
+      output.push(this.slice(start, end));
+      start += step;
+      end += step;
+    } while (partialWindows ? start < this.length : end <= this.length);
+
+    return output;
+  }
+
+  /**
    *
    * @returns {List}
    */
@@ -1746,6 +1859,15 @@ class List extends Array {
   /**
    * Returns the average of the supplied list
    * @returns {Number}
+   * @example listOf(1,3,5,7,9).average() ==> 5
+   */
+  average() {
+    return this.mean();
+  }
+
+  /**
+   * Returns the average of the supplied list
+   * @returns {Number}
    * @example listOf(1,3,5,7,9).mean() ==> 5
    */
   mean() {
@@ -1830,11 +1952,7 @@ class List extends Array {
   counts() {
     const cts = {};
     for (let i = 0; i < this.length; i++) {
-      if (this[i] in cts) {
-        cts[this[i]] = +cts[this[i]] + 1;
-      } else {
-        cts[this[i]] = 1;
-      }
+      cts[this[i]] = this[i] in cts ? +cts[this[i]] + 1 : 1;
     }
     return cts;
   }
@@ -1897,9 +2015,16 @@ class List extends Array {
    * Multiplies each element in the list with a given number
    * @param {Number} number
    * @returns {List}
-   * @example listOf(3,2,1).multiply(2) ==> [6,4,2]
+   * @example listOf(3,2,1).multiplicationBy(2) ==> [6,4,2]
    */
-  multiply(number) {
+  multiplyBy(number) {
+    if (Array.isArray(number)) {
+      const result = listOf();
+      this.forEach((element, index) => {
+        result.push(element * (number[index] || 1));
+      });
+      return result;
+    }
     return this.map((n) => n * number);
   }
 
@@ -1907,9 +2032,16 @@ class List extends Array {
    * Divides each element in the list with a given number
    * @param {Number} number
    * @returns {List}
-   * @example listOf(4,8,10).divide(2) ==> [2,4,5]
+   * @example listOf(4,8,10).divisionBy(2) ==> [2,4,5]
    */
-  divide(number) {
+  divideBy(number) {
+    if (Array.isArray(number)) {
+      const result = listOf();
+      this.forEach((element, index) => {
+        result.push(element / (number[index] || 1));
+      });
+      return result;
+    }
     return this.map((n) => n / number);
   }
 
@@ -2026,9 +2158,9 @@ class List extends Array {
       const integerEnglish =
         (sign < 0 ? "Minus " : "") +
         thousandthChunks
-          .map((digit, index) => {
-            if (index === 0) return digit;
-            if (digit) return `${digit} ${bigNums[index - 1]}`;
+          .map((numberEnglish, index) => {
+            if (index === 0) return numberEnglish;
+            if (numberEnglish) return `${numberEnglish} ${bigNums[index - 1]}`;
           })
           .filter(Boolean)
           .reverse()
@@ -2085,11 +2217,12 @@ class List extends Array {
     }
     const start = this[0];
     const end = this[1];
+    const step = this[2] || 1;
     const arr = listOf();
     for (
       let i = start;
-      start < end ? i <= end : i >= end;
-      start < end ? i++ : i--
+      start < end ? i < end : i > end;
+      start < end ? (i += step) : (i -= step)
     ) {
       arr.push(i);
     }
@@ -2146,6 +2279,61 @@ class List extends Array {
    */
   static isList(object) {
     return object instanceof List;
+  }
+
+  /**
+   * Generates a list of random numbers between 0 and 1
+   * @param {Number} size - The size of the list
+   * @returns {List}
+   */
+  static generateRandomNumbers(size = 1) {
+    return Array(size)
+      .fill(null)
+      .map(() => Math.random())
+      .toList();
+  }
+
+  /**
+   * Generates a list of random integers between min and max
+   * @param {Number} size - The size of the list
+   * @param {Number} min - Min value
+   * @param {Number} max - Max value
+   * @returns {Number}
+   */
+  static generateRandomIntegers(
+    size = 1,
+    min = Number.MIN_SAFE_INTEGER,
+    max = Number.MAX_SAFE_INTEGER
+  ) {
+    return Array(size)
+      .fill(null)
+      .map(() => Math.floor(Math.random() * (max - min + 1) + min))
+      .toList();
+  }
+
+  /**
+   * Generates a range of numbers incrementing or decrementing by one
+   * @param {*} start
+   * @param {*} end
+   * @returns {Number}
+   */
+  static range(start, end, step = 1) {
+    return new List(start, end, step).range();
+  }
+
+  static repeat(callback, times = 1) {
+    return Array(times)
+      .fill(null)
+      .map(() => (isFn(callback) ? callback() : callback))
+      .toList();
+  }
+
+  /**
+   * Converts a list to an array
+   * @returns {Array}
+   */
+  toArray() {
+    return Array.from(this);
   }
 
   /**

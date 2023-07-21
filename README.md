@@ -1,5 +1,11 @@
 # List.JS (Array Extended)
 
+## Why List.JS?
+
+JavaScript array lacks a lot of functionality to manipulate and modify existing array.
+
+The `List` extends `Array`, so all functionality that is available on a regular JavaScript array is available on the `List`.
+
 ## How to declare a list
 
 There are several ways to declare a list.
@@ -30,7 +36,7 @@ console.log(list);
 // List(4) [ 'a', 'b', 'c', 'd' ]
 ```
 
-You can also convert a JavaScript array to a list.
+You can also convert a JavaScript `Array` to a `List` using the `toList()` function.
 
 **Usage**
 
@@ -45,26 +51,20 @@ console.log(list);
 // List(4) [ 9, 8, 7, 6 ]
 ```
 
-## Why List.JS?
-
-JavaScript array lacks a lot of functionality to manipulate and modify existing array.
-
-The `List` object extends the `Array` object, so all functionality that is available on a regular JavaScript array is available on the `List`.
-
 ## Functions
 
 ## `add(...elements)`
 
 **Description**
 
-Adds elements to the list and returns the list.
+Adds all the specified `elements` to the list and returns the list.
 
 **Usage**
 
 ```js
-const input = listOf("a", "b", "c");
+const list = listOf("a", "b", "c");
 
-const result = input.add("d", "e");
+const result = list.add("d", "e");
 
 console.log(result);
 // List(4) [ 'a', 'b', 'c', 'd', 'e' ]
@@ -114,7 +114,7 @@ console.log(result);
 
 **Description**
 
-Returns an object containing key-value pairs provided by `transform` function applied to each elements of the list
+Returns an object containing key-value pairs provided by the `transform` function applied to each of the elements in the list.
 
 **Usage**
 
@@ -182,19 +182,21 @@ console.log(result);
 // }
 ```
 
-
 ## `binarySearch(element, fromIndex = 0, toIndex = this.length)`
 
 **Description**
 
 Performs a binary search on a sorted list of elements and returns the index of the search result
 
+**Note**
+The list must be in a sorted ascendingly first before this function can be used.
+
 **Usage**
 
 ```js
-const numbers = listOf(8, 34, 56, 89, 105);
+const list = listOf(8, 34, 56, 89, 105);
 
-const result = numbers.binarySearch(56);
+const result = list.binarySearch(56);
 
 console.log(result);
 // 2
@@ -233,9 +235,9 @@ Converts each word in the list to capitalized case
 **Usage**
 
 ```js
-const input = listOf("alice", "boB", "cHARLIE", "hello world");
+const words = listOf("alice", "boB", "cHARLIE", "hello world");
 
-const result = input.capitalize();
+const result = words.capitalize();
 
 console.log(result);
 // List(4) [ 'Alice', 'Bob', 'Charlie', 'Hello World' ]
@@ -245,7 +247,7 @@ console.log(result);
 
 **Description**
 
-Rounds all numbers in the list up
+Rounds all numbers in the list up to their nearest integer values
 
 **Usage**
 
@@ -332,7 +334,11 @@ console.log(result);
 
 **Description**
 
-Checks if the list contains any of the given elements
+Checks if the list contains _any_ of the given `elements`
+
+**Note**
+
+Not a deep comparison
 
 **Usage**
 
@@ -352,7 +358,7 @@ console.log(result);
 
 **Description**
 
-Checks if a list contains all of the given elements
+Checks if a list contains _all_ of the given elements
 
 **Usage**
 
@@ -373,8 +379,8 @@ console.log(contains);
 
 Returns the number of elements matching a given `predicate`.
 
-- If the `predicate` is a function, returns the number of instances for which the function returns `true`.
-- If the `predicate` is a value, counts the number of occurences in the list.
+- If the `predicate` is a **function**, returns the number of instances for which the function returns `true`.
+- If the `predicate` is a **value**, counts the number of occurences in the list.
 - If no `predicate` is provided, returns the length of the list.
 
 **Usage**
@@ -400,17 +406,16 @@ console.log(result);
 
 **Description**
 
-Counts unique occurences in the list and returns them as an object
+Counts occurences of every element in the list and returns them as an `Object`
 
 **Usage**
 
 ```js
-const input = listOf("apple", "apple", "orange", "banana", "banana", "banana");
+const list = listOf("apple", "apple", "orange", "banana", "banana", "banana");
 
-const result = input.counts();
+const result = list.counts();
 
 console.log(result);
-
 // { apple: 2, orange: 1, banana: 3 }
 ```
 
@@ -418,7 +423,7 @@ console.log(result);
 
 **Description**
 
-Deletes any given number of elements from a list.
+Deletes all occurences of the given elements from the list.
 
 **Note**
 Mutates the original list. To ensure original list is not mutated, use `exclude()` instead.
@@ -438,7 +443,7 @@ console.log(fruits);
 
 **Description**
 
-Finds all the elements that are _not_ common to both lists
+Returns the "difference" between two lists, i.e. finds all the elements that are _not_ common to both lists
 
 **Note**
 Opposite of `intersection()`
@@ -452,7 +457,7 @@ const fruits2 = listOf("peach", "apple", "orange", "plum");
 const difference = fruits1.difference(fruits2);
 
 console.log(difference);
-// List(4) [ 'peach', 'plum', 'banana', 'pear' ]
+// List(4) [ 'banana', 'pear', 'peach', 'plum' ]
 ```
 
 ## `distinct()`
@@ -460,9 +465,6 @@ console.log(difference);
 **Description**
 
 Returns all the unique elements in the list
-
-**Note**
-This is the same as the `unique()` function, except that it returns a `List` object instead of a `Set`
 
 **Usage**
 
@@ -504,21 +506,25 @@ console.log(result);
 // ]
 ```
 
-## `divide(number)`
+## `divideBy(number)`
 
 **Description**
 
-Divides each element in the list with a given `number`
+Divides each element in the list with a given `number` or a list of numbers.
 
 **Usage**
 
 ```js
-const input = listOf(32, 78, 56, 19, 22, 31);
+const input = listOf(32, 78, 56);
 
-const result = input.divide(4);
+let result = input.divideBy(4);
 
 console.log(result);
-// List(6) [ 8, 19.5, 14, 4.75, 5.5, 7.75 ]
+// List(3) [ 8, 19.5, 14 ]
+
+result = input.divideBy([4, 3, 2]);
+console.log(result);
+// List(3) [ 8, 26, 28 ]
 ```
 
 ## `drop(n)`
@@ -566,9 +572,9 @@ Returns a list containing all elements except last elements that satisfy the giv
 ```js
 const numbers = listOf(32, 78, 56, 19, 22, 31);
 
-const dropped = numbers.dropLastWhile((it) => it > 30);
+const result = numbers.dropLastWhile((it) => it > 30);
 
-console.log(dropped);
+console.log(result);
 // List(5) [ 32, 78, 56, 19, 22 ]
 ```
 
@@ -662,17 +668,25 @@ console.log(eighth);
 
 Returns an element at the given `index` or throws an `IndexOutOfBoundsException` if the `index` is larger than the length of the list.
 
+**Note**
+
+Supports negative indices. If a negative index is given, it counts backwards from the end of the list.
+
 **Usage**
 
 ```js
 const numbers = listOf(32, 78, 56);
 
-let element = numbers.elementAt(2);
-console.log(element);
+let result = numbers.elementAt(2);
+console.log(result);
 // 56
 
-element = numbers.elementAt(4);
-console.log(element);
+let result = numbers.elementAt(-2);
+console.log(result);
+// 78
+
+result = numbers.elementAt(4);
+console.log(result);
 // IndexOutOfBoundsException [Error]: Index out of bounds: 4
 ```
 
@@ -683,24 +697,34 @@ console.log(element);
 Returns an element at the given `index` or the result of calling the `defaultValue` function if the `index` is out of bounds of this list.
 
 **Note**
-`defaultValue` can either be a function or a value
+
+- Supports negative indices
+- `defaultValue` can either be a function or a value
 
 **Usage**
 
 ```js
 const numbers = listOf(32, 78, 56);
 
-let element = numbers.elementAtOrElse(2, 70);
-console.log(element);
+let result = numbers.elementAtOrElse(2, 70);
+console.log(result);
 // 56
 
-element = numbers.elementAtOrElse(4, 70);
-console.log(element);
+result = numbers.elementAtOrElse(4, 70);
+console.log(result);
 // 70
 
-element = numbers.elementAtOrElse(4, () => Math.random());
-console.log(element);
+result = numbers.elementAtOrElse(4, () => Math.random());
+console.log(result);
 // 0.5232938553939832
+
+let result = numbers.elementAtOrElse(-2, 70);
+console.log(result);
+// 78
+
+result = numbers.elementAtOrElse(-4, 70);
+console.log(result);
+// 70
 ```
 
 ## `elementAtOrNull(index)`
@@ -708,6 +732,10 @@ console.log(element);
 **Description**
 
 Returns an element at the given `index` or `null` if the `index` is out of bounds.
+
+**Note**
+
+Supports negative indices
 
 **Usage**
 
@@ -719,6 +747,14 @@ console.log(result);
 // 56
 
 result = input.elementAtOrNull(4);
+console.log(result);
+// null
+
+result = numbers.elementAtOrNull(-2);
+console.log(result);
+// 78
+
+result = numbers.elementAtOrNull(-4);
 console.log(result);
 // null
 ```
@@ -752,24 +788,24 @@ console.log(result);
 Takes in a variable number of arguments and excludes them from the list.
 
 **Note**
-Does not modify original list. To modify original list, use `delete()` instead.
+Does not mutate original list. To mutate original list, use `delete()` instead.
 
 **Usage**
 
 ```js
-const input = listOf("z", "a", "d", "b", "e", "c", "f");
+const input = listOf("a", "d", "b", "e", "c", "f");
 const result = input.exclude("a", "b", "c");
 
+console.log(result);
+// List(3) [ 'd', 'e', 'f' ]
+
+// Does not mutate original list
 console.log(input);
-// List(7) [
-//   'z', 'a', 'd',
-//   'b', 'e', 'c',
-//   'f'
+// List(6) [
+//   'a', 'd', 'b',
+//   'e', 'c', 'f'
 // ]
 //
-
-console.log(result);
-// List(4) [ 'z', 'd', 'e', 'f' ]
 ```
 
 ## `exists(predicate)`
@@ -779,7 +815,7 @@ console.log(result);
 Checks if an item exists in the list that matches the given `predicate`
 
 **Note**
-The `predicate` can either be a function or a value
+The `predicate` can be a function or a value
 
 **Usage**
 
@@ -874,8 +910,8 @@ console.log(result);
 Only returns values that are falsy.
 
 **Params**
-`zeroTruthy` controls whether the value '0' should be treated as truthy or not.
-The default value of `zeroTruthy` is `false`
+
+- `zeroTruthy` controls whether the value `0` should be treated as truthy or not. The default value of `zeroTruthy` is `false`.
 
 **Usage**
 
@@ -895,7 +931,7 @@ console.log(filtered);
 
 **Description**
 
-Filters out the first `null` element, but keeps the rest
+Filters out the **first** `null` element, but keeps the rest
 
 **Usage**
 
@@ -1024,6 +1060,10 @@ console.log(result);
 
 Filters out all the elements in the list that are not `null`. Keeps `undefined` values.
 
+**Note**
+
+To remove both `null` and `undefined` values, use `filterNotNullish()` or `filterTruthy()`
+
 **Usage**
 
 ```js
@@ -1034,19 +1074,80 @@ console.log(filtered);
 // List(4) [ 'apple', 'carrot', undefined, 'ginger' ]
 ```
 
-## filterNotNullTo
+## `filterNotNullish()`
 
-###
+**Description**
 
-## filterNotTo
+Filters out all the elements in the list that are `null` or `undefined`.
 
-###
+**Note**
 
-## filterNotUndefined
+- To remove only `null` values while keeping `undefined` values, use `filterNotNull()`
+- To remove only `undefined` values while keeping `null` values, use `filterNotUndefined()`
+
+**Usage**
+
+```js
+const items = listOf(null, "apple", "carrot", undefined, null, null, "ginger");
+
+const result = items.filterNotNullish();
+
+console.log(result);
+// List(3) [ 'apple', 'carrot', 'ginger' ]
+```
+
+## `filterNotNullTo(destination)`
+
+**Description**
+
+Filters out all the elements in the list that are not `undefined` and appends them to a `destination` list. Keeps `null` values.
+
+**Usage**
+
+```js
+const items = listOf(null, "apple", "carrot", undefined, null, null, "ginger");
+const list = listOf("banana", "watermelon");
+
+const result = items.filterNotNullTo(list);
+
+console.log(result);
+// List(6) [
+//   'banana',
+//   'watermelon',
+//   'apple',
+//   'carrot',
+//   undefined,
+//   'ginger'
+// ]
+```
+
+## `filterNotTo(destination, predicate)`
+
+**Description**
+
+Appends all elements not matching the given `predicate` to the given `destination`.
+
+**Usage**
+
+```js
+const items = listOf(1, 2, 3, 6, 7, 8);
+const list = listOf(4, 5);
+
+const result = items.filterNotTo(list, (x) => x > 5);
+
+console.log(result);
+// List(5) [ 4, 5, 1, 2, 3 ]
+```
+
+## `filterNotUndefined()`
 
 **Description**
 
 Filters out all the elements in the list that are not `undefined`. Keeps `null` values.
+
+**Note**
+
+To remove both `null` and `undefined` values, use `filterNotNullish()` or `filterTruthy()`
 
 **Usage**
 
@@ -1093,15 +1194,29 @@ console.log(result);
 // List(3) [ 17, 19, 23 ]
 ```
 
-## filterTo
+## `filterTo(destination, predicate)`
 
-###
+**Description**
+
+Appends all elements matching the given `predicate` to the given `destination`.
+
+**Usage**
+
+```js
+const items = listOf(1, 2, 3, 6, 7, 8);
+const list = listOf(4, 5);
+
+const result = items.filterTo(list, (x) => x > 5);
+
+console.log(result);
+// List(5) [ 4, 5, 6, 7, 8 ]
+```
 
 ## `filterTruthy(zeroTruthy = true)`
 
 **Description**
 
-Filters out all values that are truthy. Value of '0' is treated as truthy by default
+Filters out all values that are truthy. Value of `0` is treated as truthy by default
 
 **Usage**
 
@@ -1151,28 +1266,76 @@ console.log(result);
 
 Returns the first half of the list
 
-@param `keepMiddle` (Boolean) - controls whether the middle element of the list should be included in this list if the size of the list is an odd number
+**Param**
+`keepMiddle` (Boolean) - if the size of the list is an odd number, controls whether the middle element of the list should be included
 
 **Usage**
 
 ```js
 const numbers = listOf(3, 4, 5, 6, 7, 8, 9, 10, 11);
-let firstHalf = numbers.firstHalf();
-console.log(firstHalf);
+
+let result = numbers.firstHalf();
+console.log(result);
 // List(5) [ 3, 4, 5, 6, 7 ]
 
-firstHalf = numbers.firstHalf(false);
-console.log(firstHalf);
+result = numbers.firstHalf(false);
+console.log(result);
 // List(4) [ 3, 4, 5, 6 ]
 ```
 
-## firstNotNullOf()
+## `firstNotNullOf(transform)`
 
-###
+**Description**
 
-## firstNotNullOfOrNull
+Returns the first non-null value produced by `transform` function being applied to elements of this collection in iteration order, or throws `NoSuchElementException` if no non-null value was produced.
 
-###
+**Usage**
+
+```js
+const users = listOf(
+  { id: null, name: "Tony", isAdmin: null },
+  { id: null, name: "Dave", isAdmin: null },
+  { id: null, name: "Pat", isAdmin: null },
+  { id: null, name: "Chris", isAdmin: null },
+  { id: 39, name: "Fred", isAdmin: null },
+  { id: 105, name: "George", isAdmin: null }
+);
+
+let result = users.firstNotNullOf((it) => it.id);
+console.log(result);
+// 39
+
+result = users.firstNotNullOf((it) => it.isAdmin);
+console.log(result);
+// NoSuchElementException [Error]: No such element
+```
+
+## `firstNotNullOfOrNull(transform)`
+
+**Description**
+
+Returns the first non-null value produced by `transform` function being applied to elements of this collection in iteration order, or throws NoSuchElementException if no non-null value was produced.
+
+**Usage**
+
+```js
+const users = listOf(
+  { id: null, name: "Tony", isAdmin: null },
+  { id: null, name: "Dave", isAdmin: null },
+  { id: null, name: "Pat", isAdmin: null },
+  { id: null, name: "Chris", isAdmin: null },
+  { id: 39, name: "Fred", isAdmin: null },
+  { id: 105, name: "George", isAdmin: null }
+);
+
+let result = users.firstNotNullOfOrNull((it) => it.id);
+console.log(result);
+// 39
+
+result = users.firstNotNullOfOrNull((it) => it.isAdmin);
+console.log(result);
+// null
+```
 
 ## `firstOfEach()`
 
@@ -1267,30 +1430,38 @@ console.log(result);
 
 ###
 
-## forEachAsync
+## `forEachAsync(callback)`
 
 ###
 
-## fourth
+## `fourth`
 
 ###
 
-## fourthOrNull
+## `fourthOrNull`
 
 ###
 
-## get(index, defaultValue)
+## `get(index, defaultValue)`
 
 **Description**
 
-Returns the element at a particular `index`, or returns the `defaultValue` parameter if that index doesn't exist.
+Returns the element at a particular `index`, or returns `defaultValue` if that index doesn't exist.
 
 **Usage**
 
 ```js
 const list = listOf("a", "b", "c");
 
-let result = list.get(2, "d");
+let result = list.get(1);
+console.log(result);
+// b
+
+result = list.get(-1);
+console.log(result);
+// c
+
+result = list.get(2, "d");
 console.log(result);
 // c
 
@@ -1391,6 +1562,7 @@ Halves the list into two and returns the two parts.
 
 ```js
 const input = listOf(3, 4, 5, 6, 7, 8, 9, 10, 11);
+
 let result = input.halve();
 console.log(result);
 // List(2) [
@@ -1418,6 +1590,7 @@ Default value of `n` is `1`.
 
 ```js
 const numbers = listOf(3, 4, 5, 6, 7, 8, 9, 10, 11);
+
 let head = numbers.head();
 console.log(head);
 //List(1) [ 3 ]
@@ -1427,11 +1600,11 @@ console.log(head);
 // List(4) [ 3, 4, 5, 6 ]
 ```
 
-## hundredth
+## `hundredth(predicate)`
 
 ###
 
-## hundredthOrNull
+## `hundredthOrNull(predicate)`
 
 ###
 
@@ -1529,45 +1702,23 @@ console.log(result);
 // List(2) [ 1, 4 ]
 ```
 
-## `intersect(...lists)`
+## `intersect(list)`
 
 **Description**
 
-Returns all the elements that exist in one or more given lists.
-
-**Note**
-
-- Accepts multiple arguments
-- Opposite of `difference()`
-- Unlike `union()`, returns a `List` object instead of a `Set`
+Returns all the elements that exist in the given lists.
 
 **Usage**
 
 ```js
 const list1 = listOf(1, 2, 3, 4);
 const list2 = listOf(2, 4, 6, 8);
-const list3 = listOf(3, 4, 5, 6);
-const list4 = [4, 6, 8, 10];
-
-const input = listOf(1, 2, 3, 4, 5, 6);
 
 let result;
 
-result = input.intersect(list1);
-console.log(result);
-// List(4) [ 1, 2, 3, 4 ]
-
-result = input.intersect(list1, list2);
+result = list1.intersect(list2);
 console.log(result);
 // List(2) [ 2, 4 ]
-
-result = input.intersect(list1, list2, list3); // Output: [4]
-console.log(result);
-// List(1) [ 4 ]
-
-result = input.intersect(list1, list2, list3, list4);
-console.log(result);
-// List(1) [ 4 ]
 ```
 
 ## `intersection(...lists)`
@@ -1581,35 +1732,19 @@ Alias for `intersect(...lists)`
 ```js
 const list1 = listOf(1, 2, 3, 4);
 const list2 = listOf(2, 4, 6, 8);
-const list3 = listOf(3, 4, 5, 6);
-const list4 = [4, 6, 8, 10];
-
-const input = listOf(1, 2, 3, 4, 5, 6);
 
 let result;
 
-result = input.intersection(list1);
-console.log(result);
-// List(4) [ 1, 2, 3, 4 ]
-
-result = input.intersection(list1, list2);
+result = list1.intersection(list2);
 console.log(result);
 // List(2) [ 2, 4 ]
-
-result = input.intersection(list1, list2, list3); // Output: [4]
-console.log(result);
-// List(1) [ 4 ]
-
-result = input.intersection(list1, list2, list3, list4);
-console.log(result);
-// List(1) [ 4 ]
 ```
 
 ## `isEmpty()`
 
 **Description**
 
-Returns `true` if a list is empty
+Returns `true` if the list is empty
 
 **Usage**
 
@@ -1852,7 +1987,7 @@ console.log(result);
 Given two lists, merges them into a `Map` where the first list contains the keys and the second list contains the values.
 
 **Note**
-This method creates a `Map` object. In order to create an `Object` instead of a `Map`, use `pairWith()` instead.
+This method creates a `Map`. In order to create an `Object` instead of a `Map`, use `pairWith()` instead.
 
 **Usage**
 
@@ -1870,9 +2005,10 @@ console.log(result);
 
 **Description**
 
-Returns the `nth` element in the list that matches the `predicate`, or the `nth` element in the list if no predicate is specified.
+Returns the `nth` element in the list that matches the `predicate`, or the `nth` element in the list if no `predicate` is specified.
 
 **Note**
+
 Throws an error if no item matches the `predicate`
 
 **Usage**
@@ -1897,7 +2033,7 @@ console.log(result);
 
 **Description**
 
-Returns the `nth` element in the list matches the predicate, or `null` if such an element does not exist.
+Returns the `nth` element in the list matches the `predicate`, or `null` if such an element does not exist.
 
 **Usage**
 
@@ -1950,14 +2086,14 @@ const input = listOf(
   { name: "Burger", price: 20.99 },
   { name: "Sushi", price: 15.99 },
   { name: "Cake", price: 15.99 },
-  { name: "Kebab", price: 23.99 },
+  { name: "Kebab", price: 23.99 }
 );
 
-let result = input.maxBy(item => item.price);
+let result = input.maxBy((item) => item.price);
 console.log(result);
 // { name: 'Pizza', price: 23.99 }
 
-result = input.maxBy(item => item.price, true);
+result = input.maxBy((item) => item.price, true);
 console.log(result);
 // List(2) [
 //   { name: 'Pizza', price: 23.99 },
@@ -1971,6 +2107,10 @@ console.log(result);
 
 Returns the largest value among all values produced by `selector` function applied to each element in the collection.
 
+**Note**
+
+The `selector` can be a function or a string.
+
 **Usage**
 
 ```js
@@ -1983,7 +2123,10 @@ const input = listOf(
 );
 
 const result = input.maxOf((item) => item.price);
+console.log(result);
+// 23.99
 
+result = input.maxOf("price");
 console.log(result);
 // 23.99
 ```
@@ -2050,19 +2193,19 @@ If `findAll` is set `true`, returns all the elements that yield the smallest val
 **Usage**
 
 ```js
-const input = listOf(
+const items = listOf(
   { name: "Pizza", price: 23.99 },
   { name: "Burger", price: 20.99 },
   { name: "Sushi", price: 15.99 },
   { name: "Cake", price: 15.99 },
-  { name: "Kebab", price: 23.99 },
+  { name: "Kebab", price: 23.99 }
 );
 
-let result = input.minBy(item => item.price);
+let result = items.minBy((item) => item.price);
 console.log(result);
 // { name: 'Sushi', price: 15.99 }
 
-result = input.minBy(item => item.price, true);
+result = items.minBy((item) => item.price, true);
 console.log(result);
 // List(2) [
 //   { name: 'Sushi', price: 15.99 },
@@ -2126,17 +2269,17 @@ const input = listOf(
   { name: "Burger", price: 20.99 },
   { name: "Sushi", price: 15.99 },
   { name: "Cake", price: 15.99 },
-  { name: "Kebab", price: 23.99 },
+  { name: "Kebab", price: 23.99 }
 );
 
-let result = input.minmaxBy(item => item.price);
+let result = input.minmaxBy((item) => item.price);
 console.log(result);
 // {
 //   min: { name: 'Sushi', price: 15.99 },
 //   max: { name: 'Pizza', price: 23.99 }
 // }
 
-result = input.minmaxBy(item => item.price, true);
+result = input.minmaxBy((item) => item.price, true);
 console.log(result);
 // {
 //   min: List(2) [
@@ -2164,19 +2307,34 @@ const input = listOf(
   { name: "Burger", price: 20.99 },
   { name: "Sushi", price: 15.99 },
   { name: "Cake", price: 15.99 },
-  { name: "Kebab", price: 23.99 },
+  { name: "Kebab", price: 23.99 }
 );
 
-let result = input.minmaxOf(item => item.price);
+let result = input.minmaxOf((item) => item.price);
 console.log(result);
 // { min: 15.99, max: 23.99 }
 ```
 
+## `minus(...elements)`
 
+**Description**
 
-## minus
+Returns a list with all the specified elements excluded
 
-###
+**Note**
+
+This function is an alias for `exclude()`
+
+**Usage**
+
+```js
+const input = listOf(2, 4, 6, 8, 10, 12);
+
+let result = input.minus(6, 10, 12);
+
+console.log(result);
+// List(3) [ 2, 4, 8 ]
+```
 
 ## `mode()`
 
@@ -2195,9 +2353,26 @@ console.log(result);
 // banana
 ```
 
-## multiply
+## `multiplyBy(number)`
 
-###
+**Description**
+
+Multiplies each number in the list with a given `number`.
+If the `number` argument is a `List` or an `Array`, multiplies each number in the list with the corresponding number in the supplied list
+
+**Usage**
+
+```js
+const input = listOf(3, 7, 5);
+
+let result = input.multiplyBy(4);
+console.log(result);
+// List(3) [ 12, 28, 20 ]
+
+result = input.multiplyBy([2, 3, 4]);
+console.log(result);
+// List(3) [ 6, 21, 20 ]
+```
 
 ## ninth
 
@@ -2225,6 +2400,61 @@ console.log(result);
 result = input.none((item) => item > 5);
 console.log(result);
 // false
+
+result = input.none();
+console.log(result);
+// false
+
+result = input.none(5);
+console.log(result);
+// false
+
+result = input.none(7);
+console.log(result);
+// true
+```
+
+## `nthLargest(n)`
+
+**Description**
+
+Returns the `nth` largest number in the list
+
+**Usage**
+
+```js
+const list = listOf(3, 4, 5, 6, 6, 6, 7, 7);
+
+let output = list.nthLargest(2);
+console.log(output);
+// 6
+
+output = list.nthLargest(10);
+console.log(output);
+// undefined
+```
+
+## `nthLargestOf(selector, n)`
+
+**Description**
+
+Returns the `nth` largest number in the list created by applying the `selector` function.
+
+**Usage**
+
+```js
+const input = listOf(
+  { name: "Pizza", price: 23 },
+  { name: "Burger", price: 20 },
+  { name: "Sushi", price: 15 },
+  { name: "Cake", price: 18 },
+  { name: "Kebab", price: 23 }
+);
+
+let result = input.nthLargestOf((item) => item.price, 2);
+
+console.log(result);
+// 20
 ```
 
 ## `nthOfEach(n)`
@@ -2242,6 +2472,70 @@ result = input.nthOfEach(1);
 
 console.log(result);
 // List(3) [ 'b', 'a', 'e' ]
+```
+
+## `nthSmallest(n)`
+
+**Description**
+
+Returns the `nth` smallest number in the list
+
+**Usage**
+
+```js
+const list = listOf(3, 4, 5, 6, 6, 6, 7, 7);
+
+let output = list.nthSmallest(2);
+console.log(output);
+// 4
+
+output = list.nthSmallest(10);
+console.log(output);
+// undefined
+```
+
+## `nthSmallestOf(selector, n)`
+
+**Description**
+
+Returns the `nth` smallest element in the list created by applying the `selector` function.
+
+**Usage**
+
+```js
+const input = listOf(
+  { name: "Pizza", price: 23 },
+  { name: "Burger", price: 20 },
+  { name: "Sushi", price: 15 },
+  { name: "Cake", price: 18 },
+  { name: "Kebab", price: 23 }
+);
+
+let result = input.nthSmallestOf((item) => item.price, 2);
+
+console.log(result);
+// 18
+```
+
+## `onEach(callback)`
+
+**Description**
+
+Performs the given action on each element and returns the list itself afterwards.
+
+**Usage**
+
+```js
+const input = listOf(4, 5, 10, 20);
+const squared = listOf();
+
+let result = input.onEach((it) => squared.push(it ** 2));
+
+console.log(result);
+// List(4) [ 4, 5, 10, 20 ]
+
+console.log(squared);
+// List(4) [ 16, 25, 100, 400 ]
 ```
 
 ## `pairWith(list)`
@@ -2266,7 +2560,7 @@ console.log(result);
 
 **Description**
 
-Splits the original collection into a pair of lists, where the first list contains elements for which `predicate` yielded `true`, while the second list contains elements for which `predicate` yielded `false`.
+Splits the original list into a pair of lists, where the first list contains elements for which `predicate` yielded `true`, while the second list contains elements for which `predicate` yielded `false`.
 
 **Usage**
 
@@ -2282,9 +2576,22 @@ console.log(result);
 // ]
 ```
 
-## plus()
+## `plus(...elements)`
 
-###
+**Description**
+
+Adds all the specified elements to the list
+
+**Usage**
+
+```js
+const input = listOf("a", "b", "c");
+
+const result = input.plus("d", "e", "f");
+
+console.log(result);
+// List(6) [ 'a', 'b', 'c', 'd', 'e', 'f' ]
+```
 
 ## `postfix(string)`
 
@@ -2305,7 +2612,20 @@ console.log(result);
 
 ## `power(number)`
 
-###
+**Description**
+
+Raises each number in the list to the power of the specified `number`
+
+**Usage**
+
+```js
+const input = listOf(2, 4, 6);
+
+let result = input.power(3);
+
+console.log(result);
+// List(3) [ 8, 64, 216 ]
+```
 
 ## `prefix(string)`
 
@@ -2324,7 +2644,27 @@ console.log(result);
 // List(3) [ 'Name: John', 'Name: Michael', 'Name: 1234' ]
 ```
 
-## `product()`
+## `product(initialValue = 1)`
+
+**Description**
+
+Returns the multiplication of all the numbers in the list. If an `initialValue` is provided, multiplies the the product of the numbers with the `initialValue`.
+
+**Usage**
+
+```js
+const input = listOf(4, 5, 10, 20);
+
+let result = input.product();
+console.log(result);
+// 4000
+
+result = input.product(5);
+console.log(result);
+// 20000
+```
+
+## `productOf()`
 
 **Description**
 
@@ -2347,6 +2687,10 @@ console.log(result);
 
 Returns a randomly chosen element within the list
 
+**Note**
+
+This function only returns one randomly chosen element. To return multiple randomly chosen elements, use `sample()` instead.
+
 **Usage**
 
 ```js
@@ -2365,7 +2709,7 @@ console.log(result);
 
 **Description**
 
-Returns a list of numbers counting from start to end.
+Returns a list of numbers counting from `start` to `end` (non-inclusive).
 
 **Note**
 The list must contain only 2 elements, both of which are numbers.
@@ -2376,18 +2720,18 @@ let input, result;
 input = listOf(4, 10);
 result = input.range();
 console.log(result);
-// List(7) [
+// List(6) [
 //   4, 5,  6, 7,
-//   8, 9, 10
+//   8, 9
 // ]
 
 input = listOf(10, -4);
 result = input.range();
 console.log(result);
-// List(15) [
+// List(14) [
 //   10,  9,  8, 7, 6,  5,
 //    4,  3,  2, 1, 0, -1,
-//   -2, -3, -4
+//   -2, -3
 // ]
 
 input = listOf("a", 2);
@@ -2417,7 +2761,7 @@ console.log(result);
 // ]
 ```
 
-## `replace(element, replacer, count = -1)`
+## `replace(element, value, count = -1)`
 
 **Description**
 
@@ -2426,7 +2770,7 @@ Replaces every occurence of an element in a list with a new value
 **Params**
 
 - `element` - the element to replace
-- `replacer` - the value to replace with
+- `value` - the value to replace with
 - `count` - indicates how many elements to replace, default is `-1` which indicates replace all
 
 **Usage**
@@ -2461,7 +2805,7 @@ console.log(result);
 // ]
 ```
 
-## `sample(sampleSize, allowRepeats=true)`
+## `sample(sampleSize, allowRepeats = true)`
 
 **Description**
 
@@ -2709,8 +3053,6 @@ console.log(result);
 
 **Description**
 
-
-
 **Usage**
 
 ```js
@@ -2723,7 +3065,7 @@ const users = listOf(
   { id: 7, name: "Chris" }
 );
 
-const result = users.sortBy(it => it.id);
+const result = users.sortBy((it) => it.id);
 
 console.log(result);
 // List(6) [
@@ -2750,7 +3092,7 @@ const users = listOf(
   { id: 7, name: "Chris" }
 );
 
-const result = users.sortByDescending(it => it.id);
+const result = users.sortByDescending((it) => it.id);
 
 console.log(result);
 // List(6) [
@@ -2891,11 +3233,11 @@ console.log(result);
 // List(4) [ 19, 20, 21, 22 ]
 ```
 
-## `sum()`
+## `sum(initialValue = 0)`
 
 **Description**
 
-Returns the sum of all numbers in a list
+Returns the sum of all numbers in a list, plus an optional `initialValue` if one is provided
 
 **Usage**
 
@@ -2903,31 +3245,51 @@ Returns the sum of all numbers in a list
 const input = listOf(5, 17, -15, 3, 1, 8);
 
 let result = input.sum();
-
 console.log(result);
 // 19
+
+result = input.sum(5);
+console.log(result);
+// 24
 ```
 
-## `sumOf(selector)`
+## `sumOf(selector, initialValue = 0)`
 
 **Description**
 
 Returns the sum of all values produced by `selector` function applied to each element in the collection.
 
+**Note**
+
+- The `selector` can be a function or a string.
+- The `initialValue` is added to the final sum and is `0` by default.
+
 **Usage**
 
 ```js
-const input = listOf(
+const order = listOf(
   { name: "Pizza", price: 23 },
   { name: "Burger", price: 20 },
   { name: "Sushi", price: 15 },
   { name: "Cake", price: 15 },
-  { name: "Kebab", price: 23 },
+  { name: "Kebab", price: 23 }
 );
 
-let result = input.sumOf(item => item.price);
-console.log(result);
+let total = order.sumOf((item) => item.price);
+console.log(total);
 // 96
+
+total = order.sumOf((item) => item.price, 4);
+console.log(total);
+// 100
+
+total = order.sumOf("price");
+console.log(total);
+// 96
+
+total = order.sumOf("price", 4);
+console.log(total);
+// 100
 ```
 
 ## `tail(n=1)`
@@ -2940,9 +3302,10 @@ Returns the last `n` elements in a list
 
 ```js
 const numbers = listOf(3, 4, 5, 6, 7, 8, 9, 10, 11);
+
 let tail = numbers.tail();
 console.log(tail);
-//List(1) [ 11 ]
+// List(1) [ 11 ]
 
 tail = numbers.tail(4);
 console.log(tail);
@@ -2982,7 +3345,6 @@ Returns a list containing last `n` elements.
 
 This function is an alias for `tail()`
 
-
 **Usage**
 
 ```js
@@ -3008,11 +3370,12 @@ Returns a list containing the last elements satisfying the given `predicate`.
 const input = listOf(2, 4, 6, 3, 8, 10);
 
 let result = input.takeLastWhile((it) => it % 2 === 0);
+
 console.log(result);
 // List(2) [ 8, 10 ]
 ```
 
-## takeWhile
+## `takeWhile(predicate)`
 
 **Description**
 
@@ -3023,7 +3386,8 @@ Returns a list containing the first elements satisfying the given `predicate`.
 ```js
 const input = listOf(2, 4, 6, 3, 8, 10);
 
-let result = input.takeLastWhile((it) => it % 2 === 0);
+let result = input.takeWhile((it) => it % 2 === 0);
+
 console.log(result);
 // List(3) [ 2, 4, 6 ]
 ```
@@ -3044,6 +3408,28 @@ console.log(result);
 
 ###
 
+## `toArray()`
+
+**Description**
+
+Converts a list to an array
+
+**Usage**
+
+```js
+const list = listOf(1, 2, 3, 4);
+
+const output = list.toArray();
+console.log(output);
+// [ 1, 2, 3, 4 ]
+
+console.log(Array.isArray(output));
+// true
+
+console.log(List.isList(output));
+// false
+```
+
 ## `toBoolean()`
 
 **Description**
@@ -3053,7 +3439,17 @@ Casts each item in the list to Boolean
 **Usage**
 
 ```js
-const input = listOf(1, 0, "true", "test", false, undefined, null, "hello", true);
+const input = listOf(
+  1,
+  0,
+  "true",
+  "test",
+  false,
+  undefined,
+  null,
+  "hello",
+  true
+);
 
 let result = input.toBoolean();
 console.log(result);
@@ -3189,10 +3585,7 @@ console.log(result);
 
 **Description**
 
-Returns a `Set` containing all distinct elements from both collections.
-
-**Note**
-Unlike `intersection()`, returns a `Set` object containing only unique entries instead of a `List`
+Returns a `Set` containing a union of all distinct elements from both lists.
 
 **Usage**
 
@@ -3203,17 +3596,17 @@ const list2 = listOf(6, 7, 5, 8, 9);
 let result = list1.union(list2);
 
 console.log(result);
-// Set { 6, 7, 5 }
+// List(7) [
+//   3, 4, 5, 6,
+//   7, 8, 9
+// ]
 ```
 
 ## `unique()`
 
 **Description**
 
-Returns all the unique elements in the list as a `Set` object.
-
-**Note**
-This is the same as the `distinct()` function, except that it returns a `Set` instead of a `List`.
+Returns all the unique elements in the list as a `List`.
 
 **Usage**
 
@@ -3223,7 +3616,7 @@ const fruits = listOf("apple", "apple", "orange", "banana", "banana", "pear");
 const unique = fruits.unique();
 
 console.log(unique);
-// Set { 'apple', 'orange', 'banana', 'pear' }
+// List(4) [ 'apple', 'orange', 'banana', 'pear' ]
 ```
 
 ## `unzip()`
@@ -3245,6 +3638,50 @@ let result = numbers.unzip();
 
 console.log(result);
 // List(2) [ [ 20, 40, -70 ], [ 30, 50, undefined ] ]
+```
+
+## `windowed(size, step=1, partialWindows=false)`
+
+**Description**
+
+Returns a list of snapshots of the window of the given `size` sliding along this collection with the given `step`, where each snapshot is a list.
+
+**Params**
+
+- `size` - the number of elements to take in each window
+
+- `step` - the number of elements to move the window forward by on an each step, by default 1
+
+- `partialWindows` - controls whether or not to keep partial windows in the end if any, by default `false` which means partial windows won't be preserved
+
+**Usage**
+
+```js
+const input = listOf(1, 2, 3, 4, 5, 6);
+
+let result = input.windowed(3);
+console.log(result);
+// List(4) [
+//   List(3) [ 1, 2, 3 ],
+//   List(3) [ 2, 3, 4 ],
+//   List(3) [ 3, 4, 5 ],
+//   List(3) [ 4, 5, 6 ]
+// ]
+
+result = input.windowed(3, 2);
+console.log(result);
+// List(2) [
+//   List(3) [ 1, 2, 3 ],
+//   List(3) [ 3, 4, 5 ]
+// ]
+
+result = input.windowed(3, 2, true);
+console.log(result);
+// List(3) [
+//   List(3) [ 1, 2, 3 ],
+//   List(3) [ 3, 4, 5 ],
+//   List(2) [ 5, 6 ]
+// ]
 ```
 
 ## `zip(...lists)`
@@ -3281,4 +3718,68 @@ console.log(result);
 // ]
 ```
 
-##
+## `List.isList(object)` (static)
+
+**Description**
+
+Checks if the given object is a `List`.
+
+**Usage**
+
+```js
+let input = listOf(1, 2, 3, 4);
+let result = List.isList(input);
+console.log(result);
+// true
+
+input = [1, 2, 3, 4];
+result = List.isList(input);
+console.log(result);
+// false
+
+input = [1, 2, 3, 4];
+result = List.isArray(input);
+console.log(result);
+// true
+
+input = listOf(1, 2, 3, 4);
+result = Array.isArray(input);
+console.log(result);
+// true
+```
+
+## `List.range()`
+
+## `List.from(object)`
+
+**Description**
+
+**Note**
+
+Similar to `Array.from()`, but converts into a `List` instead of an array.
+
+**Usage**
+
+```js
+let input = "foo";
+let result = List.from(input);
+console.log(result);
+// List(3) [ 'f', 'o', 'o' ]
+
+input = new Set([1, 2, 3, 4]);
+result = List.from(input);
+console.log(result);
+// List(4) [ 1, 2, 3, 4 ]
+
+let map = new Map();
+map.set("a", 1);
+map.set("b", 2);
+result = List.from(map);
+console.log(result);
+// List(2) [ [ 'a', 1 ], [ 'b', 2 ] ]
+
+input = listOf(1, 2, 3, 4);
+result = List.from(input, (x) => x * 2);
+console.log(result);
+// List(4) [ 2, 4, 6, 8 ]
+```

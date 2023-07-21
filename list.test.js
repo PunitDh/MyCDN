@@ -185,24 +185,8 @@ function timeInMilliseconds(str) {
   return timeInSeconds(str) * 1000;
 }
 
-const people = listOf(
-  { id: 1, name: "Alice" },
-  { id: 2, name: "Bob" },
-  { id: 3, name: "Charlie" }
-);
+const fruits = listOf(1, 1, 2, 2, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 5, 6);
 
-let output = people.associateBy((it) => it.id);
-console.log(output);
-// {
-//   '1': { id: 1, name: 'Alice' },
-//   '2': { id: 2, name: 'Bob' },
-//   '3': { id: 3, name: 'Charlie' }
-// }
+const difference = fruits.unique();
 
-output = people.associateBy((it) => it.name);
-console.log(output);
-// {
-//   Alice: { id: 1, name: 'Alice' },
-//   Bob: { id: 2, name: 'Bob' },
-//   Charlie: { id: 3, name: 'Charlie' }
-// }
+console.log(difference);
