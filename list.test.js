@@ -6,6 +6,10 @@ const {
   pairOf,
   mapOf,
   Table,
+  listOfType,
+  SortedSet,
+  setOf,
+  sortedSetOf,
 } = require("./public/List");
 
 // const l = listOf("Foo:Test", "Boo:Best", "Bar:Jest", "Baz:Test1");
@@ -185,8 +189,7 @@ function timeInMilliseconds(str) {
   return timeInSeconds(str) * 1000;
 }
 
-const fruits = listOf(1, 1, 2, 2, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 5, 6);
+const array = [5, 5, 5, 5, 1, 2, 3, 4, 4, 4, 4];
+const set = new Set([1, 2, 2, 2]);
 
-const difference = fruits.unique();
-
-console.log(difference);
+console.log(set);

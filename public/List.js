@@ -16,6 +16,8 @@ class IllegalArgumentException extends Error {
   }
 }
 
+class ImmutableList extends Array {}
+
 class List extends Array {
   /**
    * Size of the list
@@ -959,11 +961,11 @@ class List extends Array {
 
   /**
    * Returns the unique elements in a list as a Set object
-   * @returns {Set}
+   * @returns {List}
    * @example listOf('a','a','b','b','e','e','f').distinct() ==> Set {'a','b','e','f'}
    */
   unique() {
-    return new Set(this).toList();
+    return List.from(new Set(this));
   }
 
   /**
@@ -1100,7 +1102,7 @@ class List extends Array {
    * @returns {List}
    */
   intersection(list) {
-    return new Set(this.filter((item) => list.includes(item))).toList();
+    return List.from(new Set(this.filter((item) => list.includes(item))));
   }
 
   /**
@@ -1111,11 +1113,13 @@ class List extends Array {
   difference(list) {
     if (!list || !(list instanceof Array)) return null;
 
-    return new Set(
-      this.concat(list).filter(
-        (item) => !(this.includes(item) && list.includes(item))
+    return List.from(
+      new Set(
+        this.concat(list).filter(
+          (item) => !(this.includes(item) && list.includes(item))
+        )
       )
-    ).toList();
+    );
   }
 
   /**
@@ -1124,7 +1128,7 @@ class List extends Array {
    * @returns {List}
    */
   union(list) {
-    return new Set([...this, ...list]).toList();
+    return List.from(new Set([...this, ...list]));
   }
 
   /**
@@ -2121,7 +2125,7 @@ class List extends Array {
         return "Zero";
       }
       const [integer, decimal] = number.toString().split(".");
-      const chunks = integer.split("").reverse().toList().chunked(3);
+      const chunks = integer.split("").reversed().toList().chunked(3);
 
       const lastDigits = (num, n) =>
         num.toString().slice(num.toString().length - n);
@@ -2273,6 +2277,30 @@ class List extends Array {
   }
 
   /**
+   * Returns a list containing the "types" of each element in the list
+   * @returns {List}
+   * @example
+   */
+  instanceTypes() {
+    return this.map((item) =>
+      item === null
+        ? null
+        : typeof item === "object"
+        ? item.constructor.name
+        : typeof item
+    );
+  }
+
+  /**
+   * Returns whether the list is a list of numbers
+   * @returns {Boolean}
+   */
+  isNumberList() {
+    const instanceTypes = this.instanceTypes().unique();
+    return instanceTypes.length === 1 && instanceTypes[0] === "number";
+  }
+
+  /**
    * Checks if the given object is a List
    * @param {*} object
    * @returns {Boolean}
@@ -2321,11 +2349,21 @@ class List extends Array {
     return new List(start, end, step).range();
   }
 
+  /**
+   * Repeats the list a given number of times and returns the resultant list
+   * @param {Function} callback
+   * @param {Number} times
+   * @returns {List}
+   */
   static repeat(callback, times = 1) {
     return Array(times)
       .fill(null)
       .map(() => (isFn(callback) ? callback() : callback))
       .toList();
+  }
+
+  static emptyList() {
+    return listOf();
   }
 
   /**
@@ -2334,6 +2372,14 @@ class List extends Array {
    */
   toArray() {
     return Array.from(this);
+  }
+
+  /**
+   * Converts the list to a Set
+   * @returns {Set}
+   */
+  toSet() {
+    return new Set(this);
   }
 
   /**
@@ -2381,6 +2427,13 @@ class List extends Array {
 
     // All elements are equal, return true
     return true;
+  }
+}
+
+class SortedSet extends Set {
+  constructor(arrayLikeObject) {
+    const list = listOf(...arrayLikeObject);
+    super(list.isNumberList() ? list.sortNumbers() : list.sort());
   }
 }
 
@@ -2726,6 +2779,18 @@ function listOf(...args) {
   return new List(...args);
 }
 
+function emptyList() {
+  return List.emptyList();
+}
+
+function setOf(...args) {
+  return new Set([...args]);
+}
+
+function sortedSetOf(...args) {
+  return new SortedSet([...args]);
+}
+
 function listOfType(clazz) {
   return (...items) => {
     items.forEach((item, idx) => {
@@ -2735,7 +2800,7 @@ function listOfType(clazz) {
         const error = `Item at index '${idx}' of type '${typeof item}' is not assignable to type: '${
           clazz.name
         }'`;
-        throw new Error(error);
+        throw new IllegalArgumentException(error);
       }
     });
     return listOf(...items);
@@ -2903,6 +2968,9 @@ class Column {
 module.exports = {
   listOf,
   listOfType,
+  emptyList,
+  setOf,
+  sortedSetOf,
   pairOf,
   tripleOf,
   mapOf,
@@ -2910,6 +2978,7 @@ module.exports = {
   Triple,
   List,
   Table,
+  SortedSet,
   LinkedList,
   DoublyLinkedList,
   Utils,
