@@ -865,7 +865,7 @@ class List extends Array {
    */
   fold(callback, initialValue) {
     if (!initialValue && initialValue !== 0) {
-      throw new Error(`Initial value must be specified`);
+      throw new IllegalArgumentException(`Initial value must be specified`);
     }
     return this.reduce(callback, initialValue);
   }
@@ -881,7 +881,7 @@ class List extends Array {
   joinTo(list, separator, prefix = "", postfix = "") {
     if (!Array.isArray(list)) {
       const message = `Argument 'list' must be a type of Array or List. Found: ${typeof list}`;
-      throw new Error(message);
+      throw new IllegalArgumentException(message);
     }
     return list.toList().add(`${prefix}${this.join(separator)}${postfix}`);
   }
@@ -972,7 +972,7 @@ class List extends Array {
    * @example listOf('apple','banana','carrot').toUpperCase() ==> ['APPLE','BANANA','CARROT']
    */
   toUpperCase() {
-    return listOf(...this).map((arg) => arg.toUpperCase());
+    return this.map((arg) => arg.toUpperCase());
   }
 
   /**
@@ -980,7 +980,7 @@ class List extends Array {
    * @returns {List<String>}
    */
   capitalize() {
-    return listOf(...this).map((arg) => arg.extend().capitalize());
+    return this.map((arg) => arg.extend().capitalize());
   }
 
   /**
@@ -989,7 +989,7 @@ class List extends Array {
    * @example listOf('Apple','Banana','CARROT').toLowerCase() ==> ['apple','banana','carrot']
    */
   toLowerCase() {
-    return listOf(...this).map((arg) => arg.toLowerCase());
+    return this.map((arg) => arg.toLowerCase());
   }
 
   /**
@@ -1371,7 +1371,7 @@ class List extends Array {
    * @returns {List<Number>}
    */
   round() {
-    return this.map((item) => Math.round(item));
+    return this.map(Math.round);
   }
 
   /**
@@ -1467,8 +1467,8 @@ class List extends Array {
     } else {
       const duplicateList = this.slice();
       if (sampleSize > this.length) {
-        const error = `Sample size '${sampleSize}' is greater than list length '${this.length}'`;
-        throw new Error(error);
+        const error = `Sample size '${sampleSize}' cannot be greater than list length '${this.length}'`;
+        throw new IllegalArgumentException(error);
       }
       while (sample.length < sampleSize) {
         const index = Math.floor(Math.random() * duplicateList.length);
@@ -1493,7 +1493,7 @@ class List extends Array {
    * @returns {List<Boolean>}
    */
   toBoolean() {
-    return this.map((item) => Boolean(item));
+    return this.map(Boolean);
   }
 
   /**
@@ -1620,8 +1620,8 @@ class List extends Array {
    */
   mapNotNullTo(destination, transform) {
     if (!Array.isArray(destination)) {
-      const error = `Parameter 'destination' must be an Array or List`;
-      throw new Error(error);
+      const error = `Parameter 'destination' must be an Array or a List`;
+      throw new IllegalArgumentException(error);
     }
     let results = listOf();
     for (let it = 0; it < this.length; it++) {
@@ -1793,8 +1793,7 @@ class List extends Array {
    * @returns {List}
    */
   sortBy(selector) {
-    const newList = this.map((n) => n);
-    return newList.sort((a, b) => (selector(a) > selector(b) ? 1 : -1));
+    return [...this].sort((a, b) => (selector(a) > selector(b) ? 1 : -1));
   }
 
   /**
@@ -1813,8 +1812,7 @@ class List extends Array {
    * @returns {List}
    */
   sortByDescending(selector) {
-    const newList = this.map((n) => n);
-    return newList.sort((a, b) => (selector(a) > selector(b) ? -1 : 1));
+    return [...this].sort((a, b) => (selector(a) > selector(b) ? -1 : 1));
   }
 
   /**
@@ -1903,15 +1901,24 @@ class List extends Array {
   }
 
   /**
-   * Calculate the standard deviation of the list of numbers
+   * Calculate the variance of a list of numbers
+   * @returns {Number}
+   * @example listOf(3,4,8,7,6).variance() ==> 3.44
+   */
+  variance() {
+    const mean = this.mean();
+    return (
+      this.map((n) => (n - mean) ** 2).reduce((a, b) => +a + b) / this.length
+    );
+  }
+
+  /**
+   * Calculate the standard deviation of a list of numbers
    * @returns {Number}
    * @example listOf(3,4,8,7,6).stdev() ==> 1.8547236990991407
    */
   stdev() {
-    const mean = this.reduce((acc, cur) => +acc + cur) / this.length;
-    return Math.sqrt(
-      this.map((n) => (n - mean) ** 2).reduce((a, b) => +a + b) / this.length
-    );
+    return Math.sqrt(this.variance());
   }
 
   /**
@@ -2214,8 +2221,8 @@ class List extends Array {
    */
   range() {
     if (isNaN(this[0]) || isNaN(this[1])) {
-      const message = `Invalid list parameters`;
-      throw new Error(message);
+      const message = `Invalid range parameters`;
+      throw new IllegalArgumentException(message);
     }
     const start = this[0];
     const end = this[1];
@@ -2305,15 +2312,12 @@ class List extends Array {
   }
 
   /**
-   * Generates a list of random numbers between 0 and 1
+   * Generates a list of random floating point numbers between 0 and 1
    * @param {Number} size - The size of the list
    * @returns {List}
    */
   static generateRandomNumbers(size = 1) {
-    return Array(size)
-      .fill(null)
-      .map(() => Math.random())
-      .toList();
+    return List.from(Array(size).fill(null).map(Math.random));
   }
 
   /**
@@ -2321,17 +2325,18 @@ class List extends Array {
    * @param {Number} size - The size of the list
    * @param {Number} min - Min value
    * @param {Number} max - Max value
-   * @returns {Number}
+   * @returns {List}
    */
   static generateRandomIntegers(
     size = 1,
     min = Number.MIN_SAFE_INTEGER,
     max = Number.MAX_SAFE_INTEGER
   ) {
-    return Array(size)
-      .fill(null)
-      .map(() => Math.floor(Math.random() * (max - min + 1) + min))
-      .toList();
+    return List.from(
+      Array(size)
+        .fill(null)
+        .map(() => Math.floor(Math.random() * (max - min + 1) + min))
+    );
   }
 
   /**
@@ -2685,7 +2690,9 @@ class DoublyLinkedList {
 
   insertAtIndex(index, value) {
     if (!Number.isInteger(index) || index < 0 || index > this.length + 1) {
-      throw new Error(`Invalid index. Current length is ${this.length}`);
+      throw new IllegalArgumentException(
+        `Invalid index. Current length is ${this.length}`
+      );
     }
 
     if (index === 0) {
@@ -2716,7 +2723,9 @@ class DoublyLinkedList {
 
   remove(index) {
     if (!Number.isInteger(index) || index < 0 || index > this.length + 1) {
-      throw new Error(`Invalid index. Current length is ${this.length}`);
+      throw new IllegalArgumentException(
+        `Invalid index. Current length is ${this.length}`
+      );
     }
 
     if (index === 0) {
@@ -2811,7 +2820,7 @@ function listOfType(clazz) {
 function pairOf(arg1, arg2) {
   if (arguments.length !== 2) {
     const error = `Argument length of two expected`;
-    throw new Error(error);
+    throw new IllegalArgumentException(error);
   }
   return new Pair(arg1, arg2);
 }
@@ -2819,7 +2828,7 @@ function pairOf(arg1, arg2) {
 function tripleOf(first, second, third) {
   if (arguments.length !== 3) {
     const error = `Argument length of three expected`;
-    throw new Error(error);
+    throw new IllegalArgumentException(error);
   }
   return new Triple(first, second, third);
 }
@@ -2827,7 +2836,8 @@ function tripleOf(first, second, third) {
 function mapOf(...pairs) {
   const map = new Map();
   const isPairs = pairs.every((pair) => pair instanceof Pair);
-  if (!isPairs) throw new Error("Arguments must be of type 'Pair'");
+  if (!isPairs)
+    throw new IllegalArgumentException("Arguments must be of type 'Pair'");
   pairs.forEach((pair) => {
     map.set(pair.first, pair.second);
   });
@@ -2931,7 +2941,7 @@ class Table {
       const message = `Unable to insert entry of length (${
         data.length
       }) into column length of (${this.#columns.length})`;
-      throw new Error(message);
+      throw new IllegalArgumentException(message);
     }
     const pairs = data.map(
       (item, index) => new Pair(this.#columns[index].name, item)
