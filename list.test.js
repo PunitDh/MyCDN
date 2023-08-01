@@ -11,6 +11,7 @@ const {
   setOf,
   sortedSetOf,
   ImmutableList,
+  StringExtended,
 } = require("./public/List");
 
 // const l = listOf("Foo:Test", "Boo:Best", "Bar:Jest", "Baz:Test1");
@@ -222,10 +223,32 @@ function timeInMilliseconds(str) {
   return timeInSeconds(str) * 1000;
 }
 
-const list = List.range(1, 11);
+// const list1 = listOf(1, 2, 3, 6, 5, 6, 8, -10);
+// // const list4 = listOf(4, 5, 6);
+// const list2 = listOf(1, 2, 3, 4, 5, 6, 8, 10);
+// // const list3 = listOf(5, 6, 7, 8);
 
-console.log(list);
+// const result = list1.orderedDifference(list2);
 
-for (const i of List.range(0, "p")) {
-  console.log(i);
-}
+// console.log(j);
+
+const comparison = StringExtended.compareJSON(
+  {
+    transferred: {
+      platformCode: "IDP",
+      modelCode: "a0349162-fc23-4241-9c4c-3a85f1a3c04e",
+      investmentNumber: 36989,
+      units: "150030.145721",
+    },
+  },
+  {
+    transferred: {
+      platformCode: "IDP",
+      modelCode: "a0349162-fc23-4241-9c4c-3a85f1a3c04e",
+      investmentNumber: 32392,
+      units: "-17016.024000",
+    },
+  }
+);
+
+console.log(comparison);

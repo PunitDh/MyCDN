@@ -1104,6 +1104,25 @@ class List extends Array {
   }
 
   /**
+   * Returns the ordered difference between two lists
+   * @param {List} list
+   * @returns {List<{ index: Number, this: any, other: any }>}
+   */
+  orderedDifference(list) {
+    if (!list || !(list instanceof Array)) return null;
+
+    const diff = listOf();
+    const maxLength = List.longestFirst(this, list.toList()).length;
+
+    for (let index = 0; index < maxLength; index++) {
+      if (this[index] !== list[index]) {
+        diff.push({ index, this: this[index], other: list[index] });
+      }
+    }
+    return diff;
+  }
+
+  /**
    * Finds all the elements that do not exist in both lists
    * @param {List} list
    * @returns {List}
@@ -2215,30 +2234,6 @@ class List extends Array {
   }
 
   /**
-   * Returns a list of numbers counting from start to end
-   * @returns {List}
-   * @example listOf(1,4).range()  ==> [1,2,3,4]
-   */
-  range() {
-    if (isNaN(this[0]) || isNaN(this[1])) {
-      const message = `Invalid range parameters`;
-      throw new IllegalArgumentException(message);
-    }
-    const start = this[0];
-    const end = this[1];
-    const step = this[2] || 1;
-    const arr = listOf();
-    for (
-      let i = start;
-      start < end ? i < end : i > end;
-      start < end ? (i += step) : (i -= step)
-    ) {
-      arr.push(i);
-    }
-    return arr;
-  }
-
-  /**
    * Checks if an item exists in the list that matches the given predicate
    * @param {Function} predicate
    * @returns {Boolean}
@@ -2340,13 +2335,130 @@ class List extends Array {
   }
 
   /**
-   * Generates a range of numbers incrementing or decrementing by one
-   * @param {*} start
-   * @param {*} end
-   * @returns {Number}
+   * Returns a list of the longest lists provided in the arguments
+   * @param  {...List} lists
+   * @returns {List<List>}
+   */
+  static longest(...lists) {
+    let longestLength = 0;
+    const longestLists = listOf();
+
+    for (const list of lists) {
+      if (list.length > longestLength) {
+        longestLength = list.length;
+        longestLists.length = 0; // Clear the array
+        longestLists.push(list);
+      } else if (list.length === longestLength) {
+        longestLists.push(list);
+      }
+    }
+
+    return longestLists;
+  }
+
+  /**
+   * Returns longest first list in the provided arguments
+   * @param  {...List} lists
+   * @returns {List}
+   */
+  static longestFirst(...lists) {
+    let longestList = lists[0];
+    for (const list of lists) {
+      if (list.length > longestList.length) {
+        longestList = list;
+      }
+    }
+    return longestList;
+  }
+
+  /**
+   * Returns a list of the longest lists provided in the arguments
+   * @param  {...List} lists
+   * @returns {List}
+   */
+  static longestLast(...lists) {
+    let longestList = lists[0];
+    for (const list of lists) {
+      if (list.length >= longestList.length) {
+        longestList = list;
+      }
+    }
+    return longestList;
+  }
+
+  /**
+   * Returns a list of the longest lists provided in the arguments
+   * @param  {...List} lists
+   * @returns {List<List>}
+   */
+  static shortest(...lists) {
+    let shortestLength = lists[0].length;
+    const shortestLists = listOf();
+
+    for (const list of lists) {
+      if (list.length < shortestLength) {
+        shortestLength = list.length;
+        shortestLists.length = 0; // Clear the array
+        shortestLists.push(list);
+      } else if (list.length === shortestLength) {
+        shortestLists.push(list);
+      }
+    }
+
+    return shortestLists;
+  }
+
+  /**
+   * Returns longest first list in the provided arguments
+   * @param  {...List} lists
+   * @returns {List}
+   */
+  static shortestFirst(...lists) {
+    let longestList = lists[0];
+    for (const list of lists) {
+      if (list.length > longestList.length) {
+        longestList = list;
+      }
+    }
+    return longestList;
+  }
+
+  /**
+   * Returns a list of the longest lists provided in the arguments
+   * @param  {...List} lists
+   * @returns {List}
+   */
+  static shortestLast(...lists) {
+    let longestList = lists[0];
+    for (const list of lists) {
+      if (list.length >= longestList.length) {
+        longestList = list;
+      }
+    }
+    return longestList;
+  }
+
+  /**
+   * Generates a range of numbers incrementing or decrementing by step
+   * @param {Number} start
+   * @param {Number} end
+   * @param {Number} step
+   * @returns {List}
    */
   static range(start, end, step = 1) {
-    return new List(start, end, step).range();
+    if (isNaN(start) || isNaN(end) || isNaN(step)) {
+      const message = `Invalid range parameters`;
+      throw new IllegalArgumentException(message);
+    }
+    const arr = listOf();
+    for (
+      let i = start;
+      start < end ? i < end : i > end;
+      start < end ? (i += step) : (i -= step)
+    ) {
+      arr.push(i);
+    }
+    return arr;
   }
 
   /**
@@ -2356,10 +2468,11 @@ class List extends Array {
    * @returns {List}
    */
   static repeat(callback, times = 1) {
-    return Array(times)
-      .fill(null)
-      .map(() => (isFn(callback) ? callback() : callback))
-      .toList();
+    return listOf(
+      ...Array(times)
+        .fill(null)
+        .map(() => (isFn(callback) ? callback() : callback))
+    );
   }
 
   static emptyList() {
@@ -2383,11 +2496,29 @@ class List extends Array {
   }
 
   /**
+   * Checks whether the list is longer than a given list
+   * @param {List} list
+   * @returns {Boolean}
+   */
+  isLongerThan(list) {
+    return this.length > list.length;
+  }
+
+  /**
+   * Checks whether the list is shorter than a given list
+   * @param {List} list
+   * @returns {Boolean}
+   */
+  isShorterThan(list) {
+    return this.length < list.length;
+  }
+
+  /**
    * Returns true if all the specified lists are of equal lengths, else returns false
    * @param {List} lists
    * @returns {Boolean}
    */
-  equalsLength(...lists) {
+  isEqualLengthTo(...lists) {
     return (
       lists
         .map((it) => it.length)
@@ -2435,6 +2566,24 @@ class SortedSet extends Set {
     const list = listOf(...arrayLikeObject);
     super(list.isNumberList() ? list.sortNumbers() : list.sort());
   }
+}
+
+class OrderedDifference {
+  constructor(list) {
+    this.list = list.map(
+      (item) => new OrderedDifference.Diff(item.index, item.this, item.other)
+    );
+  }
+
+  static Diff = class {
+    constructor(index, thisValue, otherValue) {
+      this.index = index;
+      this.this = thisValue;
+      this.other = otherValue;
+    }
+  };
+
+  values() {}
 }
 
 class ImmutableList extends List {
@@ -2764,6 +2913,82 @@ class StringExtended extends String {
     super(...args);
   }
 
+  static compareJSON(json1, json2) {
+    if (!json1 || !json2) return null;
+    let obj1, obj2;
+    const diff1 = {},
+      diff2 = {};
+
+    try {
+      if (typeof json1 === "string") {
+        obj1 = JSON.parse(json1);
+      } else if (typeof json1 === "object") {
+        obj1 = JSON.parse(JSON.stringify(json1));
+      }
+
+      if (typeof json2 === "string") {
+        obj2 = JSON.parse(json2);
+      } else if (typeof json2 === "object") {
+        obj2 = JSON.parse(JSON.stringify(json2));
+      }
+    } catch (error) {
+      throw new IllegalArgumentException(error);
+    }
+
+    function recursiveDifference(thisObj, otherObj, thisDiff, otherDiff) {
+      const thisKeys = listOf(...Object.keys(thisObj));
+      const otherKeys = listOf(...Object.keys(otherObj));
+      const keys = thisKeys.union(otherKeys);
+
+      for (const key of keys) {
+        const [thisValue, otherValue] = [thisObj[key], otherObj[key]];
+        if (thisValue !== otherValue) {
+          if (thisValue instanceof Array && otherValue instanceof Array) {
+            thisDiff[key] = [];
+            otherDiff[key] = [];
+            recursiveDifference(
+              thisValue,
+              otherValue,
+              thisDiff[key],
+              otherDiff[key]
+            );
+            if (thisDiff[key].length === 0) {
+              delete thisDiff[key];
+            }
+            if (otherDiff[key].length === 0) {
+              delete otherDiff[key];
+            }
+          } else if (
+            typeof thisValue === "object" &&
+            typeof otherValue === "object"
+          ) {
+            thisDiff[key] = {};
+            otherDiff[key] = {};
+            recursiveDifference(
+              thisValue,
+              otherValue,
+              thisDiff[key],
+              otherDiff[key]
+            );
+            if (Object.keys(thisDiff[key]).length === 0) {
+              delete thisDiff[key];
+            }
+            if (Object.keys(otherDiff[key]).length === 0) {
+              delete otherDiff[key];
+            }
+          } else {
+            thisDiff[key] = thisValue;
+            otherDiff[key] = otherValue;
+          }
+        }
+      }
+    }
+
+    recursiveDifference(obj1, obj2, diff1, diff2);
+
+    return [diff1, diff2];
+  }
+
   /**
    * Capitalizes the first letter of each word as defined by a separator and a joiner
    * @param {Array} separators
@@ -2844,6 +3069,10 @@ function mapOf(...pairs) {
   return map;
 }
 
+/**
+ *
+ * @returns {List}
+ */
 Array.prototype.toList = function () {
   return listOf(...this);
 };
@@ -2852,6 +3081,10 @@ Set.prototype.toList = function () {
   return listOf(...this);
 };
 
+/**
+ *
+ * @returns {List}
+ */
 Object.prototype.toList = function () {
   return Object.entries(this)
     .map((arr) => arr.toList())
