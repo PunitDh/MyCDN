@@ -1,16 +1,22 @@
-class IndexOutOfBoundsException extends Error {
+class IndexOutOfBoundsError extends Error {
   constructor(...args) {
     super(...args);
   }
 }
 
-class NoSuchElementException extends Error {
+class NoSuchElementError extends Error {
   constructor(...args) {
     super(...args);
   }
 }
 
-class IllegalArgumentException extends Error {
+class IllegalArgumentError extends Error {
+  constructor(...args) {
+    super(...args);
+  }
+}
+
+class NoSuchColumnError extends Error {
   constructor(...args) {
     super(...args);
   }
@@ -99,7 +105,7 @@ class List extends Array {
    * Returns the first element in the list or the first element that matches the predicate
    * @param {Function | undefined} predicate
    * @returns {*}
-   * @throws {NoSuchElementException}
+   * @throws {NoSuchElementError}
    */
   first(predicate) {
     return this.match(predicate, 1);
@@ -118,7 +124,7 @@ class List extends Array {
    * Returns the second element in the list or the first element that matches the predicate
    * @param {Function | undefined} predicate
    * @returns {*}
-   * @throws {NoSuchElementException}
+   * @throws {NoSuchElementError}
    */
   second(predicate) {
     return this.match(predicate, 2);
@@ -137,7 +143,7 @@ class List extends Array {
    * Returns the third element in the list or the third element that matches the predicate
    * @param {Function | undefined} predicate
    * @returns {*}
-   * @throws {NoSuchElementException}
+   * @throws {NoSuchElementError}
    */
   third(predicate) {
     return this.match(predicate, 3);
@@ -156,7 +162,7 @@ class List extends Array {
    * Returns the fourth element in the list or the fourth element that matches the predicate
    * @param {Function | undefined} predicate
    * @returns {*}
-   * @throws {NoSuchElementException}
+   * @throws {NoSuchElementError}
    */
   fourth(predicate) {
     return this.match(predicate, 4);
@@ -175,7 +181,7 @@ class List extends Array {
    * Returns the fifth element in the list or the fifth element that matches the predicate
    * @param {Function | undefined} predicate
    * @returns {*}
-   * @throws {NoSuchElementException}
+   * @throws {NoSuchElementError}
    */
   fifth(predicate) {
     return this.match(predicate, 5);
@@ -194,7 +200,7 @@ class List extends Array {
    * Returns the sixth element in the list or the sixth element that matches the predicate
    * @param {Function | undefined} predicate
    * @returns {*}
-   * @throws {NoSuchElementException}
+   * @throws {NoSuchElementError}
    */
   sixth(predicate) {
     return this.match(predicate, 6);
@@ -213,7 +219,7 @@ class List extends Array {
    * Returns the seventh element in the list or the seventh element that matches the predicate
    * @param {Function | undefined} predicate
    * @returns {*}
-   * @throws {NoSuchElementException}
+   * @throws {NoSuchElementError}
    */
   seventh(predicate) {
     return this.match(predicate, 7);
@@ -232,7 +238,7 @@ class List extends Array {
    * Returns the eighth element in the list or the eighth element that matches the predicate
    * @param {Function | undefined} predicate
    * @returns {*}
-   * @throws {NoSuchElementException}
+   * @throws {NoSuchElementError}
    */
   eighth(predicate) {
     return this.match(predicate, 8);
@@ -251,7 +257,7 @@ class List extends Array {
    * Returns the ninth element in the list or the ninth element that matches the predicate
    * @param {Function | undefined} predicate
    * @returns {*}
-   * @throws {NoSuchElementException}
+   * @throws {NoSuchElementError}
    */
   ninth(predicate) {
     return this.match(predicate, 9);
@@ -270,7 +276,7 @@ class List extends Array {
    * Returns the tenth element in the list or the tenth element that matches the predicate
    * @param {Function | undefined} predicate
    * @returns {*}
-   * @throws {NoSuchElementException}
+   * @throws {NoSuchElementError}
    */
   tenth(predicate) {
     return this.match(predicate, 10);
@@ -289,7 +295,7 @@ class List extends Array {
    * Returns the hundredth element in the list or the hundredth element that matches the predicate
    * @param {Function | undefined} predicate
    * @returns {*}
-   * @throws {NoSuchElementException}
+   * @throws {NoSuchElementError}
    */
   hundredth(predicate) {
     return this.match(predicate, 100);
@@ -308,7 +314,7 @@ class List extends Array {
    * Returns the last element in the list or the last element that matches the predicate
    * @param {Function | undefined} predicate
    * @returns {*}
-   * @throws {NoSuchElementException}
+   * @throws {NoSuchElementError}
    */
   last(predicate) {
     return this.reversed().first(predicate);
@@ -340,7 +346,7 @@ class List extends Array {
           }
         }
       }
-      throw new NoSuchElementException(`No such element`);
+      throw new NoSuchElementError(`No such element`);
     } else {
       return this[nth - 1];
     }
@@ -457,7 +463,7 @@ class List extends Array {
       }
     }
     const error = `No such element`;
-    throw new NoSuchElementException(error);
+    throw new NoSuchElementError(error);
   }
 
   /**
@@ -607,7 +613,7 @@ class List extends Array {
         }
       }
     }
-    return filtered.reverse();
+    return filtered.reversed();
   }
 
   /**
@@ -645,7 +651,7 @@ class List extends Array {
         droppedList.push(it);
       }
     }
-    return droppedList.reverse();
+    return droppedList.reversed();
   }
 
   /**
@@ -659,7 +665,7 @@ class List extends Array {
       return this[adjustedIndex];
     }
     const error = `Index out of bounds: ${index}`;
-    throw new IndexOutOfBoundsException(error);
+    throw new IndexOutOfBoundsError(error);
   }
 
   /**
@@ -865,7 +871,7 @@ class List extends Array {
    */
   fold(callback, initialValue) {
     if (!initialValue && initialValue !== 0) {
-      throw new IllegalArgumentException(`Initial value must be specified`);
+      throw new IllegalArgumentError(`Initial value must be specified`);
     }
     return this.reduce(callback, initialValue);
   }
@@ -881,7 +887,7 @@ class List extends Array {
   joinTo(list, separator, prefix = "", postfix = "") {
     if (!Array.isArray(list)) {
       const message = `Argument 'list' must be a type of Array or List. Found: ${typeof list}`;
-      throw new IllegalArgumentException(message);
+      throw new IllegalArgumentError(message);
     }
     return list.toList().add(`${prefix}${this.join(separator)}${postfix}`);
   }
@@ -1007,9 +1013,8 @@ class List extends Array {
    * @example listOf({ item: 'apple', price: 2 }, { item: 'banana', price: 5 }).sumOf(it => it.price) ==> 7
    */
   sumOf(selector, initialValue = 0) {
-    if (typeof selector === "function")
-      return this.map(selector).sum(initialValue);
-    if (typeof selector === "string" || selector instanceof String)
+    if (isFn(selector)) return this.map(selector).sum(initialValue);
+    if (isString(selector))
       return this.reduce((a, c) => +a + c[selector], initialValue);
   }
 
@@ -1180,9 +1185,8 @@ class List extends Array {
    * @returns {Number}
    */
   maxOf(selector) {
-    if (typeof selector === "function") return this.map(selector).max();
-    if (typeof selector === "string" || selector instanceof String)
-      return this.map((it) => it[selector]).max();
+    if (isFn(selector)) return this.map(selector).max();
+    if (isString(selector)) return this.map((it) => it[selector]).max();
   }
 
   /**
@@ -1205,9 +1209,8 @@ class List extends Array {
    * @returns {Number}
    */
   minOf(selector) {
-    if (typeof selector === "function") return this.map(selector).min();
-    if (typeof selector === "string" || selector instanceof String)
-      return this.map((it) => it[selector]).min();
+    if (isFn(selector)) return this.map(selector).min();
+    if (isString(selector)) return this.map((it) => it[selector]).min();
   }
 
   /**
@@ -1288,9 +1291,9 @@ class List extends Array {
    * @returns {Number}
    */
   nthLargestOf(selector, n) {
-    if (typeof selector === "function")
+    if (isFn(selector))
       return this.map(selector).sortNumbersDescending().distinct()[n - 1];
-    if (typeof selector === "string" || selector instanceof String)
+    if (isString(selector))
       return this.map((it) => it[selector])
         .sortNumbersDescending()
         .distinct()[n - 1];
@@ -1311,9 +1314,9 @@ class List extends Array {
    * @returns {Number}
    */
   nthSmallestOf(selector, n) {
-    if (typeof selector === "function")
+    if (isFn(selector))
       return this.map(selector).sortNumbers().distinct()[n - 1];
-    if (typeof selector === "string" || selector instanceof String)
+    if (isString(selector))
       return this.map((it) => it[selector])
         .sortNumbers()
         .distinct()[n - 1];
@@ -1365,7 +1368,7 @@ class List extends Array {
     const found = listOf(...this.filter(predicate));
     if (found.length !== 1) {
       const error = `No single element matches the given predicate Found: (${found.length})`;
-      throw new NoSuchElementException(error);
+      throw new NoSuchElementError(error);
     }
     return found.first();
   }
@@ -1386,11 +1389,12 @@ class List extends Array {
 
   /**
    * Rounds all the numbers in the list to the nearest integer
+   * @param {Number} nearest
    * @this {List<Number>}
    * @returns {List<Number>}
    */
-  round() {
-    return this.map(Math.round);
+  round(nearest = 1) {
+    return this.map((number) => Math.round(number / nearest) * nearest);
   }
 
   /**
@@ -1398,8 +1402,8 @@ class List extends Array {
    * @this {List<Number>}
    * @returns {List<Number>}
    */
-  ceil() {
-    return this.map(Math.ceil);
+  ceil(nearest = 1) {
+    return this.map((number) => Math.ceil(number / nearest) * nearest);
   }
 
   /**
@@ -1407,8 +1411,8 @@ class List extends Array {
    * @this {List<Number>}
    * @returns {List<Number>}
    */
-  floor() {
-    return this.map(Math.floor);
+  floor(nearest = 1) {
+    return this.map((number) => Math.floor(number / nearest) * nearest);
   }
 
   /**
@@ -1427,6 +1431,14 @@ class List extends Array {
     } else {
       return this.length === 0;
     }
+  }
+
+  findDuplicates() {
+    return List.from(
+      Object.entries(this.counts())
+        .filter(([_, value]) => value > 1)
+        .map((it) => it[0])
+    );
   }
 
   /**
@@ -1487,7 +1499,7 @@ class List extends Array {
       const duplicateList = this.slice();
       if (sampleSize > this.length) {
         const error = `Sample size '${sampleSize}' cannot be greater than list length '${this.length}'`;
-        throw new IllegalArgumentException(error);
+        throw new IllegalArgumentError(error);
       }
       while (sample.length < sampleSize) {
         const index = Math.floor(Math.random() * duplicateList.length);
@@ -1640,7 +1652,7 @@ class List extends Array {
   mapNotNullTo(destination, transform) {
     if (!Array.isArray(destination)) {
       const error = `Parameter 'destination' must be an Array or a List`;
-      throw new IllegalArgumentException(error);
+      throw new IllegalArgumentError(error);
     }
     let results = listOf();
     for (let it = 0; it < this.length; it++) {
@@ -1696,7 +1708,7 @@ class List extends Array {
    */
   windowed(size, step = 1, partialWindows = false) {
     if (size < 1 || step < 1) {
-      throw new IllegalArgumentException(
+      throw new IllegalArgumentError(
         `Both 'size' and 'step' must be greater than zero. Found: size ${size} step ${step}`
       );
     }
@@ -2047,11 +2059,7 @@ class List extends Array {
    */
   multiplyBy(number) {
     if (Array.isArray(number)) {
-      const result = listOf();
-      this.forEach((element, index) => {
-        result.push(element * (number[index] || 1));
-      });
-      return result;
+      return this.map((element, index) => element * (number[index] || 1));
     }
     return this.map((n) => n * number);
   }
@@ -2064,11 +2072,7 @@ class List extends Array {
    */
   divideBy(number) {
     if (Array.isArray(number)) {
-      const result = listOf();
-      this.forEach((element, index) => {
-        result.push(element / (number[index] || 1));
-      });
-      return result;
+      return this.map((element, index) => element / (number[index] || 1));
     }
     return this.map((n) => n / number);
   }
@@ -2448,7 +2452,7 @@ class List extends Array {
   static range(start, end, step = 1) {
     if (isNaN(start) || isNaN(end) || isNaN(step)) {
       const message = `Invalid range parameters`;
-      throw new IllegalArgumentException(message);
+      throw new IllegalArgumentError(message);
     }
     const arr = listOf();
     for (
@@ -2652,6 +2656,28 @@ function isFn(argument) {
   return typeof argument === "function";
 }
 
+/**
+ *
+ * @param {Array} argumentsArray
+ * @returns {Boolean}
+ */
+function isObjectArg(argumentsArray) {
+  return (
+    argumentsArray.length === 1 &&
+    !Array.isArray(argumentsArray[0]) &&
+    typeof argumentsArray[0] === "object"
+  );
+}
+
+/**
+ * Checks if the argument is a string
+ * @param {*} argument
+ * @returns {Boolean}
+ */
+function isString(argument) {
+  return typeof argument === "string" || argument instanceof String;
+}
+
 class Node {
   constructor(value = null, next = null, previous = null) {
     this.value = value;
@@ -2839,7 +2865,7 @@ class DoublyLinkedList {
 
   insertAtIndex(index, value) {
     if (!Number.isInteger(index) || index < 0 || index > this.length + 1) {
-      throw new IllegalArgumentException(
+      throw new IllegalArgumentError(
         `Invalid index. Current length is ${this.length}`
       );
     }
@@ -2872,7 +2898,7 @@ class DoublyLinkedList {
 
   remove(index) {
     if (!Number.isInteger(index) || index < 0 || index > this.length + 1) {
-      throw new IllegalArgumentException(
+      throw new IllegalArgumentError(
         `Invalid index. Current length is ${this.length}`
       );
     }
@@ -2920,19 +2946,19 @@ class StringExtended extends String {
       diff2 = {};
 
     try {
-      if (typeof json1 === "string") {
+      if (isString(json1)) {
         obj1 = JSON.parse(json1);
       } else if (typeof json1 === "object") {
         obj1 = JSON.parse(JSON.stringify(json1));
       }
 
-      if (typeof json2 === "string") {
+      if (isString(json2)) {
         obj2 = JSON.parse(json2);
       } else if (typeof json2 === "object") {
         obj2 = JSON.parse(JSON.stringify(json2));
       }
     } catch (error) {
-      throw new IllegalArgumentException(error);
+      throw new IllegalArgumentError(error);
     }
 
     function recursiveDifference(thisObj, otherObj, thisDiff, otherDiff) {
@@ -2986,7 +3012,7 @@ class StringExtended extends String {
 
     recursiveDifference(obj1, obj2, diff1, diff2);
 
-    return [diff1, diff2];
+    return listOf(diff1, diff2);
   }
 
   /**
@@ -3035,7 +3061,7 @@ function listOfType(clazz) {
         const error = `Item at index '${idx}' of type '${typeof item}' is not assignable to type: '${
           clazz.name
         }'`;
-        throw new IllegalArgumentException(error);
+        throw new IllegalArgumentError(error);
       }
     });
     return listOf(...items);
@@ -3045,7 +3071,7 @@ function listOfType(clazz) {
 function pairOf(arg1, arg2) {
   if (arguments.length !== 2) {
     const error = `Argument length of two expected`;
-    throw new IllegalArgumentException(error);
+    throw new IllegalArgumentError(error);
   }
   return new Pair(arg1, arg2);
 }
@@ -3053,7 +3079,7 @@ function pairOf(arg1, arg2) {
 function tripleOf(first, second, third) {
   if (arguments.length !== 3) {
     const error = `Argument length of three expected`;
-    throw new IllegalArgumentException(error);
+    throw new IllegalArgumentError(error);
   }
   return new Triple(first, second, third);
 }
@@ -3061,8 +3087,16 @@ function tripleOf(first, second, third) {
 function mapOf(...pairs) {
   const map = new Map();
   const isPairs = pairs.every((pair) => pair instanceof Pair);
-  if (!isPairs)
-    throw new IllegalArgumentException("Arguments must be of type 'Pair'");
+  if (!isPairs) {
+    const foundTypes = pairs
+      .filter((pair) => !(pair instanceof Pair))
+      .map((it, idx) => `${it.constructor.name} at ${idx}`);
+    throw new IllegalArgumentError(
+      `Arguments must be of type 'Pair'. Found:\n\t- ${foundTypes.join(
+        "\n\t- "
+      )}`
+    );
+  }
   pairs.forEach((pair) => {
     map.set(pair.first, pair.second);
   });
@@ -3148,17 +3182,50 @@ class Utils {
 }
 
 class Table {
-  #columns = listOf();
+  #columns = listOf(new Column("_id"));
   #rows = listOf();
+  #currentId = 1;
+  #resetId = function () {
+    this.#currentId = 1;
+  };
+
   constructor(name) {
-    this.name = Symbol(name);
+    this.name = name;
+  }
+
+  get rows() {
+    return this.#rows;
+  }
+
+  get columns() {
+    return this.#columns;
+  }
+
+  get headings() {
+    return List.from(this.#columns.map((it) => it.name));
+  }
+
+  get rowCount() {
+    return this.#rows.length;
+  }
+
+  get columnCount() {
+    return this.#columns.length;
   }
 
   /**
-   *
+   * Adds columns to the table
    * @param  {...any} columns
    */
   addColumns(...columns) {
+    if (this.headings.intersection(columns).length) {
+      const duplicateColumns = this.headings
+        .concat(columns)
+        .findDuplicates()
+        .joinWith(", ", "'", "'");
+      const error = `Duplicate columns found: ${duplicateColumns}`;
+      throw new IllegalArgumentError(error);
+    }
     columns.forEach((column) => {
       if (column instanceof Column) this.#columns.push(column);
       else this.#columns.push(new Column(column));
@@ -3169,26 +3236,116 @@ class Table {
     return this.addColumns(...columns);
   }
 
+  insertRowBefore(rowId, ...data) {}
+
+  insertRowAfter(rowId, ...data) {}
+
+  insertColumnBefore(columnName, newColumnName) {}
+
+  insertColumnAfter(columnName, newColumnName) {}
+
+  /**
+   * Inserts a row into the table
+   * @param  {...any} data
+   * @returns
+   */
   insertRow(...data) {
-    if (data.length !== this.#columns.length) {
-      const message = `Unable to insert entry of length (${
-        data.length
-      }) into column length of (${this.#columns.length})`;
-      throw new IllegalArgumentException(message);
+    let entries;
+    if (isObjectArg(data)) {
+      entries = Object.entries(data[0]).map(([key, value]) => {
+        if (this.headings.includes(key)) return new Pair(key, value);
+        const error = `Column '${key}' does not exist on table '${this.name}'.`;
+        throw new NoSuchColumnError(error);
+      });
+    } else {
+      if (data.length !== this.#columns.length - 1) {
+        const message = `Unable to insert entry of length (${
+          data.length
+        }) into column length of (${this.#columns.length - 1})`;
+        throw new IllegalArgumentError(message);
+      }
+
+      entries = data.map(
+        (item, index) => new Pair(this.#columns[index + 1].name, item)
+      );
     }
-    const pairs = data.map(
-      (item, index) => new Pair(this.#columns[index].name, item)
-    );
+
+    const pairs = listOf(new Pair("_id", this.#currentId)).concat(entries);
+    this.#currentId++;
     this.#rows.push(mapOf(...pairs));
     return this.#rows[this.#rows.length - 1];
   }
 
-  get rows() {
-    return this.#rows;
+  getRow(rowId) {
+    return this.#rows.find((it) => it.get("_id") === rowId);
+  }
+
+  updateRow(rowId, ...data) {
+    this.#rows[rowId] = data.map(
+      (item, index) => new Pair(this.#columns[index + 1].name, item)
+    );
+    return this.#rows[rowId];
+  }
+
+  deleteRow(rowId) {
+    const index = this.#rows.findIndex((it) => it.get("_id") === rowId);
+    this.#rows.splice(index, 1);
+    return true;
+  }
+
+  deleteColumn(columnName) {}
+
+  clearRows(confirm = false) {
+    if (confirm) {
+      this.#rows.clear();
+      return true;
+    }
+    return false;
+  }
+
+  clear(confirm = false) {
+    if (confirm) {
+      this.#columns.clear();
+      this.clearRows(confirm);
+      this.#resetId();
+      return true;
+    }
+    return false;
+  }
+
+  insertColumn(columnName, position = this.#columns.length) {
+    this.#columns.splice(position || 1, 0, new Column(columnName));
+    return true;
+  }
+
+  exportToCSV(file, options = { excludeColumns: [] }) {
+    const csvFormat = this.toCSVFormat({
+      excludeColumns: options.excludeColumns,
+    });
+    if (!isString(file) || !file.includes(".csv")) {
+      const error = `File '${file}' is not a CSV file`;
+      throw new IllegalArgumentError(error);
+    }
+    const fs = require("fs");
+    fs.writeFileSync(file, csvFormat);
+    return true;
+  }
+
+  toCSVFormat({ excludeColumns = [] }) {
+    const headings = this.headings.filter(
+      (heading) => !excludeColumns.includes(heading)
+    );
+    const data = this.#rows.map((row) =>
+      headings.map((heading) => row.get(heading))
+    );
+    return [
+      headings.join(","),
+      data.map((row) => row.join(",")).join("\n"),
+    ].join("\n");
   }
 
   toString() {
-    const headings = this.#columns.map((column) => column.name).join(",");
+    const headings = this.headings.join(",");
     const data = this.#rows
       .map((row) => {
         const iterator = row.values();
@@ -3201,6 +3358,12 @@ class Table {
       .join("\n");
     return `${headings}\n${data}`;
   }
+
+  tabulate() {
+    console.table(this.toString());
+  }
+
+  // Private functions
 }
 
 class Column {

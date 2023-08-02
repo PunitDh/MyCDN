@@ -232,23 +232,39 @@ function timeInMilliseconds(str) {
 
 // console.log(j);
 
-const comparison = StringExtended.compareJSON(
-  {
-    transferred: {
-      platformCode: "IDP",
-      modelCode: "a0349162-fc23-4241-9c4c-3a85f1a3c04e",
-      investmentNumber: 36989,
-      units: "150030.145721",
-    },
-  },
-  {
-    transferred: {
-      platformCode: "IDP",
-      modelCode: "a0349162-fc23-4241-9c4c-3a85f1a3c04e",
-      investmentNumber: 32392,
-      units: "-17016.024000",
-    },
-  }
-);
+// const comparison = StringExtended.compareJSON(
+//   {
+//     transferred: {
+//       platformCode: "IDP",
+//       modelCode: "a0349162-fc23-4241-9c4c-3a85f1a3c04e",
+//       investmentNumber: 36989,
+//       units: "150030.145721",
+//     },
+//   },
+//   {
+//     transferred: {
+//       platformCode: "IDP",
+//       modelCode: "a0349162-fc23-4241-9c4c-3a85f1a3c04e",
+//       investmentNumber: 36989,
+//       units: "150030.145721",
+//     },
+//   },
+// );
 
-console.log(comparison);
+// console.log(comparison);
+
+const table = new Table("cont");
+
+table.addHeadings("Test1", "Test2");
+table.insertRow("A", "B");
+table.insertRow("C", "D");
+table.insertColumn("Test3");
+table.insertRow("F", "G", "E");
+
+const result = table.toString();
+table.deleteRow(3);
+table.insertRow("H", "J", "K");
+
+table.insertRow({ Test1: "M" });
+
+console.log(table.exportToCSV("./test.csv", { excludeColumns: ["_id"] }));
