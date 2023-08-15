@@ -2375,6 +2375,32 @@ class List extends Array {
     return longestList;
   }
 
+  longest() {
+    let longestElement = String(this[0]);
+    for (const item of this) {
+      if (String(item).length > longestElement.length) {
+        longestElement = item;
+      }
+    }
+    return longestElement;
+  }
+
+  longestFirst() {
+    return List.longestFirst(...this);
+  }
+
+  longestLast() {
+    return List.longestLast(...this);
+  }
+
+  get maxLength() {
+    return this.longestFirst().length;
+  }
+
+  get minLength() {
+    return List.shortestFirst(...this).length;
+  }
+
   /**
    * Returns a list of the longest lists provided in the arguments
    * @param  {...List} lists
@@ -3185,6 +3211,21 @@ class Table {
   #columns = listOf(new Column("_id"));
   #rows = listOf();
   #currentId = 1;
+  #values = function () {
+    return this.#rows.map((row) => {
+      const iterator = row.values();
+      const values = listOf();
+      for (let i = 0; i < row.size; i++) {
+        values.push(iterator.next().value);
+      }
+      return values;
+    });
+  };
+  #columnData = function () {
+    return this.headings.map((heading) => {
+      return this.#rows.map((row) => row.get(heading));
+    });
+  };
   #resetId = function () {
     this.#currentId = 1;
   };
@@ -3318,9 +3359,23 @@ class Table {
     return true;
   }
 
-  exportToCSV(file, options = { excludeColumns: [] }) {
+  /**
+   * Exports the table to a CSV file
+   * @param {String} file - name of the file
+   * @param {Object} options
+   * @param {Array<String>} options.excludeColumns - columns to be excluded from the export (default: [])
+   * @param {String} options.delimiter - delimiter used to separate column data (default: ",")
+   * @param {Boolean} options.includeHeadings - whether to include headings in the CSV file (default: true)
+   * @returns {String}
+   */
+  exportToCSV(
+    file,
+    { excludeColumns = [], delimiter = ",", includeHeadings = true } = {}
+  ) {
     const csvFormat = this.toCSVFormat({
-      excludeColumns: options.excludeColumns,
+      excludeColumns,
+      delimiter,
+      includeHeadings,
     });
     if (!isString(file) || !file.includes(".csv")) {
       const error = `File '${file}' is not a CSV file`;
@@ -3331,39 +3386,80 @@ class Table {
     return true;
   }
 
-  toCSVFormat({ excludeColumns = [] }) {
+  /**
+   * Converts the table to a CSV format
+   * @param {Object} options
+   * @param {Array<String>} options.excludeColumns - columns to be excluded from the export (default: [])
+   * @param {String} options.delimiter - delimiter used to separate column data (default: ",")
+   * @param {Boolean} options.includeHeadings - whether to include headings in the CSV file (default: true)
+   * @returns {String}
+   */
+  toCSVFormat({
+    excludeColumns = [],
+    delimiter = ",",
+    includeHeadings = true,
+  } = {}) {
     const headings = this.headings.filter(
       (heading) => !excludeColumns.includes(heading)
     );
-    const data = this.#rows.map((row) =>
-      headings.map((heading) => row.get(heading))
-    );
-    return [
-      headings.join(","),
-      data.map((row) => row.join(",")).join("\n"),
-    ].join("\n");
+    const csvRows = this.#rows
+      .map((row) => headings.map((heading) => row.get(heading)).join(delimiter))
+      .join("\n");
+    return includeHeadings
+      ? [headings.join(delimiter), csvRows].join("\n")
+      : csvRows;
   }
 
   toString() {
-    const headings = this.headings.join(",");
-    const data = this.#rows
-      .map((row) => {
-        const iterator = row.values();
-        const values = listOf();
-        for (let i = 0; i < row.size; i++) {
-          values.push(iterator.next().value);
-        }
-        return values.join(",");
-      })
-      .join("\n");
-    return `${headings}\n${data}`;
+    // const headings = this.headings.join(",");
+    // const data = this.#rows
+    //   .map((row) => {
+    //     const iterator = row.values();
+    //     const values = listOf();
+    //     for (let i = 0; i < row.size; i++) {
+    //       values.push(iterator.next().value);
+    //     }
+    //     return values.join(",");
+    //   })
+    //   .join("\n");
+    // return `${headings}\n${data}`;
+    return this.toCSVFormat();
   }
 
   tabulate() {
-    console.table(this.toString());
-  }
+    const cell_size = 5;
+    const grid_indent = "\t" * 3;
+    const top_left_corner = "┌";
+    const top_right_corner = "┐";
+    const bottom_left_corner = "└";
+    const bottom_right_corner = "┘";
+    const horizontal_edge = "─";
+    const vertical_edge = "│";
+    const horizontal_separator_open = "┬";
+    const horizontal_separator_close = "┴";
+    const vertical_separator_open = "├";
+    const vertical_separator_close = "┤";
+    const middle_separator = "┼";
 
-  // Private functions
+    const tableHeadings = `${vertical_edge} ${this.headings.join(
+      ` ${vertical_edge} `
+    )} ${vertical_edge}`;
+    const tableData = this.#values();
+    const columnData = this.#columnData();
+    const rowMaxLength = tableData.maxLength;
+    const cellMaxLengths = columnData.map((cell) => cell.longest());
+    console.log({ rowMaxLength, cellMaxLengths, columnData });
+    const repeaters = this.headings
+      .map((it) => "-".repeat(it.length))
+      .join(` ${horizontal_separator_open} `);
+    const tableTop = `${top_left_corner}${"-".repeat(
+      tableHeadings.length - 2
+    )}${top_right_corner}`;
+    const tableBottom = `${bottom_left_corner}${"-".repeat(
+      tableHeadings.length - 2
+    )}${bottom_right_corner}`;
+    return [tableTop, tableHeadings, tableData, tableBottom].join("\n");
+  }
 }
 
 class Column {

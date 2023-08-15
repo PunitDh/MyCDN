@@ -263,8 +263,8 @@ table.insertRow("F", "G", "E");
 
 const result = table.toString();
 table.deleteRow(3);
-table.insertRow("H", "J", "K");
+table.insertRow("H", "J", "KH");
 
 table.insertRow({ Test1: "M" });
 
-console.log(table.exportToCSV("./test.csv", { excludeColumns: ["_id"] }));
+console.table(table.tabulate());
