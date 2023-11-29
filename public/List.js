@@ -3468,6 +3468,23 @@ class Column {
   }
 }
 
+function when(condition, functionObject) {
+  const values = Object.keys(functionObject).filter((it) => it !== "else");
+  for (const value of values) {
+    if (String(value) === String(condition)) {
+      return typeof functionObject[value] === "function"
+        ? functionObject[value](condition)
+        : functionObject[value];
+    }
+  }
+  if (functionObject.else)
+    return typeof functionObject.else === "function"
+      ? functionObject.else(condition)
+      : functionObject.else;
+
+  return null;
+}
+
 module.exports = {
   listOf,
   listOfType,
@@ -3488,4 +3505,5 @@ module.exports = {
   Utils,
   StringExtended,
   strOf,
+  when,
 };

@@ -12,6 +12,7 @@ const {
   sortedSetOf,
   ImmutableList,
   StringExtended,
+  when,
 } = require("./public/List");
 
 // const l = listOf("Foo:Test", "Boo:Best", "Bar:Jest", "Baz:Test1");
@@ -268,3 +269,14 @@ table.insertRow("H", "J", "KH");
 table.insertRow({ Test1: "M" });
 
 console.table(table.tabulate());
+
+const test = "f";
+
+const switcher = when(test, {
+  a: "Abba",
+  b: "Beatles",
+  c: "Chuck",
+  else: "None",
+});
+
+console.log({ switcher });
