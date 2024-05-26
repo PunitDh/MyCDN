@@ -13,6 +13,8 @@ const {
   ImmutableList,
   StringExtended,
   when,
+  Queue,
+  Stack,
 } = require("./public/List");
 
 // const l = listOf("Foo:Test", "Boo:Best", "Bar:Jest", "Baz:Test1");
@@ -141,88 +143,88 @@ const {
 
 // console.log(m);
 
-const l = listOf(
-  { id: 3, name: "apple" },
-  { id: 5, name: "orange" },
-  { id: 19, name: "banana" },
-  { id: 32, name: "pear" }
-);
+// const l = listOf(
+//   { id: 3, name: "apple" },
+//   { id: 5, name: "orange" },
+//   { id: 19, name: "banana" },
+//   { id: 32, name: "pear" }
+// );
 
-class CustomIterable {
-  #items;
+// class CustomIterable {
+//   #items;
 
-  constructor(...items) {
-    this.#items = items;
-  }
+//   constructor(...items) {
+//     this.#items = items;
+//   }
 
-  *[Symbol.iterator]() {
-    for (const item of this.#items) {
-      yield item;
-    }
-  }
-}
+//   *[Symbol.iterator]() {
+//     for (const item of this.#items) {
+//       yield item;
+//     }
+//   }
+// }
 
-Object.prototype[Symbol.iterator] = function* () {
-  for (const [key, value] of Object.entries(this)) {
-    yield [key, value];
-  }
-};
+// Object.prototype[Symbol.iterator] = function* () {
+//   for (const [key, value] of Object.entries(this)) {
+//     yield [key, value];
+//   }
+// };
 
-Object.prototype.forEach = function (callback) {
-  for (const it of this) {
-    callback(it);
-  }
-};
+// Object.prototype.forEach = function (callback) {
+//   for (const it of this) {
+//     callback(it);
+//   }
+// };
 
-Object.prototype.map = function (callback) {
-  for (const it of this) {
-    callback(it);
-  }
-};
+// Object.prototype.map = function (callback) {
+//   for (const it of this) {
+//     callback(it);
+//   }
+// };
 
-// console.log(l.reduce((acc,cur) => acc+cur.id, it => it.id, 0));
+// // console.log(l.reduce((acc,cur) => acc+cur.id, it => it.id, 0));
 
-function timeInSeconds(str) {
-  const regex = /^(\d+h\s*)?(\d+m\s*)?(\d+s\s*)?$/gi;
-  const matches = str.trim().match(regex).split(/:| |_/);
-  const toS = (part, sep) =>
-    parseInt(part.substring(0, part.indexOf(sep)) || 0);
+// function timeInSeconds(str) {
+//   const regex = /^(\d+h\s*)?(\d+m\s*)?(\d+s\s*)?$/gi;
+//   const matches = str.trim().match(regex).split(/:| |_/);
+//   const toS = (part, sep) =>
+//     parseInt(part.substring(0, part.indexOf(sep)) || 0);
 
-  if (!matches) {
-    return null; // Invalid format
-  }
+//   if (!matches) {
+//     return null; // Invalid format
+//   }
 
-  console.log({ matches });
+//   console.log({ matches });
 
-  let seconds = 0;
-  for (const match of matches) {
-    if (!match) continue;
-    const t = match[match.length - 1].toLowerCase();
-    switch (t) {
-      case "h":
-        seconds += toS(match, "h") * 3600;
-        break;
-      case "m":
-        seconds += toS(match, "m") * 60;
-        break;
-      case "s":
-        seconds += toS(match, "s") * 1000;
-        break;
-      default:
-        return null;
-    }
-  }
+//   let seconds = 0;
+//   for (const match of matches) {
+//     if (!match) continue;
+//     const t = match[match.length - 1].toLowerCase();
+//     switch (t) {
+//       case "h":
+//         seconds += toS(match, "h") * 3600;
+//         break;
+//       case "m":
+//         seconds += toS(match, "m") * 60;
+//         break;
+//       case "s":
+//         seconds += toS(match, "s") * 1000;
+//         break;
+//       default:
+//         return null;
+//     }
+//   }
 
-  if (seconds < 0) {
-    return null; // Negative durations not supported
-  }
+//   if (seconds < 0) {
+//     return null; // Negative durations not supported
+//   }
 
-  return seconds;
-}
+//   return seconds;
+// }
 
-function timeInMilliseconds(str) {
-  return timeInSeconds(str) * 1000;
-}
+// function timeInMilliseconds(str) {
+//   return timeInSeconds(str) * 1000;
+// }
 
 // const list1 = listOf(1, 2, 3, 6, 5, 6, 8, -10);
 // // const list4 = listOf(4, 5, 6);
@@ -254,29 +256,53 @@ function timeInMilliseconds(str) {
 
 // console.log(comparison);
 
-const table = new Table("cont");
+// const table = new Table("cont");
 
-table.addHeadings("Test1", "Test2");
-table.insertRow("A", "B");
-table.insertRow("C", "D");
-table.insertColumn("Test3");
-table.insertRow("F", "G", "E");
+// table.addHeadings("Test1", "Test2");
+// table.insertRow("A", "B");
+// table.insertRow("C", "D");
+// table.insertColumn("Test3");
+// table.insertRow("F", "G", "E");
 
-const result = table.toString();
-table.deleteRow(3);
-table.insertRow("H", "J", "KH");
+// const result = table.toString();
+// table.deleteRow(3);
+// table.insertRow("H", "J", "KH");
 
-table.insertRow({ Test1: "M" });
+// table.insertRow({ Test1: "M" });
 
-console.table(table.tabulate());
+// console.table(table.tabulate());
 
-const test = "f";
+// const test = "f";
 
-const switcher = when(test, {
-  a: "Abba",
-  b: "Beatles",
-  c: "Chuck",
-  else: "None",
-});
+// const switcher = when(test, {
+//   a: "Abba",
+//   b: "Beatles",
+//   c: "Chuck",
+//   else: "None",
+// });
 
-console.log({ switcher });
+// console.log({ switcher });
+
+const q = new Queue(5, 6, 7, 8);
+console.log(q);
+
+q.pop();
+console.log(q);
+
+q.pop();
+console.log(q);
+
+q.pop();
+console.log(q);
+
+const s = new Stack(5, 6, 7, 8);
+console.log(s);
+
+s.pop();
+console.log(s);
+
+s.pop();
+console.log(s);
+
+s.pop();
+console.log(s);

@@ -1,32 +1,30 @@
-const express = require("express");
-const { faker } = require("./public/Faker");
-const { listOf, List } = require("./public/List");
+import express, { NextFunction, Request, Response } from "express";
+import { faker } from "./public/Faker";
+import { listOf, List } from "./public/List";
 const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(express.static("public"));
 
-app.get("/", (req, res, next) => {
+app.get("/", (_: Request, res: Response) => {
   res.send("Hello");
 });
 
-app.get("/random/users/:quantity", (req, res, next) => {
+app.get("/random/users/:quantity", (req: Request, res: Response) => {
   const users = listOf();
-  for (let i = 0; i < req.params.quantity; i++) {
+  for (let i = 0; i < Number(req.params.quantity); i++) {
     users.push(faker.user());
   }
   return res.json(users);
 });
 
-app.get("/random/integers/:integers", (req, res, next) => {
+app.get("/random/integers/:integers", (req: Request, res: Response) => {
   const num = Number(req.params.integers);
-  console.log(num);
   const integers = List.generateRandomIntegers(
     num,
     req.query.min,
     req.query.max
   );
-  console.log(integers);
   return res.json(integers);
 });
 

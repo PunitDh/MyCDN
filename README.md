@@ -1306,6 +1306,26 @@ console.log(result);
 // List(4) [ 3, 4, 5, 6 ]
 ```
 
+## `firstNotNull()`
+
+**Description**
+
+Returns the first non-null value of the elements of this collection in iteration order, or throws `NoSuchElementException` if no non-null value was produced. By default, it ignores undefined values, but this behaviour can be turned off by setting the `ignoreUndefined` flag to `false`.
+
+**Usage**
+
+```js
+const numbers = listOf(null, null, undefined, null, 39, 105);
+
+let result = numbers.firstNotNull();
+console.log(result);
+// 39
+
+result = numbers.firstNotNullOf(false);
+console.log(result);
+// undefined
+```
+
 ## `firstNotNullOf(transform)`
 
 **Description**
@@ -1418,13 +1438,13 @@ let input = listOf([32, 78], [56, 23], listOf(21, listOf(22, 24)));
 
 let result = input.flatten();
 console.log(result);
-// List(6) [ 32, 78, 56, 23, 21, List(2) [ 22, 24 ] ]
+// List(6) [ 32, 78, 56, 23, 21, 22, 24 ]
 
-result = input.flatten(2);
+result = input.flatten(1);
 console.log(result);
 // List(7) [
 //   32, 78, 56, 23,
-//   21, 22, 24
+//   21, List(2) [22, 24]
 // ]
 ```
 
@@ -2536,7 +2556,7 @@ const input = listOf(
 let result = input.nthLargestOf((item) => item.price, 2);
 
 console.log(result);
-// 20
+// { name: "Burger", price: 20 }
 ```
 
 ## `nthOfEach(n)`
@@ -2596,7 +2616,7 @@ const input = listOf(
 let result = input.nthSmallestOf((item) => item.price, 2);
 
 console.log(result);
-// 18
+// { name: "Cake", price: 18 }
 ```
 
 ## `onEach(callback)`
