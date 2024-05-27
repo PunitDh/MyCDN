@@ -27,7 +27,6 @@ type MinMax<T> = {
 export class List<T> extends Array<T> {
   constructor(...args: T[]) {
     super(...args);
-    // Object.freeze(this);
   }
 
   /**
@@ -1134,7 +1133,7 @@ export class List<T> extends Array<T> {
    * @example listOf('a','a','b','b','e','e','f').distinct() ==> Set {'a','b','e','f'}
    */
   unique(): List<T> {
-    return listFrom(Array.from(new Set<T>(this)));
+    return this.removeDuplicates();
   }
 
   /**
@@ -1325,16 +1324,16 @@ export class List<T> extends Array<T> {
    */
   difference(list: List<T>): List<T> | null {
     if (!list || !(list instanceof Array)) return null;
+    const diff = listOf<T>();
+    const concatenated = listFrom(this.concat(list)).counts();
 
-    return listFrom(
-      Array.from(
-        new Set(
-          this.concat(list).filter(
-            (item) => !(this.includes(item) && list.includes(item))
-          )
-        )
-      )
-    );
+    for (const [key, value] of concatenated.entries()) {
+      if (value === 1) {
+        diff.push(key);
+      }
+    }
+
+    return diff;
   }
 
   /**
@@ -1725,11 +1724,17 @@ export class List<T> extends Array<T> {
     }
   }
 
-  findDuplicates(this: List<T>): List<T> {
+  /**
+   * Finds all the duplicate elements within the list
+   * @param {Boolean} indices - controls whether to only return the indicies
+   * @returns {List}
+   */
+  findDuplicates(indices = false): List<T> | List<number> {
     const lones = listOf<T>();
     const duplicates = listOf<T>();
+    const indicesList = listOf<number>();
 
-    for (const item of this) {
+    for (const [idx, item] of this.entries()) {
       let foundDuplicate = false;
       for (const lone of lones) {
         if (deepEquals(lone, item)) {
@@ -1742,11 +1747,36 @@ export class List<T> extends Array<T> {
         if (!duplicates.some((duplicate) => deepEquals(duplicate, item))) {
           duplicates.add(item);
         }
+        indices && indicesList.add(idx);
       } else {
         lones.add(item);
       }
     }
-    return duplicates;
+    return indices ? indicesList : duplicates;
+  }
+
+  /**
+   * Removes all the duplicate elements within the list
+   * @returns {List}
+   */
+  removeDuplicates(): List<T> {
+    const lones = listOf<T>();
+
+    for (const item of this) {
+      let foundDuplicate = false;
+      for (const lone of lones) {
+        if (deepEquals(lone, item)) {
+          foundDuplicate = true;
+          break;
+        }
+      }
+
+      if (!foundDuplicate) {
+        lones.add(item);
+      }
+    }
+
+    return lones;
   }
 
   /**
@@ -2601,21 +2631,21 @@ export class List<T> extends Array<T> {
 
   /**
    * Replaces every occurence of an element in a list with a new value
-   * @param {any} element - the element to replace
-   * @param {any} replaced - the replacer
-   * @param {any} count - indicates how many elements to replace, default is -1 which indicates replace all
+   * @param {T} element - the element to replace
+   * @param {T} newValue - the new value
+   * @param {T} count - indicates how many elements to replace, default is -1 which indicates replace all
    * @returns {List}
    * @example  listOf(1,2,3,4,2).replace(2,7) ==> [1,7,3,4,7]
    * @example  listOf(1,2,3,4,2).replace(2,7,1) ==> [1,7,3,4,2]
    */
-  replace(element: T, replaced: T, count: number = -1): List<T> {
+  replace(element: T, newValue: T, count: number = -1): List<T> {
     let replaceCount = 0;
     return listFrom(
       this.map((item) => {
         if (deepEquals(item, element)) {
           if (replaceCount < count || count < 0) {
             replaceCount++;
-            return replaced;
+            return newValue;
           }
         }
         return item;
@@ -2628,7 +2658,7 @@ export class List<T> extends Array<T> {
    * @param {Function} predicate
    * @returns {Boolean}
    */
-  exists(predicate: () => boolean): boolean {
+  exists(predicate: (element: T) => boolean): boolean {
     for (const item of this) {
       if (isMatch(predicate, item)) {
         return true;
@@ -2675,7 +2705,7 @@ export class List<T> extends Array<T> {
    * @returns {Boolean}
    */
   isNumberList(): boolean {
-    return this.every((item) => !Number.isNaN(item));
+    return this.every((item) => Number.isFinite(item));
   }
 
   /**

@@ -1299,6 +1299,7 @@ describe(List, () => {
     it("should find duplicate items in the list using deep equality", () => {
       const input = listOf("One", "Three", "Two", "Five", "Five", "Two");
       expect(input.findDuplicates()).toEqual(listOf("Five", "Two"));
+      expect(input.findDuplicates(true)).toEqual(listOf(4, 5));
 
       const order = listOf(
         { name: "Pizza", price: 23 },
@@ -1310,6 +1311,33 @@ describe(List, () => {
 
       expect(order.findDuplicates()).toEqual(
         listOf({ name: "Pizza", price: 23 })
+      );
+      expect(order.findDuplicates(true)).toEqual(listOf(2));
+    });
+  });
+
+  describe(list.removeDuplicates, () => {
+    it("should remove duplicate items from the list using deep equality", () => {
+      const input = listOf("One", "Three", "Two", "Five", "Five", "Two");
+      expect(input.removeDuplicates()).toEqual(
+        listOf("One", "Three", "Two", "Five")
+      );
+
+      const order = listOf(
+        { name: "Pizza", price: 23 },
+        { name: "Burger", price: 20 },
+        { name: "Pizza", price: 23 },
+        { name: "Burger", price: 8 },
+        { name: "Ramen", price: 12 }
+      );
+
+      expect(order.removeDuplicates()).toEqual(
+        listOf(
+          { name: "Pizza", price: 23 },
+          { name: "Burger", price: 20 },
+          { name: "Burger", price: 8 },
+          { name: "Ramen", price: 12 }
+        )
       );
     });
   });
@@ -2185,6 +2213,239 @@ describe(List, () => {
       expect(List.isList([1, 5, 2])).toBeFalsy();
       expect(List.isList(listOf())).toBeTruthy();
       expect(List.isList(undefined)).toBeFalsy();
+    });
+  });
+
+  test("associate should transform items into key-value pairs", () => {
+    const list = listOf("apple", "banana", "orange");
+    const result = list.associate((fruit) => fruit.toUpperCase());
+    expect(result).toEqual({
+      apple: "APPLE",
+      banana: "BANANA",
+      orange: "ORANGE",
+    });
+  });
+
+  test("associateBy should map items to their keys", () => {
+    const list = listOf(
+      { name: "Pizza" },
+      { name: "Burger" },
+      { name: "Ramen" }
+    );
+    const result = list.associateBy((item) => item.name);
+    expect(result).toEqual({
+      Pizza: { name: "Pizza" },
+      Burger: { name: "Burger" },
+      Ramen: { name: "Ramen" },
+    });
+  });
+
+  test("associateWith should map items to their values produced by valueSelector", () => {
+    const list = listOf(1, 2, 3);
+    const result = list.associateWith((n) => n * 2);
+    expect(result).toEqual(
+      new Map([
+        [1, 2],
+        [2, 4],
+        [3, 6],
+      ])
+    );
+  });
+
+  test("prefix should add a prefix to each string in the list", () => {
+    const list = listOf("apple", "banana", "orange");
+    const result = list.prefix("pre-");
+    expect(result).toEqual(listOf("pre-apple", "pre-banana", "pre-orange"));
+  });
+
+  test("postfix should add a postfix to each string in the list", () => {
+    const list = listOf("apple", "banana", "orange");
+    const result = list.postfix("-post");
+    expect(result).toEqual(listOf("apple-post", "banana-post", "orange-post"));
+  });
+
+  test("multiplyBy should multiply each number in the list by a given number", () => {
+    const list = listOf(3, 2, 1);
+    const result = list.multiplyBy(2);
+    expect(result).toEqual(listOf(6, 4, 2));
+  });
+
+  test("divideBy should divide each number in the list by a given number", () => {
+    const list = listOf(4, 8, 10);
+    const result = list.divideBy(2);
+    expect(result).toEqual(listOf(2, 4, 5));
+  });
+
+  test("power should raise each number in the list to the power of a given number", () => {
+    const list = listOf(1, 2, 3);
+    const result = list.power(2);
+    expect(result).toEqual(listOf(1, 4, 9));
+  });
+
+  test("toFixed should set the decimal places of each number in the list", () => {
+    const list = listOf(1, 2, 3);
+    const result = list.toFixed(2);
+    expect(result).toEqual(listOf("1.00", "2.00", "3.00"));
+  });
+
+  describe(list.toEnglish, () => {
+    it("should convert a list of numbers into its english representation", () => {
+      expect(listOf(1).toEnglish()).toEqual(listOf("One"));
+      expect(listOf(100).toEnglish()).toEqual(listOf("One Hundred"));
+      expect(listOf(312).toEnglish()).toEqual(
+        listOf("Three Hundred and Twelve")
+      );
+      expect(listOf(19300274927556).toEnglish()).toEqual(
+        listOf(
+          "Nineteen Trillion, Three Hundred Billion, Two Hundred and Seventy Four Million, Nine Hundred and Twenty Seven Thousand, Five Hundred and Fifty Six"
+        )
+      );
+      expect(listOf(1930027.4927556).toEnglish()).toEqual(
+        listOf(
+          "One Million, Nine Hundred and Thirty Thousand, Twenty Seven Point Four Nine Two Seven Five Five Six"
+        )
+      );
+      expect(listOf(-32572.472023).toEnglish()).toEqual(
+        listOf(
+          "Minus Thirty Two Thousand, Five Hundred and Seventy Two Point Four Seven Two Zero Two Three"
+        )
+      );
+    });
+  });
+
+  describe(list.replace, () => {
+    it("should replace occurences of elements within a list with the given value", () => {
+      const fruits = listOf(
+        "apple",
+        "banana",
+        "cherry",
+        "dragonfruit",
+        "cherry"
+      );
+
+      expect(fruits.replace("cherry", "coconut")).toEqual(
+        listOf("apple", "banana", "coconut", "dragonfruit", "coconut")
+      );
+
+      const order = listOf(
+        { name: "Sushi", price: 25 },
+        { name: "Pizza", price: 19 },
+        { name: "Sushi", price: 25 },
+        { name: "Pho", price: 12 },
+        { name: "Pasta", price: 27 }
+      );
+
+      expect(
+        order.replace(
+          { name: "Sushi", price: 25 },
+          { name: "Burger", price: 20 }
+        )
+      ).toEqual(
+        listOf(
+          { name: "Burger", price: 20 },
+          { name: "Pizza", price: 19 },
+          { name: "Burger", price: 20 },
+          { name: "Pho", price: 12 },
+          { name: "Pasta", price: 27 }
+        )
+      );
+
+      expect(
+        order.replace(
+          { name: "Sushi", price: 25 },
+          { name: "Burger", price: 20 },
+          1
+        )
+      ).toEqual(
+        listOf(
+          { name: "Burger", price: 20 },
+          { name: "Pizza", price: 19 },
+          { name: "Sushi", price: 25 },
+          { name: "Pho", price: 12 },
+          { name: "Pasta", price: 27 }
+        )
+      );
+    });
+  });
+
+  describe(list.exists, () => {
+    it("should check if an element exists in the list that matches the given predicate", () => {
+      const fruits = listOf(
+        "apple",
+        "banana",
+        "cherry",
+        "dragonfruit",
+        "cherry"
+      );
+
+      expect(fruits.exists((it) => it.startsWith("c"))).toBeTruthy();
+
+      const order = listOf(
+        { name: "Sushi", price: 25 },
+        { name: "Pizza", price: 19 },
+        { name: "Sushi", price: 25 },
+        { name: "Pho", price: 12 },
+        { name: "Pasta", price: 27 }
+      );
+
+      expect(order.exists((it) => it.price > 25)).toBeTruthy();
+      expect(order.exists((it) => it.price > 27)).toBeFalsy();
+    });
+  });
+
+  describe(list.head, () => {
+    it("should return the first n element in a list", () => {
+      const fruits = listOf(
+        "apple",
+        "banana",
+        "cherry",
+        "dragonfruit",
+        "cherry"
+      );
+
+      expect(fruits.head()).toEqual(listOf("apple"));
+      expect(fruits.head(2)).toEqual(listOf("apple", "banana"));
+      expect(fruits.head(10)).toEqual(
+        listOf("apple", "banana", "cherry", "dragonfruit", "cherry")
+      );
+    });
+  });
+
+  describe(list.tail, () => {
+    it("should return the last n element in a list", () => {
+      const fruits = listOf(
+        "apple",
+        "banana",
+        "cherry",
+        "dragonfruit",
+        "cherry"
+      );
+
+      expect(fruits.tail()).toEqual(listOf("cherry"));
+      expect(fruits.tail(2)).toEqual(listOf("dragonfruit", "cherry"));
+      expect(fruits.tail(10)).toEqual(
+        listOf("apple", "banana", "cherry", "dragonfruit", "cherry")
+      );
+    });
+  });
+
+  describe(list.instanceTypes, () => {
+    it("should return the instance types of all elements in the list", () => {
+      const items = listOf<any>("apple", 32, {}, null, undefined, 3 == 3);
+
+      expect(items.instanceTypes()).toEqual(
+        listOf("string", "number", "Object", "object", "undefined", "boolean")
+      );
+      expect(items.instanceTypes(true)).toEqual(
+        listOf("string", "number", "object", "object", "undefined", "boolean")
+      );
+    });
+  });
+
+  describe(list.isNumberList, () => {
+    it("should return whether or not all the elements in the list are numbers", () => {
+      expect(listOf(-43, 32, null, 3).isNumberList()).toBeFalsy();
+      expect(listOf(-43, 32, 3).isNumberList()).toBeTruthy();
     });
   });
 });

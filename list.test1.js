@@ -16,6 +16,7 @@ const {
   Queue,
   Stack,
 } = require("./public/List");
+const fs = require('fs');
 
 // const l = listOf("Foo:Test", "Boo:Best", "Bar:Jest", "Baz:Test1");
 // const fs = require("fs");
@@ -306,3 +307,7 @@ console.log(s);
 
 s.pop();
 console.log(s);
+
+fs.writeFileSync("./names.js", JSON.stringify(Object.getOwnPropertyNames(List.prototype).sort(), null, 2), "utf-8");
+
+// console.log(Object.getOwnPropertyNames(List.prototype).length);
