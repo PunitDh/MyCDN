@@ -1,4 +1,4 @@
-import { listOf } from "./public/List";
+import { List, listFrom, listOf, str } from "./public/List";
 import fs from "fs";
 
 // const l = listOf("Foo:Test", "Boo:Best", "Bar:Jest", "Baz:Test1");
@@ -298,3 +298,110 @@ const list = listOf("apple", "apple", "orange", "banana", "banana", "banana");
 const result = list.counts();
 
 console.log(result);
+
+const list1 = List.from("abs");
+const list2 = List.isList(list1);
+const list3 = List.isList([list1]);
+
+console.log(list1, list2, list3);
+
+// fs.readFile("./public/words_dictionary.json", "utf-8", (err, data) => {
+//   const dict = JSON.parse(data);
+//   const words = Object.keys(dict);
+//   const string = JSON.stringify(words);
+//   fs.writeFile("./public/words_dictionary_clean.json", string, "utf8", () => {
+//     console.log("Done");
+//   });
+// });
+// console.log(
+//   str(
+//     "This is this cat this is is cat this is how cat this is to cat this is keep cat this is a cat this is retard cat this is busy cat this is for cat this is forty cat this is seconds cat"
+//   )
+//     .listWords()
+//     .chunked(4)
+//     .nthOfEach(2)
+//     .join(" ")
+// );
+
+// Let's stay you have a list of order items
+
+// const orderItems = [
+//   {
+//     item: "Shoes",
+//     type: "Bottom Wear",
+//     price: 20.99,
+//     quantity: 2,
+//     discounted: false,
+//   },
+//   {
+//     item: "Pants",
+//     type: "Bottom Wear",
+//     price: 49.99,
+//     quantity: 3,
+//     discounted: false,
+//   },
+//   {
+//     item: "Socks",
+//     type: "Bottom Wear",
+//     price: 6.99,
+//     quantity: 6,
+//     discounted: false,
+//   },
+//   {
+//     item: "T-Shirts",
+//     type: "Top Wear",
+//     price: 10.99,
+//     quantity: 4,
+//     discounted: true,
+//   },
+//   {
+//     item: "Business Shirts",
+//     type: "Top Wear",
+//     price: 59.99,
+//     quantity: 5,
+//     discounted: false,
+//   },
+//   {
+//     item: "Ties",
+//     type: "Top Wear",
+//     price: 20.99,
+//     quantity: 5,
+//     discounted: true,
+//   },
+// ];
+
+// // And you need to find the total cost of each of the "type" of items with regular JavaScript
+
+// const topwearPrices = orderItems
+//   .filter((it) => it.type === "Top Wear")
+//   .reduce((acc, cur) => +acc + cur.price * cur.quantity, 0);
+
+// const bottomwearPrices = orderItems
+//   .filter((it) => it.type === "Bottom Wear")
+//   .reduce((acc, cur) => +acc + cur.price * cur.quantity, 0);
+
+// console.log({ topwearPrices, bottomwearPrices });
+
+// // With list:
+
+// const [topwearPrices1, bottomwearPrices1] = listFrom(orderItems)
+//   .partition((it) => it.type === "Top Wear")
+//   .map((it) => it.sumOf((item) => item.price * item.quantity));
+
+// console.log({ topwearPrices1, bottomwearPrices1 });
+
+const listUsers = listOf(
+  { id: 1, name: "Tony" },
+  { id: 2, name: "Brad" },
+  { id: 4, name: "Callum" },
+  { id: 5, name: "Mark" },
+  { id: 6, name: "Anthony" }
+);
+
+const newusers = listUsers.insertAt(2, { id: 3, name: "John" });
+
+listUsers.deleteAt(5);
+
+console.log(newusers.secondOrNull((it) => !!it.id));
+
+console.log(listOf(2,3,4,5,6,7,8,9).clamp(4,7));

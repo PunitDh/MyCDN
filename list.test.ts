@@ -8,6 +8,8 @@ import {
   listOf,
   NoSuchElementError,
   RoundingMode,
+  str,
+  when,
 } from "./public/List";
 
 describe(List, () => {
@@ -2486,5 +2488,22 @@ describe(deepEquals, () => {
     expect(deepEquals(null, null)).toBeTruthy();
     expect(deepEquals(undefined, undefined)).toBeTruthy();
     expect(deepEquals("undefined", "undefined")).toBeTruthy();
+  });
+});
+
+describe(when, () => {
+  it("should execute when commands returning the correct case", () => {
+    const fruit = "mango";
+    const generateString = (s: string) =>
+      `The fruit is a${str(s).startsWithVowel() ? "n" : ""} ${s}`;
+    const output = when(fruit, {
+      apple: generateString,
+      pear: generateString,
+      banana: generateString,
+      cherry: generateString,
+      _: () => "It's not a fruit",
+    });
+
+    expect(output).toBe("It's not a fruit");
   });
 });

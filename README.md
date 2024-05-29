@@ -6,6 +6,20 @@ JavaScript array lacks a lot of functionality to manipulate and modify existing 
 
 The `List` extends `Array`, so all functionality that is available on a regular JavaScript array is available on the `List`.
 
+## Exports in this package
+
+List.js offers many different exports for several different use cases. First are foremost, there is the `List` class, which extends the `Array` class. However, you may want to work with other data structures. List.js also exports:
+
+- `listOf()`: Creates an instance of a `List`.
+- `listFrom()`: Converts a JavaScript `Array` into a `List`.
+- `emptyList()`: Creates an empty `List` object.
+- `SetExtended`: The `SetExtended` class extends the JavaScript `Set` and adds additional functionality to sets.
+- `setOf()`: The `setOf` function behaves similarly to the `listOf` function. It allows you to create a set of objects.
+- `deepEquals()`: Compares two objects using deep equality and returns a `boolean`.
+- `StringExtended`: Extends the JavaScript `string` by adding additional functionality to JavaScript strings.
+- `str()`: Creates an instance of `StringExtended`.
+- `when()`: The when function acts like the JavaScript `switch` keyword, which takes in a parameter and performs
+
 ## How to declare a list
 
 There are several ways to declare a list.
