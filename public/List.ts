@@ -1487,7 +1487,7 @@ export class List<T> extends Array<T> {
    */
   minOf(selector: ((value: T) => number) | keyof T): number | null {
     if (isFunction(selector)) return listFrom(this.map(selector)).min();
-    if (isString(selector))
+    if (isKey<T>(selector))
       return listFrom<number>(this.map((it) => it[selector] as number)).min();
     return null;
   }
@@ -1577,11 +1577,10 @@ export class List<T> extends Array<T> {
   }
 
   /**
-   * Returns the first element yielding the smallest value of the given function.
-   * If `findAll` is set `true`, returns all the elements that yield the smallest value.
-   * @param {Function} selector
-   * @param {Boolean} findAll
-   * @returns {Object}
+   * Clamps all values within the list between min and max
+   * @param {number} min
+   * @param {number} max
+   * @returns {List<number>}
    */
   clamp(this: List<number>, min: number, max: number): List<number> {
     return listFrom(this.map((number) => Math.min(Math.max(min, number), max)));
@@ -1615,11 +1614,9 @@ export class List<T> extends Array<T> {
       const list = this.distinct().sort((a, b) => selector(b) - selector(a));
       return n < 0 ? list[list.length + n] : list[n - 1];
     }
-    if (isString(selector)) {
+    if (isKey<T>(selector)) {
       const list = this.distinct().sort(
-        (a, b) =>
-          (b[selector] as unknown as number) -
-          (a[selector] as unknown as number)
+        (a, b) => (b[selector] as number) - (a[selector] as number)
       );
       return n < 0 ? list[list.length + n] : list[n - 1];
     }
@@ -1652,11 +1649,9 @@ export class List<T> extends Array<T> {
       const list = this.distinct().sort((a, b) => selector(a) - selector(b));
       return n < 0 ? list[list.length + n] : list[n - 1];
     }
-    if (isString(selector)) {
+    if (isKey<T>(selector)) {
       const list = this.distinct().sort(
-        (a, b) =>
-          (a[selector] as unknown as number) -
-          (b[selector] as unknown as number)
+        (a, b) => (a[selector] as number) - (b[selector] as number)
       );
       return n < 0 ? list[list.length + n] : list[n - 1];
     }
@@ -1720,7 +1715,7 @@ export class List<T> extends Array<T> {
    * @returns {List}
    */
   singleOrNull(
-    predicate: (value: T, index: number, array: T[]) => unknown
+    predicate: (value: T, index: number, array: T[]) => boolean
   ): T | null {
     const found = listFrom(this.filter(predicate));
     if (found.length !== 1) {
@@ -1980,7 +1975,7 @@ export class List<T> extends Array<T> {
           this.filter((item) => keySelector(item) === property)
         );
       });
-    } else if (isString(keySelector)) {
+    } else if (isKey<T>(keySelector)) {
       const distinctProperties = List.from(
         new Set(this.map((it) => it[keySelector]))
       );
@@ -2105,7 +2100,7 @@ export class List<T> extends Array<T> {
     }
     let results = listOf<unknown>();
     for (let it = 0; it < this.length; it++) {
-      if (this[it] !== null && this[it] !== undefined) {
+      if (!isNullOrUndefined(this[it])) {
         const result = transform(this[it], it, this);
         results.push(result);
       }
@@ -2186,7 +2181,7 @@ export class List<T> extends Array<T> {
     const list1 = listOf();
     const list2 = listOf();
     for (const item of this) {
-      if (isObject(item)) {
+      if (isPureObject(item)) {
         list1.push(Object.keys(item)[0]);
         list2.push(Object.values(item)[0]);
       } else if (Array.isArray(item)) {
@@ -2302,7 +2297,7 @@ export class List<T> extends Array<T> {
   sortBy(selector: ((item: T) => string | number) | keyof T): List<T> {
     if (isFunction(selector)) {
       return this.sort((a, b) => (selector(a) > selector(b) ? 1 : -1));
-    } else if (isString(selector)) {
+    } else if (isKey<T>(selector)) {
       return this.sort((a, b) => (a[selector] > b[selector] ? 1 : -1));
     } else {
       return this.sort();
@@ -2785,7 +2780,7 @@ export class List<T> extends Array<T> {
   instanceTypes(primitives: boolean = false): List<string> {
     return listFrom(
       this.map((item) =>
-        isObject(item) && !primitives ? item.constructor.name : typeof item
+        isPureObject(item) && !primitives ? item.constructor.name : typeof item
       )
     );
   }
@@ -3090,11 +3085,11 @@ export function deepEquals(
     return obj1.toLowerCase() === obj2.toLowerCase();
   }
 
-  if (obj1 == null || obj2 == null) {
+  if (isNullOrUndefined(obj1) || isNullOrUndefined(obj2)) {
     return obj1 === obj2;
   }
 
-  if (typeof obj1 !== "object" || typeof obj2 !== "object") return false;
+  if (!isObject(obj1) || !isObject(obj2)) return false;
 
   const keys1 = Object.keys(obj1 as object);
   const keys2 = Object.keys(obj2 as object);
@@ -3102,7 +3097,7 @@ export function deepEquals(
   if (keys1.length !== keys2.length) return false;
 
   for (const key of keys1) {
-    if (!(key in obj2)) return false;
+    if (!(key in obj2!)) return false;
 
     const val1 = (obj1 as Record<string, unknown>)[key];
     const val2 = (obj2 as Record<string, unknown>)[key];
@@ -3210,12 +3205,16 @@ function isNullOrUndefined(argument: unknown): argument is null | undefined {
   return argument === undefined || argument === null;
 }
 
-function isObject(argument: unknown): argument is Record<string, unknown> {
+function isPureObject(argument: unknown): argument is Record<string, unknown> {
   return (
     Boolean(argument) &&
     !Array.isArray(argument) &&
     typeof argument === "object"
   );
+}
+
+function isObject(argument: unknown): argument is Record<string, unknown> {
+  return Boolean(argument) && typeof argument === "object";
 }
 
 export class Node<T> {
