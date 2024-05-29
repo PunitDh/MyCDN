@@ -425,7 +425,7 @@ console.log(result);
 
 **Description**
 
-Counts occurences of every element in the list and returns them as an `Object`
+Counts occurences of every element in the list and returns them as a `Map`
 
 **Usage**
 
@@ -435,7 +435,7 @@ const list = listOf("apple", "apple", "orange", "banana", "banana", "banana");
 const result = list.counts();
 
 console.log(result);
-// { apple: 2, orange: 1, banana: 3 }
+// Map(3) { 'apple' => 2, 'orange' => 1, 'banana' => 3 }
 ```
 
 ## `delete(...elements)`

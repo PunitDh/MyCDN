@@ -1056,12 +1056,11 @@ export class List<T> extends Array<T> {
    * @returns {List}
    */
   async mapAsync(
-    this: List<T>,
     callback: (value: T, index?: number, array?: T[]) => Promise<any>
   ): Promise<List<T>> {
     let result = listOf<T>();
-    for (let [idx, it] of this.entries()) {
-      const promise = await callback(it, idx, this);
+    for (let idx = 0; idx < this.length; idx++) {
+      const promise = await callback(this[idx], idx, this);
       result.push(promise);
     }
     return result;
@@ -1075,8 +1074,8 @@ export class List<T> extends Array<T> {
     callback: (value: T, index?: number, array?: T[]) => void
   ): Promise<void> {
     const promises = [];
-    for (let [idx, it] of this.entries()) {
-      promises.push(callback(it, idx, this));
+    for (let idx = 0; idx < this.length; idx++) {
+      promises.push(callback(this[idx], idx, this));
     }
     await Promise.all(promises);
   }
@@ -1207,7 +1206,6 @@ export class List<T> extends Array<T> {
    * @returns {Number}
    */
   productOf(
-    this: List<T>,
     selector: keyof T | ((value: T, index?: number, array?: T[]) => number),
     initialValue = 1
   ): number | null {
@@ -1300,10 +1298,7 @@ export class List<T> extends Array<T> {
    * @returns {List<Difference>}
    */
 
-  orderedDifference(
-    this: List<T>,
-    list: Iterable<T>
-  ): List<Difference<T>> | null {
+  orderedDifference(list: Iterable<T>): List<Difference<T>> | null {
     if (!list || !(list instanceof Array)) return null;
 
     const diff = listOf<Difference<T>>();
@@ -1377,7 +1372,6 @@ export class List<T> extends Array<T> {
    * @returns {number}
    */
   maxOf(
-    this: List<T>,
     selector: ((value: T, index?: number, array?: T[]) => number) | keyof T
   ): number {
     if (isFn(selector)) return listFrom(this.map(selector)).max();
@@ -1478,7 +1472,6 @@ export class List<T> extends Array<T> {
    * @returns {Object}
    */
   minmaxBy(
-    this: List<T>,
     selector: (value: T, index?: number, array?: T[]) => number,
     findAll: boolean = false
   ): MinMax<T> | null {
@@ -1514,7 +1507,6 @@ export class List<T> extends Array<T> {
    * @returns {Number}
    */
   nthLargestOf(
-    this: List<T>,
     selector: ((value: T, index?: number, array?: T[]) => number) | keyof T,
     n: number
   ): T | null {
@@ -1611,10 +1603,7 @@ export class List<T> extends Array<T> {
    * @param {Function} predicate
    * @returns {*}
    */
-  single(
-    this: List<T>,
-    predicate: (value: T, index?: number, array?: T[]) => boolean
-  ): T {
+  single(predicate: (value: T, index?: number, array?: T[]) => boolean): T {
     const filtered = listFrom(this.filter(predicate));
     if (filtered.length !== 1) {
       const error = `No single element matches the given predicate Found: (${filtered.length})`;
@@ -1734,22 +1723,22 @@ export class List<T> extends Array<T> {
     const duplicates = listOf<T>();
     const indicesList = listOf<number>();
 
-    for (const [idx, item] of this.entries()) {
+    for (let idx = 0; idx < this.length; idx++) {
       let foundDuplicate = false;
       for (const lone of lones) {
-        if (deepEquals(lone, item)) {
+        if (deepEquals(lone, this[idx])) {
           foundDuplicate = true;
           break;
         }
       }
 
       if (foundDuplicate) {
-        if (!duplicates.some((duplicate) => deepEquals(duplicate, item))) {
-          duplicates.add(item);
+        if (!duplicates.some((duplicate) => deepEquals(duplicate, this[idx]))) {
+          duplicates.add(this[idx]);
         }
         indices && indicesList.add(idx);
       } else {
-        lones.add(item);
+        lones.add(this[idx]);
       }
     }
     return indices ? indicesList : duplicates;
@@ -2032,8 +2021,8 @@ export class List<T> extends Array<T> {
    */
   mapWith<K, V>(other: List<any>): Map<K, V> {
     const map = new Map();
-    for (const [idx, item] of this.entries()) {
-      map.set(item, other[idx]);
+    for (let idx = 0; idx < this.length; idx++) {
+      map.set(this[idx], other[idx]);
     }
     return map;
   }
@@ -2121,11 +2110,11 @@ export class List<T> extends Array<T> {
     transform?: (a: any, b: any) => unknown
   ): List<List<any>> {
     const zipped = listOf<any>();
-    for (const [idx, item] of this.entries()) {
+    for (let idx = 0; idx < this.length; idx++) {
       if (transform) {
-        zipped.push(transform(item, list[idx]));
+        zipped.push(transform(this[idx], list[idx]));
       } else {
-        zipped.push(listOf(item, list[idx]));
+        zipped.push(listOf(this[idx], list[idx]));
       }
     }
 
@@ -2307,9 +2296,9 @@ export class List<T> extends Array<T> {
    * @returns {*}
    * @example listOf(3,4,8,8,7,6).mode() ==> 8
    */
-  mode(this: List<T>): T | undefined {
+  mode(): T | undefined {
     const counts = this.counts();
-    const max = listFrom([...counts.values()]).max();
+    const max = listOf(...counts.values()).max();
     for (const [key, value] of counts.entries()) {
       if (value === max) {
         return key;
@@ -2379,7 +2368,7 @@ export class List<T> extends Array<T> {
    * @returns {Object}
    * @example listOf('apple', 'apple', 'orange', 'banana', 'banana', 'banana').counts() ==> { apple: 2, orange: 1, banana: 3 }
    */
-  counts(this: List<T>): Map<T, number> {
+  counts(): Map<T, number> {
     const countMap = new Map<T, number>();
 
     for (const item of this) {
@@ -2410,8 +2399,8 @@ export class List<T> extends Array<T> {
     transform: (item: string, index?: number, array?: string[]) => T
   ): Record<string, T> {
     const obj: Record<string, T> = {};
-    for (const [idx, item] of this.entries()) {
-      obj[item] = transform(item, idx, this);
+    for (let idx = 0; idx < this.length; idx++) {
+      obj[this[idx]] = transform(this[idx], idx, this);
     }
     return obj;
   }
@@ -2681,7 +2670,7 @@ export class List<T> extends Array<T> {
    * @param {Number} n
    * @returns {List}
    */
-  tail(this: List<T>, n: number = 1): List<T> {
+  tail(n: number = 1): List<T> {
     return listFrom(
       n > this.length ? this : this.slice(this.length - n, this.length)
     );

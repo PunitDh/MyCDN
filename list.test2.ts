@@ -1,22 +1,5 @@
-const {
-  listOf,
-  tripleOf,
-  List,
-  Pair,
-  pairOf,
-  mapOf,
-  Table,
-  listOfType,
-  SortedSet,
-  setOf,
-  sortedSetOf,
-  ImmutableList,
-  StringExtended,
-  when,
-  Queue,
-  Stack,
-} = require("./public/List");
-const fs = require("fs");
+import { listOf } from "./public/List";
+import fs from "fs";
 
 // const l = listOf("Foo:Test", "Boo:Best", "Bar:Jest", "Baz:Test1");
 // const fs = require("fs");

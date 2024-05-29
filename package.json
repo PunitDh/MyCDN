@@ -6,8 +6,9 @@
   "scripts": {
     "start": "ts-node index.ts",
     "dev": "nodemon index.ts",
-    "build-list": "tsc ./public/List.ts",
-    "test": "jest"
+    "build-list": "tsc public/List.ts --downlevelIteration true",
+    "test": "jest",
+    "test-list": "ts-node list.test2.ts"
   },
   "keywords": [],
   "author": "",

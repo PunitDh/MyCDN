@@ -607,7 +607,7 @@ class ElementCollection extends Array {
     return this;
   }
 
-  userSelect(userSelect: string) {
+  userSelect(userSelect?: string) {
     if (!userSelect) {
       return this.map((e) => getComputedStyle(e).userSelect);
     } else {
@@ -616,9 +616,13 @@ class ElementCollection extends Array {
     }
   }
 
-  cursor(cursor) {
-    this.forEach((e) => (e.style.cursor = cursor));
-    return this;
+  cursor(cursor?: string) {
+    if (!cursor) {
+      return this.map((e) => getComputedStyle(e).cursor);
+    } else {
+      this.forEach((e) => (e.style.cursor = cursor));
+      return this;
+    }
   }
 
   pointerEvents(
@@ -2429,7 +2433,7 @@ class AjaxPromise {
   }
 }
 
-function replaceRecursively(element, from, to) {
+function replaceRecursively(element: ChildNode, from: string, to: string) {
   if (element.childNodes.length) {
     element.childNodes.forEach((child) => replaceRecursively(child, from, to));
   } else {
