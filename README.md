@@ -20,6 +20,58 @@ List.js offers many different exports for several different use cases. First are
 - `str()`: Creates an instance of `StringExtended`.
 - `when()`: The when function acts like the JavaScript `switch` keyword, which takes in a parameter and performs
 
+## TypeScript support
+
+List JS fully supports TypeScript and automatically infers types in the list.
+
+```js
+const list1 = listOf < string > ("a", "b", "c"); // Correct
+const list2 = listOf < number > (1, 2, 3, 4, 0); // Correct
+const list3 = listOf < string > ("a", "b", 5); // Incorrect - will throw TypeError
+const list4 = listOf < any > (1, "b", false); // Correct - will not throw TypeError
+```
+
+List JS will also automatically infer types of objects passed into the list.
+
+```js
+const users1 = listOf({ id: 1, name: "John" }, { id: 2, name: "Jane" });
+// The list will be typed as List<{id: number, name: string}>
+
+const users2 = listOf(
+  { id: 1, name: "John" },
+  { id: 2, name: "Jane", isAdmin: true }
+);
+// Error: The types of the objects in the list are incompatible;
+
+type User = {
+  id: number,
+  name: string,
+  isAdmin?: boolean,
+};
+
+const users3 = listOf<User>(
+    { id: 1, name: "John" },
+    { id: 2, name: "Jane", isAdmin: true }
+  );
+// Correct
+```
+
+This allows you to do things like this:
+
+```js
+
+const users = listOf(
+  { id: 1, name: "John", type: "User" },
+  { id: 2, name: "Jane", type: "Admin" },
+  { id: 3, name: "John", type: "Admin" },
+  { id: 4, name: "Jane", type: "User" }
+);
+
+const grouped = users.groupBy(user => user.type);
+const grouped = users.groupBy("type");
+// These two functions produce identical results and TypeScript will automatically provide autocomplete suggestions when typing arguments in the groupBy function.
+```
+
 ## How to declare a list
 
 There are several ways to declare a list.
