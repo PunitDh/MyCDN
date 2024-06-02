@@ -1,22 +1,17 @@
-class List extends Array {
-  random() {
-    const index = Math.floor(Math.random() * this.length);
-    return this[index];
-  }
-}
+import { listOf } from "./List";
 
-function randInt(min, max, step = 1) {
+// class List extends Array {
+//   random() {
+//     const index = Math.floor(Math.random() * this.length);
+//     return this[index];
+//   }
+// }
+
+function randInt(min: number, max: number, step = 1): number {
   return Math.floor((Math.random() * (max - min + 1) + min) / step) * step;
 }
 
-function listOf(...args) {
-  if (args.length === 1) {
-    return new List(1).fill(...args);
-  }
-  return new List(...args);
-}
-
-function isBetween(num, low, high) {
+function isBetween(num: number, low: number, high: number) {
   return num >= low && num < high;
 }
 
@@ -2581,25 +2576,28 @@ const data = {
 };
 
 class Colour {
-  constructor(data) {
+  name?: string;
+  hex?: string;
+
+  constructor(data: Partial<Colour>) {
     this.name = data && data.name;
     this.hex = data && data.hex;
   }
 
   toHSL() {
-    return this.toRGB().toHSL();
+    return this.toRGB()?.toHSL();
   }
 
   toCMYK() {
-    return this.toRGB().toCMYK();
+    return this.toRGB()?.toCMYK();
   }
 
   toRGB() {
-    if (!this.hex.startsWith("#") || !this.hex.length === 7) return null;
+    if (!this.hex?.startsWith("#") || this.hex?.length !== 7) return null;
     const [r1, g1, b1] = [
-      this.hex.slice(1, 3),
-      this.hex.slice(3, 5),
-      this.hex.slice(5),
+      this.hex?.slice(1, 3),
+      this.hex?.slice(3, 5),
+      this.hex?.slice(5),
     ];
     const [r, g, b] = [
       parseInt(`0x${r1}`),
@@ -2610,11 +2608,15 @@ class Colour {
   }
 
   toHex() {
-    return this.toRGB().hex;
+    return this.toRGB()?.hex;
   }
 }
 
 class RGBA extends Colour {
+  r: any;
+  g: any;
+  b: any;
+  a: number;
   /**
    *
    * @param {Number} r - 0-255
@@ -2622,14 +2624,14 @@ class RGBA extends Colour {
    * @param {Number} b - 0-255
    * @param {Number} a - 0-255
    */
-  constructor(r, g, b, a = 1, name) {
+  constructor(r: number, g: number, b: number, a = 1, name?: string) {
     super({ name });
     this.r = r;
     this.g = g;
     this.b = b;
     this.a = a;
-    const zeroPadded = (val) =>
-      val < 16 ? "0" + val.toString("16") : val.toString("16");
+    const zeroPadded = (val: number) =>
+      val < 16 ? "0" + val.toString(16) : val.toString(16);
     const [r1, g1, b1] = [zeroPadded(r), zeroPadded(g), zeroPadded(b)];
     this.hex = `#${r1}${g1}${b1}`.toUpperCase();
   }
@@ -2653,7 +2655,7 @@ class RGBA extends Colour {
         : 0;
     const l = (Cmax + Cmin) / 2;
     const s = delta === 0 ? 0 : delta / (1 - Math.abs(2 * l - 1));
-    const toDegrees = (val) =>
+    const toDegrees = (val: number) =>
       val < 0 ? Math.round(360 + val) : Math.round(val);
     return new HSL(
       toDegrees(h),
@@ -2680,13 +2682,16 @@ class RGBA extends Colour {
 }
 
 class HSL extends Colour {
+  h: any;
+  s: any;
+  l: any;
   /**
    *
    * @param {Number} h 0-360
    * @param {Number} s 0%-100%
    * @param {Number} l 0%-100%
    */
-  constructor(h, s, l, name) {
+  constructor(h: number, s: number, l: number, name?: string) {
     super({ name });
     this.h = h;
     this.s = s;
@@ -2727,6 +2732,10 @@ class HSL extends Colour {
 }
 
 class CMYK extends Colour {
+  c: number;
+  m: number;
+  y: number;
+  k: number;
   /**
    *
    * @param {Number} c 0%-100%
@@ -2734,7 +2743,7 @@ class CMYK extends Colour {
    * @param {Number} y 0%-100%
    * @param {Number} k 0%-100%
    */
-  constructor(c, m, y, k, name) {
+  constructor(c: number, m: number, y: number, k: number, name?: string) {
     super({ name });
     this.c = c;
     this.m = m;
@@ -2767,13 +2776,13 @@ class CMYK extends Colour {
 }
 
 const faker = {
-  repeat: function (n, fn) {
+  repeat: function (n: any, fn: () => any) {
     return Array(n)
       .fill(null)
       .map(() => fn());
   },
   first_name: function () {
-    return data.first_names.female.concat(...data.first_names.male).random();
+    return listOf(...data.first_names.female.concat(data.first_names.male)).random();
   },
   male: {
     first_name: function () {
@@ -2854,7 +2863,10 @@ const faker = {
       string: `${street_number} ${street_name} ${street_type}, ${city}, ${state} ${postcode}`,
     };
   },
-  user: function ({ sex = undefined, minAge = 18 } = {}) {
+  user: function ({
+    sex = undefined,
+    minAge = 18,
+  }: { sex?: "m" | "f"; minAge?: number } = {}) {
     const first_name = sex
       ? sex[0].toLowerCase() === "m"
         ? this.male.first_name()
@@ -2865,7 +2877,7 @@ const faker = {
     today.setFullYear(today.getFullYear() - minAge);
     const dob = this.date(undefined, today);
     const yearBlurb = Math.round(
-      (dob.getFullYear() / 100 - parseInt(dob.getFullYear() / 100)) * 100
+      (dob.getFullYear() / 100 - Math.floor(dob.getFullYear() / 100)) * 100
     );
     const email = this.email(first_name, last_name, yearBlurb);
     const phone_number = `${randInt(0, 999)} ${randInt(1000, 9999)} ${randInt(
