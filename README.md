@@ -63,13 +63,15 @@ This allows you to do things like this:
 const users = listOf(
   { id: 1, name: "John", type: "User" },
   { id: 2, name: "Jane", type: "Admin" },
-  { id: 3, name: "John", type: "Admin" },
-  { id: 4, name: "Jane", type: "User" }
+  { id: 3, name: "Gary", type: "Admin" },
+  { id: 4, name: "Troy", type: "User" }
 );
 
-const grouped = users.groupBy(user => user.type);
-const grouped = users.groupBy("type");
-// These two functions produce identical results and TypeScript will automatically provide autocomplete suggestions when typing arguments in the groupBy function.
+const grouped1 = users.groupBy(user => user.type);
+const grouped2 = users.groupBy("type");
+// These two functions above produce identical results and TypeScript will
+// automatically provide autocomplete suggestions when typing arguments
+// into the function.
 ```
 
 ## How to declare a list
