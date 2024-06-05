@@ -1,4 +1,4 @@
-import { List, listFrom, listOf, str } from "./public/List";
+import { List, listFrom, listOf, MathPlus, str } from "./public/List";
 import fs from "fs";
 
 // const l = listOf("Foo:Test", "Boo:Best", "Bar:Jest", "Baz:Test1");
@@ -390,18 +390,24 @@ console.log(list1, list2, list3);
 
 // console.log({ topwearPrices1, bottomwearPrices1 });
 
-const listUsers = listOf(
-  { id: 1, name: "Tony" },
-  { id: 2, name: "Brad" },
-  { id: 4, name: "Callum" },
-  { id: 5, name: "Mark" },
-  { id: 6, name: "Anthony" }
+// const listUsers = listOf(
+//   { id: 1, name: "Tony" },
+//   { id: 2, name: "Brad" },
+//   { id: 4, name: "Callum" },
+//   { id: 5, name: "Mark" },
+//   { id: 6, name: "Anthony" }
+// );
+
+// const newusers = listUsers.insertAt(2, { id: 3, name: "John" });
+
+// listUsers.deleteAt(5);
+
+// console.log(newusers.secondOrNull((it) => !!it.id));
+
+// console.log(listOf(2,3,4,5,6,7,8,9).clamp(4,7));
+
+console.log(
+  Array(100)
+    .fill(null)
+    .map(() => MathPlus.random(5, 10))
 );
-
-const newusers = listUsers.insertAt(2, { id: 3, name: "John" });
-
-listUsers.deleteAt(5);
-
-console.log(newusers.secondOrNull((it) => !!it.id));
-
-console.log(listOf(2,3,4,5,6,7,8,9).clamp(4,7));

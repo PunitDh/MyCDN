@@ -1,4 +1,4 @@
-import { listOf } from "./List";
+import { listFrom, listOf } from "./List";
 
 // class List extends Array {
 //   random() {
@@ -2775,20 +2775,71 @@ class CMYK extends Colour {
   }
 }
 
-const faker = {
-  repeat: function (n: any, fn: () => any) {
+interface Faker {
+  repeat: (n: number, fn: () => any) => any[];
+  first_name: () => string;
+  last_name: () => string;
+  full_name: () => string;
+  email: (first_name: string, last_name: string, yearBlurb: number) => string;
+  date: (after?: Date, before?: Date) => Date;
+  colour: () => Colour;
+  rgb: () => RGBA;
+  rgba: () => RGBA;
+  hsl: () => HSL;
+  hwb: () => HWB;
+  cmyk: () => CMYK;
+  male: UserInfo;
+  female: UserInfo;
+  address: () => Address;
+  user: (params: { sex?: "m" | "f"; minAge?: number }) => User;
+}
+
+type HWB = {
+  h: number;
+  w: number;
+  b: number;
+};
+
+interface UserInfo {
+  first_name: () => string;
+  full_name: () => string;
+}
+
+type User = {
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone_number: string;
+  dob: Date;
+  address: Address;
+};
+
+type Address = {
+  street_number: number;
+  street_name: string;
+  street_type: string;
+  city: string;
+  state: string;
+  postcode: number;
+  string: `${number} ${string} ${string}, ${string}, ${string} ${number}`;
+};
+
+const faker: Faker = {
+  repeat: function (n: number, fn: () => any) {
     return Array(n)
       .fill(null)
       .map(() => fn());
   },
-  first_name: function () {
-    return listOf(...data.first_names.female.concat(data.first_names.male)).random();
+  first_name: function (): string {
+    return listFrom(
+      data.first_names.female.concat(data.first_names.male)
+    ).random();
   },
   male: {
     first_name: function () {
       return data.first_names.male.random();
     },
-    full_name: function () {
+    full_name: function (this: Faker) {
       return `${this.male.first_name()} ${this.last_name()}`;
     },
   },
@@ -2796,7 +2847,7 @@ const faker = {
     first_name: function () {
       return data.first_names.female.random();
     },
-    full_name: function () {
+    full_name: function (this: Faker) {
       return `${this.female.first_name()} ${this.last_name()}`;
     },
   },
@@ -2807,6 +2858,7 @@ const faker = {
     return `${this.first_name()} ${this.last_name()}`;
   },
   email: function (
+    this: Faker,
     first_name = this.first_name(),
     last_name = this.last_name(),
     yearBlurb = randInt(0, 100)

@@ -71,6 +71,43 @@ export class List<T> extends Array<T> {
     return getDepth(this);
   }
 
+  override map<U>(
+    callbackfn: (value: T, index: number, array: T[]) => U
+  ): List<U> {
+    return List.from<U>(super.map(callbackfn));
+  }
+
+  override concat(...items: ConcatArray<T>[]): List<T> {
+    return List.from(super.concat(...items));
+  }
+
+  override filter(
+    predicate: (value: T, index: number, array: T[]) => boolean,
+    thisArg?: any
+  ): List<T> {
+    return List.from(super.filter(predicate, thisArg));
+  }
+
+  override flatMap<U, This = undefined>(
+    callback: (
+      this: This,
+      value: T,
+      index: number,
+      array: T[]
+    ) => U | readonly U[],
+    thisArg?: This | undefined
+  ): List<U> {
+    return List.from<U>(super.flatMap(callback, thisArg));
+  }
+
+  override slice(start?: number, end?: number): List<T> {
+    return List.from<T>(super.slice(start, end));
+  }
+
+  override reverse(): List<T> {
+    return List.from<T>(super.reverse());
+  }
+
   /**
    * Returns the element at a particular index, or returns the optional parameter if no element is found
    * @param {Number} index
@@ -108,7 +145,7 @@ export class List<T> extends Array<T> {
    * @returns {List}
    */
   subList(fromIndex: number, toIndex: number): List<T> {
-    return listFrom<T>(this.slice(fromIndex, toIndex));
+    return this.slice(fromIndex, toIndex);
   }
 
   /**
@@ -431,13 +468,11 @@ export class List<T> extends Array<T> {
    * @example listOf(['a','b','c'], ['d','e','f'], ['x','y','z']).lastOfEach() ==> ['c','f','z']
    */
   lastOfEach(): List<T> {
-    return listFrom(
-      this.map((list) => {
-        if (List.isList(list) || Array.isArray(list)) {
-          return list[list.length - 1];
-        }
-      })
-    );
+    return this.map((list) => {
+      if (List.isList(list) || Array.isArray(list)) {
+        return list[list.length - 1];
+      }
+    });
   }
 
   /**
@@ -447,7 +482,7 @@ export class List<T> extends Array<T> {
    * @example listOf(['a','b','c'], ['d','e','f'], ['x','y','z']).nthOfEach(1) ==> ['b','e','y']
    */
   nthOfEach(n: number): List<T> {
-    return listFrom(this.map((list: any) => list[n]));
+    return this.map((list: any) => list[n]);
   }
 
   /**
@@ -474,14 +509,13 @@ export class List<T> extends Array<T> {
    * @example listOf(['a','b','c'], ['d','e','f'], ['x','y','z']).joinEach("-", "<", ">") ==> ['<a-b-c>','<d-e-f>','<x-y-z>']
    */
   joinEach(
+    this: List<List<string>> | List<string[]>,
     separator: string,
     prefix: string = "",
     postfix: string = ""
   ): List<string> {
-    return listFrom(
-      (this as List<unknown> as List<List<string>>).map((list) =>
-        listFrom(list).joinWith(separator, prefix, postfix)
-      )
+    return this.map((list) =>
+      listFrom(list).joinWith(separator, prefix, postfix)
     );
   }
 
@@ -491,14 +525,10 @@ export class List<T> extends Array<T> {
    * @returns {List}
    * @example listOf("Foo:Bar", "Baz:Test").splitEach(":") ==> [['Foo','Bar'],['Baz','Test']]
    */
-  splitEach(...separators: string[]): List<List<string>> {
+  splitEach(this: List<string>, ...separators: string[]): List<List<string>> {
     const pattern = separators.join("|");
     const regex = new RegExp(pattern, "gi");
-    return listFrom(
-      (this as List<unknown> as List<string>).map((list) =>
-        listFrom(list.split(regex))
-      )
-    );
+    return this.map((list) => listFrom(list.split(regex)));
   }
 
   /**
@@ -507,9 +537,7 @@ export class List<T> extends Array<T> {
    * @example listOf("   foo", "  bar   ").trimEach() ==> ['foo','bar']
    */
   trimEach(this: List<string>): List<string> {
-    return listFrom(
-      (this as List<unknown> as List<string>).map((element) => element.trim())
-    );
+    return this.map((element) => element.trim());
   }
 
   /**
@@ -572,8 +600,8 @@ export class List<T> extends Array<T> {
     const middleIndex = keepMiddle
       ? Math.ceil(this.length / 2)
       : Math.floor(this.length / 2);
-    const firstHalf = listFrom<T>(this.slice(0, middleIndex));
-    const secondHalf = listFrom<T>(this.slice(middleIndex, this.length));
+    const firstHalf = this.slice(0, middleIndex);
+    const secondHalf = this.slice(middleIndex, this.length);
     return listOf<List<T>>(firstHalf, secondHalf);
   }
 
@@ -619,7 +647,7 @@ export class List<T> extends Array<T> {
    * @example listOf(3,4,5,6,7).drop(3) ==> [6,7]
    */
   drop(n: number): List<T> {
-    return listFrom(this.slice(n));
+    return this.slice(n);
   }
 
   /**
@@ -629,7 +657,7 @@ export class List<T> extends Array<T> {
    * @example listOf(3,4,5,6,7).drop(3) ==> [3,4,5]
    */
   dropLast(n: number): List<T> {
-    return listFrom(this.slice(0, this.length - n));
+    return this.slice(0, this.length - n);
   }
 
   /**
@@ -837,7 +865,7 @@ export class List<T> extends Array<T> {
    * @returns {List}
    */
   plus(...elements: T[]): List<T> {
-    return listFrom<T>(this.concat(elements));
+    return this.concat(elements);
   }
 
   /**
@@ -858,11 +886,9 @@ export class List<T> extends Array<T> {
    */
   filterIsInstance(clazz: any): List<T> {
     if (!clazz.name) return this;
-    return listFrom(
-      this.filter(
-        (item) =>
-          item instanceof clazz || typeof item === clazz.name.toLowerCase()
-      )
+    return this.filter(
+      (item) =>
+        item instanceof clazz || typeof item === clazz.name.toLowerCase()
     );
   }
 
@@ -872,7 +898,7 @@ export class List<T> extends Array<T> {
    * @param {Class} clazz
    * @returns {List}
    */
-  filterIsInstanceTo(destination: List<T>, clazz: any): List<T> {
+  filterIsInstanceTo(destination: T[], clazz: any): List<T> {
     const filtered = this.filter((item) => item instanceof clazz);
     return listFrom(destination.concat(filtered));
   }
@@ -886,10 +912,8 @@ export class List<T> extends Array<T> {
   filterNot(
     predicate: (value: T, index: number, array: T[]) => boolean
   ): List<T> {
-    return listFrom(
-      this.filter(
-        (item, index, array) => !isMatch(predicate, item, index, array)
-      )
+    return this.filter(
+      (item, index, array) => !isMatch(predicate, item, index, array)
     );
   }
 
@@ -899,7 +923,7 @@ export class List<T> extends Array<T> {
    * @example listOf(3,4,5,null,7,undefined).filterNotNull() ==> [3,4,5,7,undefined]
    */
   filterNotNull(): List<T> {
-    return listFrom<T>(this.filter((value) => value !== null));
+    return this.filter((value) => value !== null);
   }
 
   /**
@@ -908,7 +932,7 @@ export class List<T> extends Array<T> {
    * @example listOf(3,4,5,null,7,undefined).filterNotNull() ==> [3,4,5,7,undefined]
    */
   filterNotNullish(): List<T> {
-    return listFrom<T>(this.filter((value) => value != null));
+    return this.filter((value) => value != null);
   }
 
   /**
@@ -925,7 +949,7 @@ export class List<T> extends Array<T> {
       }
       filteredList.push(it);
     }
-    return filteredList.toList();
+    return filteredList;
   }
 
   /**
@@ -936,8 +960,8 @@ export class List<T> extends Array<T> {
    * @example listOf(3,4,null,7,undefined,0,8).filterTruthy(false) ==> [3,4,7,8]
    */
   filterTruthy(zeroTruthy: boolean = true): List<T> {
-    return listFrom(
-      this.filter((it) => (zeroTruthy ? it === 0 || Boolean(it) : Boolean(it)))
+    return this.filter((it) =>
+      zeroTruthy ? it === 0 || Boolean(it) : Boolean(it)
     );
   }
 
@@ -949,10 +973,8 @@ export class List<T> extends Array<T> {
    * @example listOf(3,4,null,7,undefined,0,8).filterFalsy(false) ==> [null, undefined,0]
    */
   filterFalsy(zeroTruthy: boolean = false): List<T> {
-    return listFrom(
-      this.filter((it) =>
-        zeroTruthy ? it !== 0 && !Boolean(it) : !Boolean(it)
-      )
+    return this.filter((it) =>
+      zeroTruthy ? it !== 0 && !Boolean(it) : !Boolean(it)
     );
   }
 
@@ -961,7 +983,7 @@ export class List<T> extends Array<T> {
    * @param {List} destination
    * @returns {List}
    */
-  filterNotNullTo(destination: List<T>): List<T> {
+  filterNotNullTo(destination: T[]): List<T> {
     const filtered = this.filterNotNull();
     return listFrom(destination.concat(filtered));
   }
@@ -972,7 +994,7 @@ export class List<T> extends Array<T> {
    * @example listOf(3,4,5,null,7,undefined).filterNotUndefined() ==> [3,4,5,null,7]
    */
   filterNotUndefined(): List<T> {
-    return listFrom<T>(this.filter((value) => value !== undefined));
+    return this.filter((value) => value !== undefined);
   }
 
   /**
@@ -982,7 +1004,7 @@ export class List<T> extends Array<T> {
    * @returns {List}
    */
   filterTo(
-    destination: List<T>,
+    destination: T[],
     predicate: (value: T, index: number, array: T[]) => value is T
   ): List<T> {
     const filtered = this.filter(predicate);
@@ -995,7 +1017,7 @@ export class List<T> extends Array<T> {
    * @param {Function} predicate
    * @returns {List}
    */
-  filterNotTo(destination: List<T>, predicate: (value: T) => boolean): List<T> {
+  filterNotTo(destination: T[], predicate: (value: T) => boolean): List<T> {
     const filtered = this.filterNot(predicate);
     return listFrom(destination.concat(filtered));
   }
@@ -1015,7 +1037,7 @@ export class List<T> extends Array<T> {
    * @example listOf(1,4,null,undefined,0,8, "", "test", "foo", false, true).compact() ==> [1,4,8,'test','foo',true]
    */
   compact(): List<T> {
-    return listFrom(this.filter(Boolean).filter((it) => it !== ""));
+    return this.filter(Boolean).filter((it) => it !== "");
   }
 
   /**
@@ -1123,9 +1145,7 @@ export class List<T> extends Array<T> {
       const message = `Argument 'list' must be a type of Array or List. Found: ${typeof list}`;
       throw new IllegalArgumentError(message);
     }
-    return listFrom(list)
-      .add(`${prefix}${this.join(separator)}${postfix}`)
-      .toList();
+    return listFrom(list).add(`${prefix}${this.join(separator)}${postfix}`);
   }
 
   /**
@@ -1175,7 +1195,7 @@ export class List<T> extends Array<T> {
    * @example listOf('z','a','d','b','e','c','f').exclude('a','b','c') ==> ['z','d','e','f']
    */
   exclude(...elements: T[]): List<T> {
-    return listFrom(this.filter((item) => !elements.includes(item)));
+    return this.filter((item) => !elements.includes(item));
   }
 
   /**
@@ -1220,7 +1240,7 @@ export class List<T> extends Array<T> {
    * @example listOf('apple','banana','carrot').toUpperCase() ==> ['APPLE','BANANA','CARROT']
    */
   toUpperCase(this: List<string>): List<string> {
-    return listFrom(this.map((arg) => arg.toUpperCase()));
+    return this.map((arg) => arg.toUpperCase());
   }
 
   /**
@@ -1228,7 +1248,7 @@ export class List<T> extends Array<T> {
    * @returns {List<String>}
    */
   capitalize(this: List<string>): List<string> {
-    return listFrom(this.map((arg) => new StringExtended(arg).capitalize()));
+    return this.map((arg) => str(arg).capitalize());
   }
 
   /**
@@ -1236,10 +1256,8 @@ export class List<T> extends Array<T> {
    * @returns {List<String>}
    * @example listOf('Apple','Banana','CARROT').toLowerCase() ==> ['apple','banana','carrot']
    */
-  toLowerCase(): List<string> {
-    return listFrom(
-      (this as List<unknown> as List<string>).map((arg) => arg.toLowerCase())
-    );
+  toLowerCase(this: List<string>): List<string> {
+    return this.map((arg) => arg.toLowerCase());
   }
 
   /**
@@ -1260,8 +1278,7 @@ export class List<T> extends Array<T> {
     selector: keyof T | ((value: T) => number),
     initialValue = 0
   ): number | null {
-    if (isFunction(selector))
-      return listFrom(this.map(selector)).sum(initialValue);
+    if (isFunction(selector)) return this.map(selector).sum(initialValue);
     if (isKey(selector))
       return this.reduce((a, c) => +a + c[selector], initialValue);
     return null;
@@ -1283,8 +1300,7 @@ export class List<T> extends Array<T> {
     selector: keyof T | ((value: T, index: number, array: T[]) => number),
     initialValue = 1
   ): number | null {
-    if (isFunction(selector))
-      return listFrom(this.map(selector)).product(initialValue);
+    if (isFunction(selector)) return this.map(selector).product(initialValue);
     if (isKey(selector))
       return this.reduce((a, c) => +a * c[selector], initialValue);
     return null;
@@ -1314,7 +1330,7 @@ export class List<T> extends Array<T> {
   chunked(size: number): List<List<T>> {
     const chunkedList = listOf<List<T>>();
     for (let i = 0; i < this.length; i += Math.abs(size)) {
-      chunkedList.push(listFrom(this.slice(i, i + Math.abs(size))));
+      chunkedList.push(this.slice(i, i + Math.abs(size)));
     }
     return chunkedList;
   }
@@ -1358,9 +1374,7 @@ export class List<T> extends Array<T> {
    * @returns {List}
    */
   intersection(list: List<T> | Array<T>): List<T> {
-    return listFrom(
-      Array.from(new Set(this.filter((item) => list.includes(item))))
-    );
+    return List.from(new Set(this.filter((item) => list.includes(item))));
   }
 
   /**
@@ -1391,7 +1405,7 @@ export class List<T> extends Array<T> {
   difference(list: List<T>): List<T> | null {
     if (!list || !(list instanceof Array)) return null;
     const diff = listOf<T>();
-    const concatenated = listFrom(this.concat(list)).counts();
+    const concatenated = this.concat(list).counts();
 
     for (const [key, value] of concatenated.entries()) {
       if (value === 1) {
@@ -1408,7 +1422,7 @@ export class List<T> extends Array<T> {
    * @returns {List}
    */
   union(list: List<T>): List<T> {
-    return listFrom(Array.from(new Set([...this, ...list])));
+    return List.from(new Set([...this, ...list]));
   }
 
   /**
@@ -1445,11 +1459,9 @@ export class List<T> extends Array<T> {
   maxOf(
     selector: ((value: T, index: number, array: T[]) => number) | keyof T
   ): number {
-    if (isFunction(selector)) return listFrom(this.map(selector)).max();
+    if (isFunction(selector)) return this.map(selector).max();
     if (isKey<T>(selector))
-      return listFrom<number>(
-        this.map((it: T) => it[selector] as number)
-      ).max();
+      return this.map((it: T) => it[selector] as number).max();
     return 0;
   }
 
@@ -1464,17 +1476,15 @@ export class List<T> extends Array<T> {
     findAll: boolean = false
   ): T | List<T> | undefined {
     if (isFunction(selector)) {
-      const max = listFrom(this.map(selector)).max();
+      const max = this.map(selector).max();
       return findAll
-        ? (listFrom(this.filter((it) => selector(it) === max)) as List<T>)
+        ? (this.filter((it) => selector(it) === max) as List<T>)
         : this.find((it) => selector(it) === max);
     }
     if (isKey<T>(selector)) {
-      const max = listFrom<number>(
-        this.map((it: T) => it[selector] as number)
-      ).max();
+      const max = this.map((it: T) => it[selector] as number).max();
       return findAll
-        ? (listFrom(this.filter((it) => it[selector] === max)) as List<T>)
+        ? (this.filter((it) => it[selector] === max) as List<T>)
         : this.find((it) => it[selector] === max);
     }
   }
@@ -1486,9 +1496,9 @@ export class List<T> extends Array<T> {
    * @returns {Number}
    */
   minOf(selector: ((value: T) => number) | keyof T): number | null {
-    if (isFunction(selector)) return listFrom(this.map(selector)).min();
+    if (isFunction(selector)) return this.map(selector).min();
     if (isKey<T>(selector))
-      return listFrom<number>(this.map((it) => it[selector] as number)).min();
+      return this.map((it) => it[selector] as number).min();
     return null;
   }
 
@@ -1504,17 +1514,15 @@ export class List<T> extends Array<T> {
     findAll: boolean = false
   ): T | List<T> | undefined {
     if (isFunction(selector)) {
-      const min = listFrom(this.map(selector)).min();
+      const min = this.map(selector).min();
       return findAll
-        ? listFrom(this.filter((it) => selector(it) === min))
+        ? this.filter((it) => selector(it) === min)
         : this.find((it) => selector(it) === min);
     }
     if (isKey(selector)) {
-      const min = listFrom<number>(
-        this.map((it) => it[selector] as number)
-      ).min();
+      const min = this.map((it) => it[selector] as number).min();
       return findAll
-        ? listFrom(this.filter((it) => it[selector] === min))
+        ? this.filter((it) => it[selector] === min)
         : this.find((it) => it[selector] === min);
     }
   }
@@ -1583,7 +1591,7 @@ export class List<T> extends Array<T> {
    * @returns {List<number>}
    */
   clamp(this: List<number>, min: number, max: number): List<number> {
-    return listFrom(this.map((number) => Math.min(Math.max(min, number), max)));
+    return this.map((number) => Math.min(Math.max(min, number), max));
   }
 
   /**
@@ -1700,7 +1708,7 @@ export class List<T> extends Array<T> {
    * @returns {*}
    */
   single(predicate: (value: T, index: number, array: T[]) => boolean): T {
-    const filtered = listFrom(this.filter(predicate));
+    const filtered = this.filter(predicate);
     if (filtered.length !== 1) {
       const error = `No single element matches the given predicate Found: (${filtered.length})`;
       throw new NoSuchElementError(error);
@@ -1717,7 +1725,7 @@ export class List<T> extends Array<T> {
   singleOrNull(
     predicate: (value: T, index: number, array: T[]) => boolean
   ): T | null {
-    const found = listFrom(this.filter(predicate));
+    const found = this.filter(predicate);
     if (found.length !== 1) {
       return null;
     }
@@ -1760,7 +1768,7 @@ export class List<T> extends Array<T> {
       }
       return result;
     });
-    return listFrom(resultList);
+    return resultList;
   }
 
   /**
@@ -1768,12 +1776,8 @@ export class List<T> extends Array<T> {
    * @this {List<Number>}
    * @returns {List<Number>}
    */
-  ceil(nearest = 1): List<number> {
-    return listFrom(
-      (this as List<unknown> as List<number>).map(
-        (number) => Math.ceil(number / nearest) * nearest
-      )
-    );
+  ceil(this: List<number>, nearest = 1): List<number> {
+    return this.map((number) => Math.ceil(number / nearest) * nearest);
   }
 
   /**
@@ -1781,12 +1785,8 @@ export class List<T> extends Array<T> {
    * @this {List<Number>}
    * @returns {List<Number>}
    */
-  floor(nearest = 1): List<number> {
-    return listFrom(
-      (this as List<unknown> as List<number>).map(
-        (number) => Math.floor(number / nearest) * nearest
-      )
-    );
+  floor(this: List<number>, nearest = 1): List<number> {
+    return this.map((number) => Math.floor(number / nearest) * nearest);
   }
 
   /**
@@ -1929,7 +1929,7 @@ export class List<T> extends Array<T> {
    * @returns {List<Boolean>}
    */
   toBoolean(): List<boolean> {
-    return listFrom(this.map(Boolean));
+    return this.map(Boolean);
   }
 
   /**
@@ -1971,8 +1971,8 @@ export class List<T> extends Array<T> {
     if (isFunction(keySelector)) {
       const distinctProperties = List.from(new Set(this.map(keySelector)));
       distinctProperties.forEach((property) => {
-        grouped[property] = listFrom(
-          this.filter((item) => keySelector(item) === property)
+        grouped[property] = this.filter(
+          (item) => keySelector(item) === property
         );
       });
     } else if (isKey<T>(keySelector)) {
@@ -1981,8 +1981,8 @@ export class List<T> extends Array<T> {
       );
 
       distinctProperties.forEach((property) => {
-        grouped[property as string] = listFrom(
-          this.filter((item) => item[keySelector] === property)
+        grouped[property as string] = this.filter(
+          (item) => item[keySelector] === property
         );
       });
     }
@@ -2064,12 +2064,12 @@ export class List<T> extends Array<T> {
    * @param {List} destination
    * @param {Function} transform
    */
-  mapTo(
+  mapTo<U>(
     destination: List<any>,
-    transform: (value: T, index: number, array: T[]) => unknown
-  ): List<unknown> {
+    transform: (value: T, index: number, array: T[]) => U
+  ): List<U> {
     const mapped = this.map(transform);
-    return listFrom(destination.concat(mapped));
+    return destination.concat(mapped);
   }
 
   /**
@@ -2077,11 +2077,10 @@ export class List<T> extends Array<T> {
    * @param {Function} transform
    * @returns {List}
    */
-  mapNotNull<X>(
-    this: List<T | null | undefined>,
-    transform: (value: T | null | undefined, index: number, array: T[]) => X
-  ): List<X> {
-    return listFrom((this.filterNotNullish() as T[]).map<X>(transform));
+  mapNotNull<U>(
+    transform: (value: T, index: number, array: T[]) => U
+  ): List<U> {
+    return this.filterNotNullish().map<U>(transform);
   }
 
   /**
@@ -2090,15 +2089,15 @@ export class List<T> extends Array<T> {
    * @param {Function} transform
    * @returns {List}
    */
-  mapNotNullTo(
-    destination: List<any>,
-    transform: (value: T, index: number, array: T[]) => unknown
-  ): List<T> {
+  mapNotNullTo<U>(
+    destination: U[],
+    transform: (value: T, index: number, array: T[]) => U
+  ): List<U> {
     if (!Array.isArray(destination)) {
       const error = `Parameter 'destination' must be an Array or a List`;
       throw new IllegalArgumentError(error);
     }
-    let results = listOf<unknown>();
+    let results = listOf<U>();
     for (let it = 0; it < this.length; it++) {
       if (!isNullOrUndefined(this[it])) {
         const result = transform(this[it], it, this);
@@ -2164,7 +2163,7 @@ export class List<T> extends Array<T> {
     let [start, end] = [0, size];
 
     do {
-      output.push(listFrom(this.slice(start, end)));
+      output.push(this.slice(start, end));
       start += step;
       end += step;
     } while (partialWindows ? start < this.length : end <= this.length);
@@ -2270,23 +2269,37 @@ export class List<T> extends Array<T> {
    * @returns {List}
    */
   reversed(): List<T> {
-    return listFrom([...this].reverse());
+    return this.slice().reverse();
   }
 
   /**
-   * Searches for a string in an array and returns the search results as a list
+   * Searches for a query in the list and returns the search results as a list
    * @param {String} query
    * @returns {List}
    */
-  search(query: string, caseSensitive = false): List<string> {
-    const list = this as List<unknown> as List<string>;
-    if (caseSensitive)
-      return listFrom(list.filter((element) => element.includes(query)));
-    return listFrom(
-      list.filter((element) =>
-        element.toLowerCase().includes(query.toLowerCase())
-      )
+  search(
+    this: List<string>,
+    query: string,
+    caseSensitive = false
+  ): List<string> {
+    if (caseSensitive) return this.filter((element) => element.includes(query));
+    return this.filter((element) =>
+      element.toLowerCase().includes(query.toLowerCase())
     );
+  }
+
+  /**
+   * Performs a fuzzy search of the query in the list and returns the closest result
+   * @param {String} query
+   * @returns {List}
+   */
+  fuzzySearch(
+    this: List<string>,
+    query: string,
+    threshold: number = Infinity,
+    caseSensitive = false
+  ): List<string> {
+    return str(query).fuzzySearch(threshold, caseSensitive, this);
   }
 
   /**
@@ -2322,7 +2335,7 @@ export class List<T> extends Array<T> {
   sortByDescending(
     selector: ((item: T) => string | number) | keyof T
   ): List<T> {
-    return listFrom(this.sortBy(selector).reverse());
+    return this.sortBy(selector).reverse();
   }
 
   /**
@@ -2431,7 +2444,7 @@ export class List<T> extends Array<T> {
    * @example listOf(1,2,4,7,9).filterOddNumbers() ==> [1,7,9]
    */
   filterOddNumbers(this: List<number>): List<number> {
-    return listFrom(this.filter((it) => it % 2 === 1));
+    return this.filter((it) => it % 2 === 1);
   }
 
   /**
@@ -2440,7 +2453,7 @@ export class List<T> extends Array<T> {
    * @example listOf(1,2,4,7,9).filterEvenNumbers() ==> [2,4]
    */
   filterEvenNumbers(this: List<number>): List<number> {
-    return listFrom(this.filter((it) => it % 2 === 0));
+    return this.filter((it) => it % 2 === 0);
   }
 
   /**
@@ -2449,14 +2462,12 @@ export class List<T> extends Array<T> {
    * @example listOf(1,3,5,7,9).filterPrimeNumbers() ==> [3,5,7]
    */
   filterPrimeNumbers(this: List<number>): List<number> {
-    return listFrom(
-      this.filter((num) => {
-        for (let i = 2, s = Math.sqrt(num); i <= s; i++) {
-          if (num % i === 0) return false;
-        }
-        return num > 1;
-      })
-    );
+    return this.filter((num) => {
+      for (let i = 2, s = Math.sqrt(num); i <= s; i++) {
+        if (num % i === 0) return false;
+      }
+      return num > 1;
+    });
   }
 
   /**
@@ -2529,7 +2540,7 @@ export class List<T> extends Array<T> {
    * @returns {List<String>}
    */
   prefix(this: List<string>, string: string): List<string> {
-    return listFrom(this.map((item) => `${string}${item}`));
+    return this.map((item) => `${string}${item}`);
   }
 
   /**
@@ -2538,7 +2549,7 @@ export class List<T> extends Array<T> {
    * @returns {List<String>}
    */
   postfix(this: List<string>, string: string): List<string> {
-    return listFrom(this.map((item) => `${item}${string}`));
+    return this.map((item) => `${item}${string}`);
   }
 
   /**
@@ -2549,13 +2560,9 @@ export class List<T> extends Array<T> {
    */
   multiplyBy(this: List<number>, number: number): List<number> {
     if (Array.isArray(number)) {
-      return listFrom(
-        (this as unknown as List<number>).map(
-          (element, index) => element * (number[index] || 1)
-        )
-      );
+      return this.map((element, index) => element * (number[index] || 1));
     }
-    return listFrom(this.map((n) => n * number));
+    return this.map((n) => n * number);
   }
 
   /**
@@ -2566,11 +2573,9 @@ export class List<T> extends Array<T> {
    */
   divideBy(this: List<number>, number: number): List<number> {
     if (Array.isArray(number)) {
-      return listFrom(
-        this.map((element, index) => element / (number[index] || 1))
-      );
+      return this.map((element, index) => element / (number[index] || 1));
     }
-    return listFrom(this.map((n) => n / number));
+    return this.map((n) => n / number);
   }
 
   /**
@@ -2580,7 +2585,7 @@ export class List<T> extends Array<T> {
    * @example listOf(1,2,3).power(2) ==> [1,4,9]
    */
   power(this: List<number>, number: number): List<number> {
-    return listFrom<number>(this.map((n) => n ** number));
+    return this.map((n) => n ** number);
   }
 
   /**
@@ -2590,7 +2595,7 @@ export class List<T> extends Array<T> {
    * @example listOf(1,2,3).toFixed(2) ==> ['1.00', '2.00', '3.00']
    */
   toFixed(this: List<number>, digits: number): List<string> {
-    return listFrom(this.map((n) => n.toFixed(digits)));
+    return this.map((n) => n.toFixed(digits));
   }
 
   /**
@@ -2598,120 +2603,7 @@ export class List<T> extends Array<T> {
    * @returns {List}
    */
   toEnglish(this: List<number>): List<string> {
-    return listFrom(
-      this.map((num) => (!Number.isNaN(num) ? numToEnglish(num) : String(num)))
-    );
-    function numToEnglish(num: number): string {
-      const dictionary: Record<string, string> = {
-        1: "One",
-        2: "Two",
-        3: "Three",
-        4: "Four",
-        5: "Five",
-        6: "Six",
-        7: "Seven",
-        8: "Eight",
-        9: "Nine",
-        10: "Ten",
-        11: "Eleven",
-        12: "Twelve",
-        13: "Thirteen",
-        14: "Fourteen",
-        15: "Fifteen",
-        16: "Sixteen",
-        17: "Seventeen",
-        18: "Eighteen",
-        19: "Nineteen",
-        20: "Twenty",
-        30: "Thirty",
-        40: "Forty",
-        50: "Fifty",
-        60: "Sixty",
-        70: "Seventy",
-        80: "Eighty",
-        90: "Ninety",
-        100: "Hundred",
-      };
-
-      const bigNums = listOf(
-        "Thousand",
-        "Million",
-        "Billion",
-        "Trillion",
-        "Quadrillion",
-        "Quintrillion",
-        "Sextillion",
-        "Septillion",
-        "Octillion",
-        "Nonillion",
-        "Decillion"
-      );
-      const sign = Math.sign(num);
-      const number = Math.abs(num);
-      if (number === 0) {
-        return "Zero";
-      }
-      const [integer, decimal] = number.toString().split(".");
-      const chunks = listFrom(integer.split("")).reversed().chunked(3);
-
-      const lastDigits = (num: number, n: number): string =>
-        num.toString().slice(num.toString().length - n);
-
-      function parseThreeDigits(num: number): string {
-        if (num < 10) {
-          return dictionary[num];
-        }
-        const twoPlaces = lastDigits(num, 2);
-        let twoPlacesEnglish = dictionary[Number(twoPlaces)];
-        if (!twoPlacesEnglish) {
-          const [tens, ones] = twoPlaces.split("");
-          const tensEnglish = dictionary[Number(tens) * 10] || "";
-          const onesEnglish = dictionary[Number(ones)] || "";
-          twoPlacesEnglish =
-            parseInt(twoPlaces) > 0 ? `${tensEnglish} ${onesEnglish}` : "";
-        }
-        let hundredth = "",
-          hundredthEnglish;
-        if (num >= 100) {
-          hundredth = Math.floor(num / 100).toString();
-          hundredthEnglish = `${dictionary[Number(hundredth)]} ${
-            dictionary[(Number(hundredth) * 100) / Number(hundredth)]
-          }${Number(twoPlaces) > 0 ? " and " : ""}`;
-          return `${hundredthEnglish}${twoPlacesEnglish}`;
-        }
-        return twoPlacesEnglish;
-      }
-
-      const thousandthChunks = chunks.map((chunk) =>
-        parseThreeDigits(parseInt(chunk.reverse().join("")))
-      );
-
-      const integerEnglish =
-        (sign < 0 ? "Minus " : "") +
-        thousandthChunks
-          .map((numberEnglish: string, index: number) => {
-            if (index === 0) return numberEnglish;
-            if (numberEnglish) return `${numberEnglish} ${bigNums[index - 1]}`;
-          })
-          .filter(Boolean)
-          .reverse()
-          .join(", ");
-
-      const decimalEnglish =
-        decimal &&
-        decimal
-          .split("")
-          .map((digit) => {
-            if (digit === "0") return "Zero";
-            return dictionary[digit];
-          })
-          .join(" ");
-
-      if (decimal) {
-        return `${integerEnglish} Point ${decimalEnglish}`;
-      }
-      return integerEnglish;
-    }
+    return this.map(Str.toEnglish);
   }
 
   /**
@@ -2725,17 +2617,15 @@ export class List<T> extends Array<T> {
    */
   replace(element: T, newValue: T, count: number = -1): List<T> {
     let replaceCount = 0;
-    return listFrom(
-      this.map((item) => {
-        if (deepEquals(item, element)) {
-          if (replaceCount < count || count < 0) {
-            replaceCount++;
-            return newValue;
-          }
+    return this.map((item) => {
+      if (deepEquals(item, element)) {
+        if (replaceCount < count || count < 0) {
+          replaceCount++;
+          return newValue;
         }
-        return item;
-      })
-    );
+      }
+      return item;
+    });
   }
 
   /**
@@ -2758,7 +2648,7 @@ export class List<T> extends Array<T> {
    * @returns {List}
    */
   head(n: number = 1): List<T> {
-    return listFrom(n > this.length ? this : this.slice(0, n));
+    return n > this.length ? this : this.slice(0, n);
   }
 
   /**
@@ -2767,9 +2657,7 @@ export class List<T> extends Array<T> {
    * @returns {List}
    */
   tail(n: number = 1): List<T> {
-    return listFrom(
-      n > this.length ? this : this.slice(this.length - n, this.length)
-    );
+    return n > this.length ? this : this.slice(this.length - n, this.length);
   }
 
   /**
@@ -2778,10 +2666,8 @@ export class List<T> extends Array<T> {
    * @returns {List}
    */
   instanceTypes(primitives: boolean = false): List<string> {
-    return listFrom(
-      this.map((item) =>
-        isPureObject(item) && !primitives ? item.constructor.name : typeof item
-      )
+    return this.map((item) =>
+      isPureObject(item) && !primitives ? item.constructor.name : typeof item
     );
   }
 
@@ -2940,7 +2826,7 @@ export class List<T> extends Array<T> {
    * @param  {...List} lists
    * @returns {List}
    */
-  static shortestFirst<T>(...lists: List<List<T>>): List<T> {
+  static shortestFirst<T>(...lists: List<T>[]): List<T> {
     let longestList = lists[0];
     for (const list of lists) {
       if (list.length > longestList.length) {
@@ -2955,7 +2841,7 @@ export class List<T> extends Array<T> {
    * @param  {...List} lists
    * @returns {List}
    */
-  static shortestLast<T>(...lists: List<List<T>>): List<T> {
+  static shortestLast<T>(...lists: List<T>[]): List<T> {
     let longestList = lists[0];
     for (const list of lists) {
       if (list.length >= longestList.length) {
@@ -3089,7 +2975,7 @@ export function deepEquals(
     return obj1 === obj2;
   }
 
-  if (!isObject(obj1) || !isObject(obj2)) return false;
+  if (!isObjectOrArray(obj1) || !isObjectOrArray(obj2)) return false;
 
   const keys1 = Object.keys(obj1 as object);
   const keys2 = Object.keys(obj2 as object);
@@ -3099,10 +2985,10 @@ export function deepEquals(
   for (const key of keys1) {
     if (!(key in obj2!)) return false;
 
-    const val1 = (obj1 as Record<string, unknown>)[key];
-    const val2 = (obj2 as Record<string, unknown>)[key];
+    const val1 = obj1[key];
+    const val2 = obj2[key];
 
-    if (isObject(val1) && isObject(val2)) {
+    if (isObjectOrArray(val1) && isObjectOrArray(val2)) {
       if (!deepEquals(val1, val2, ignoreCase)) return false;
     } else if (isString(val1) && isString(val2) && ignoreCase) {
       if (val1.toLowerCase() !== val2.toLowerCase()) return false;
@@ -3213,7 +3099,9 @@ function isPureObject(argument: unknown): argument is Record<string, unknown> {
   );
 }
 
-function isObject(argument: unknown): argument is Record<string, unknown> {
+function isObjectOrArray(
+  argument: unknown
+): argument is Record<string, unknown> {
   return Boolean(argument) && typeof argument === "object";
 }
 
@@ -3542,17 +3430,15 @@ export default class SetExtended<T> extends Set<T> {
   filter(
     filterFn: (value: T, index: number, array: List<T>) => boolean
   ): SetExtended<T> {
-    return listFrom(
-      this.toArray().filter((value, index, array) =>
-        filterFn(value, index, listFrom(array))
-      )
-    ).toSetExtended();
+    return this.toList()
+      .filter((value, index, list) => filterFn(value, index, listFrom(list)))
+      .toSetExtended();
   }
 
   find(
     findFn: (value: T, index: number, array: List<T>) => boolean
   ): T | undefined {
-    return this.toArray().find((value, index, array) =>
+    return this.toList().find((value, index, array) =>
       findFn(value, index, listFrom(array))
     );
   }
@@ -3562,7 +3448,7 @@ export function setOf<T>(...args: any[]): SetExtended<T> {
   return new SetExtended(...args);
 }
 
-export class StringExtended extends String {
+export class Str extends String {
   private vowels = listOf("a", "e", "i", "o", "u");
   private chars = listOf<string>();
 
@@ -3662,6 +3548,121 @@ export class StringExtended extends String {
     return listOf(diff1, diff2);
   }
 
+  static toEnglish(number: number): string {
+    if (Number.isNaN(number)) return NaN.toString();
+    const dictionary: Record<string, string> = {
+      1: "One",
+      2: "Two",
+      3: "Three",
+      4: "Four",
+      5: "Five",
+      6: "Six",
+      7: "Seven",
+      8: "Eight",
+      9: "Nine",
+      10: "Ten",
+      11: "Eleven",
+      12: "Twelve",
+      13: "Thirteen",
+      14: "Fourteen",
+      15: "Fifteen",
+      16: "Sixteen",
+      17: "Seventeen",
+      18: "Eighteen",
+      19: "Nineteen",
+      20: "Twenty",
+      30: "Thirty",
+      40: "Forty",
+      50: "Fifty",
+      60: "Sixty",
+      70: "Seventy",
+      80: "Eighty",
+      90: "Ninety",
+      100: "Hundred",
+    };
+
+    const bigNums = listOf(
+      "Thousand",
+      "Million",
+      "Billion",
+      "Trillion",
+      "Quadrillion",
+      "Quintrillion",
+      "Sextillion",
+      "Septillion",
+      "Octillion",
+      "Nonillion",
+      "Decillion"
+    );
+    const sign = Math.sign(number);
+    const absoluteValue = Math.abs(number);
+    if (absoluteValue === 0) {
+      return "Zero";
+    }
+    const [integer, decimal] = absoluteValue.toString().split(".");
+    const chunks = listFrom(integer.split("")).reversed().chunked(3);
+
+    const lastDigits = (num: number, n: number): string =>
+      num.toString().slice(num.toString().length - n);
+
+    function parseThreeDigits(num: number): string {
+      if (num < 10) {
+        return dictionary[num];
+      }
+      const twoPlaces = lastDigits(num, 2);
+      let twoPlacesEnglish = dictionary[Number(twoPlaces)];
+      if (!twoPlacesEnglish) {
+        const [tens, ones] = twoPlaces.split("");
+        const tensEnglish = dictionary[Number(tens) * 10] || "";
+        const onesEnglish = dictionary[Number(ones)] || "";
+        twoPlacesEnglish =
+          parseInt(twoPlaces) > 0 ? `${tensEnglish} ${onesEnglish}` : "";
+      }
+      let hundredth = "",
+        hundredthEnglish;
+      if (num >= 100) {
+        hundredth = Math.floor(num / 100).toString();
+        hundredthEnglish = `${dictionary[Number(hundredth)]} ${
+          dictionary[(Number(hundredth) * 100) / Number(hundredth)]
+        }${Number(twoPlaces) > 0 ? " and " : ""}`;
+        return `${hundredthEnglish}${twoPlacesEnglish}`;
+      }
+      return twoPlacesEnglish;
+    }
+
+    const thousandthChunks = chunks.map((chunk) =>
+      parseThreeDigits(parseInt(chunk.reverse().join("")))
+    );
+
+    const integerEnglish =
+      (sign < 0 ? "Minus " : "") +
+      thousandthChunks
+        .map((numberEnglish: string, index: number) => {
+          if (index === 0) return numberEnglish;
+          if (numberEnglish) return `${numberEnglish} ${bigNums[index - 1]}`;
+        })
+        .filter(Boolean)
+        .reverse()
+        .join(", ");
+
+    const decimalEnglish =
+      decimal &&
+      decimal
+        .split("")
+        .map((digit) => {
+          if (digit === "0") return "Zero";
+          return dictionary[digit];
+        })
+        .join(" ");
+
+    if (decimal) {
+      return `${integerEnglish}${
+        Number(integerEnglish) === 0 ? "" : " "
+      }Point ${decimalEnglish}`;
+    }
+    return integerEnglish;
+  }
+
   /**
    * Capitalizes the first letter of each word as defined by a separator and a joiner
    * @param {Array} separators
@@ -3727,7 +3728,7 @@ export class StringExtended extends String {
   }
 
   chunked(n: number) {
-    return listFrom(this.chars).chunked(n).joinEach("");
+    return this.chars.chunked(n).joinEach("");
   }
 
   segment(n: number) {
@@ -3805,11 +3806,7 @@ export class StringExtended extends String {
     const object: Record<string, number> = {};
     for (const char of this) {
       if (asObject) {
-        if (object[char]) {
-          object[char]++;
-        } else {
-          object[char] = 1;
-        }
+        object[char] = object[char] ? object[char]++ : 1;
       } else {
         if (map.has(char)) {
           map.set(char, (map.get(char) as number) + 1);
@@ -3865,19 +3862,30 @@ export class StringExtended extends String {
     return matrix[word.length][this.length];
   }
 
-  getClosestDictionaryWord(dictionary?: string[]) {
-    let closestWord = "";
-    let minDistance = Infinity;
+  fuzzySearch(
+    threshold: number = Infinity,
+    caseSensitive: boolean = false,
+    dictionary?: string[] | List<string>
+  ): List<string> {
+    let closestWords: List<string> = listOf();
+    let minDistance = threshold;
 
-    for (const word of dictionary ?? word_dictionary) {
+    for (let word of dictionary ?? word_dictionary) {
+      let thisWord = this.slice();
+      if (!caseSensitive) {
+        word = word.toLowerCase();
+        thisWord = this.toLowerCase();
+      }
       const distance = this.levenshteinDistanceTo(word);
       if (distance < minDistance) {
         minDistance = distance;
-        closestWord = word;
+        closestWords = listOf(word);
+      } else if (distance === minDistance) {
+        closestWords.push(word);
       }
     }
 
-    return closestWord;
+    return closestWords;
   }
 }
 
@@ -3935,8 +3943,8 @@ export function mapOf<K, V>(...pairs: Pair<K, V>[]): Map<K, V> {
   return map;
 }
 
-export function str(str: string): StringExtended {
-  return new StringExtended(str);
+export function str(str: string): Str {
+  return new Str(str);
 }
 
 export class Utils {
@@ -3951,6 +3959,26 @@ export class Utils {
           .join("")
       )
       .join("-");
+  }
+}
+
+export class MathPlus {
+  static factorial(n: number): number {
+    if (n < 0) throw new Error("Factorial is not defined for negative numbers");
+    if (n === 0 || n === 1) return 1;
+    let result = 1;
+    for (let i = 2; i <= n; i++) {
+      result *= i;
+    }
+    return result;
+  }
+
+  static randomInt(min: number, max: number): number {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  static random(min: number, max: number): number {
+    return Math.random() * (max - min) + min;
   }
 }
 

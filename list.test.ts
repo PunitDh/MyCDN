@@ -9,6 +9,7 @@ import {
   NoSuchElementError,
   RoundingMode,
   str,
+  Str,
   when,
 } from "./public/List";
 
@@ -1892,6 +1893,48 @@ describe(List, () => {
       expect(foods.search("u")).toEqual(listOf("Burger", "Sushi"));
       expect(foods.search("p", false)).toEqual(listOf("Pho", "Pasta"));
       expect(foods.search("p", true)).toEqual(listOf());
+
+      const dishes = listOf(
+        "Chocolate milkshake",
+        "Chocolate cake",
+        "Cream crumpets",
+        "Cream fraiche",
+        "Almond chocolate croissant"
+      );
+
+      expect(dishes.search("chocolate")).toEqual(
+        listOf(
+          "Chocolate milkshake",
+          "Chocolate cake",
+          "Almond chocolate croissant"
+        )
+      );
+      expect(dishes.search("chocolate", false)).toEqual(
+        listOf(
+          "Chocolate milkshake",
+          "Chocolate cake",
+          "Almond chocolate croissant"
+        )
+      );
+      expect(dishes.search("chocolate", true)).toEqual(
+        listOf("Almond chocolate croissant")
+      );
+    });
+  });
+
+  describe(list.fuzzySearch, () => {
+    it("should search a list for a given string and return the closest results in a list", () => {
+      const words = listOf(
+        "card",
+        "apple",
+        "yard",
+        "coconut",
+        "cherry",
+        "banana"
+      );
+
+      expect(words.fuzzySearch("lard")).toEqual(listOf("card", "yard"));
+      expect(words.fuzzySearch("al")).toEqual(listOf("apple"));
     });
   });
 
@@ -2292,24 +2335,27 @@ describe(List, () => {
 
   describe(list.toEnglish, () => {
     it("should convert a list of numbers into its english representation", () => {
-      expect(listOf(1).toEnglish()).toEqual(listOf("One"));
-      expect(listOf(100).toEnglish()).toEqual(listOf("One Hundred"));
-      expect(listOf(312).toEnglish()).toEqual(
-        listOf("Three Hundred and Twelve")
-      );
-      expect(listOf(19300274927556).toEnglish()).toEqual(
+      expect(
         listOf(
-          "Nineteen Trillion, Three Hundred Billion, Two Hundred and Seventy Four Million, Nine Hundred and Twenty Seven Thousand, Five Hundred and Fifty Six"
-        )
-      );
-      expect(listOf(1930027.4927556).toEnglish()).toEqual(
+          1e-3,
+          1,
+          100,
+          312,
+          19300274927556,
+          1930027.4927556,
+          -32572.472023,
+          864823861e-6
+        ).toEnglish()
+      ).toEqual(
         listOf(
-          "One Million, Nine Hundred and Thirty Thousand, Twenty Seven Point Four Nine Two Seven Five Five Six"
-        )
-      );
-      expect(listOf(-32572.472023).toEnglish()).toEqual(
-        listOf(
-          "Minus Thirty Two Thousand, Five Hundred and Seventy Two Point Four Seven Two Zero Two Three"
+          "Point Zero Zero One",
+          "One",
+          "One Hundred",
+          "Three Hundred and Twelve",
+          "Nineteen Trillion, Three Hundred Billion, Two Hundred and Seventy Four Million, Nine Hundred and Twenty Seven Thousand, Five Hundred and Fifty Six",
+          "One Million, Nine Hundred and Thirty Thousand, Twenty Seven Point Four Nine Two Seven Five Five Six",
+          "Minus Thirty Two Thousand, Five Hundred and Seventy Two Point Four Seven Two Zero Two Three",
+          "Eight Hundred and Sixty Four Point Eight Two Three Eight Six One"
         )
       );
     });
@@ -2505,5 +2551,28 @@ describe(when, () => {
     });
 
     expect(output).toBe("It's not a fruit");
+  });
+});
+
+describe(Str, () => {
+  describe(Str.toEnglish, () => {
+    it("should convert a number to its english representation", () => {
+      expect(Str.toEnglish(1e-3)).toBe("Point Zero Zero One");
+      expect(Str.toEnglish(1)).toBe("One");
+      expect(Str.toEnglish(100)).toBe("One Hundred");
+      expect(Str.toEnglish(312)).toBe("Three Hundred and Twelve");
+      expect(Str.toEnglish(19300274927556)).toBe(
+        "Nineteen Trillion, Three Hundred Billion, Two Hundred and Seventy Four Million, Nine Hundred and Twenty Seven Thousand, Five Hundred and Fifty Six"
+      );
+      expect(Str.toEnglish(1930027.4927556)).toBe(
+        "One Million, Nine Hundred and Thirty Thousand, Twenty Seven Point Four Nine Two Seven Five Five Six"
+      );
+      expect(Str.toEnglish(-32572.472023)).toBe(
+        "Minus Thirty Two Thousand, Five Hundred and Seventy Two Point Four Seven Two Zero Two Three"
+      );
+      expect(Str.toEnglish(864823861e-6)).toBe(
+        "Eight Hundred and Sixty Four Point Eight Two Three Eight Six One"
+      );
+    });
   });
 });
